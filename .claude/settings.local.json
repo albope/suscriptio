@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(npm init -y)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run build:*)",
+      "Skill(frontend-design)",
+      "Skill(frontend-design:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: complete Suscriptio subscription manager app\n\n- React 19 + TypeScript + Vite setup\n- Dark futuristic theme with cyan/purple accents\n- Glassmorphism UI components\n- Dashboard with spend overview, metrics, and category breakdown\n- Subscription CRUD with localStorage persistence\n- Responsive design with mobile navigation\n- i18n support \\(Spanish\\)\n- Custom logo and favicon\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

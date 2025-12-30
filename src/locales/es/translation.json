@@ -1,0 +1,81 @@
+{
+  "common": {
+    "add": "Añadir",
+    "edit": "Editar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "currency": "€"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "subscriptions": "Suscripciones"
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "monthlySpend": "Gasto mensual",
+    "yearlySpend": "Gasto anual",
+    "upcomingPayments": "Próximos pagos",
+    "categoryBreakdown": "Desglose por categoría",
+    "activeSubscriptions": "Suscripciones activas",
+    "mostExpensive": "Más cara",
+    "next30Days": "Próximos 30 días",
+    "noUpcoming": "No hay pagos próximos en los próximos 30 días"
+  },
+  "subscriptions": {
+    "title": "Suscripciones",
+    "add": "Añadir suscripción",
+    "edit": "Editar suscripción",
+    "cancelSubscription": "Cancelar suscripción",
+    "confirmCancel": "¿Cancelar suscripción? Se excluirá de los totales, pero se mantendrá el registro.",
+    "keepActive": "Mantener activa",
+    "emptyState": "No hay suscripciones. ¡Añade tu primera suscripción!",
+    "filterActive": "Activas",
+    "filterCanceled": "Canceladas",
+    "filterAll": "Todas",
+    "sortByDate": "Fecha de pago",
+    "sortByName": "Nombre",
+    "sortByCost": "Coste",
+    "fields": {
+      "name": "Nombre",
+      "cost": "Coste",
+      "billingFrequency": "Frecuencia de pago",
+      "nextPaymentDate": "Próxima fecha de pago",
+      "status": "Estado",
+      "category": "Categoría",
+      "notes": "Notas",
+      "providerUrl": "URL del proveedor"
+    },
+    "frequency": {
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "perMonth": "/ mes",
+      "perYear": "/ año"
+    },
+    "status": {
+      "active": "Activa",
+      "canceled": "Cancelada"
+    },
+    "categories": {
+      "streaming": "Streaming",
+      "productivity": "Productividad",
+      "cloud_storage": "Almacenamiento",
+      "music": "Música",
+      "gaming": "Juegos",
+      "health_fitness": "Salud y fitness",
+      "news_learning": "Noticias y aprendizaje",
+      "utilities": "Utilidades",
+      "other": "Otro"
+    }
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "minLength": "Mínimo {{min}} caracteres",
+    "maxLength": "Máximo {{max}} caracteres",
+    "invalidUrl": "URL no válida",
+    "invalidNumber": "Número no válido",
+    "minValue": "Valor mínimo: {{min}}",
+    "maxValue": "Valor máximo: {{max}}"
+  }
+}
