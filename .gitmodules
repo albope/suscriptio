@@ -1,0 +1,3 @@
+[submodule ".claude/plugins/agents"]
+	path = .claude/plugins/agents
+	url = https://github.com/albope/claude-agents-plugin.git

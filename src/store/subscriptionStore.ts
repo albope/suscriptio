@@ -16,6 +16,11 @@ interface SubscriptionStore {
   getYearlySpend: () => number;
   getCategoryBreakdown: () => CategoryBreakdown[];
   getMostExpensiveSubscription: () => Subscription | null;
+  // Cloud sync methods
+  setSubscriptions: (subscriptions: Subscription[]) => void;
+  addSubscriptionFromCloud: (subscription: Subscription) => void;
+  clearSubscriptions: () => void;
+  getLocalSubscriptions: () => Subscription[];
 }
 
 export const useSubscriptionStore = create<SubscriptionStore>()(
@@ -130,6 +135,25 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
 
           return subMonthlyCost > maxMonthlyCost ? sub : max;
         });
+      },
+
+      // Cloud sync methods
+      setSubscriptions: (subscriptions) => {
+        set({ subscriptions });
+      },
+
+      addSubscriptionFromCloud: (subscription) => {
+        set((state) => ({
+          subscriptions: [...state.subscriptions, subscription],
+        }));
+      },
+
+      clearSubscriptions: () => {
+        set({ subscriptions: [] });
+      },
+
+      getLocalSubscriptions: () => {
+        return get().subscriptions;
       },
     }),
     {

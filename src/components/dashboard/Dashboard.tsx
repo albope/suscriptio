@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
+import { useAuth } from '@/contexts/AuthContext';
 import { SpendOverview } from './SpendOverview';
 import { KeyMetrics } from './KeyMetrics';
 import { UpcomingPayments } from './UpcomingPayments';
 import { CategoryBreakdown } from './CategoryBreakdown';
 import { SubscriptionModal } from '@/components/subscriptions/SubscriptionModal';
+import { MigrationModal } from '@/components/auth/MigrationModal';
 import { Subscription } from '@/types';
 
 export const Dashboard = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const {
     activeSubscriptions,
     upcomingPayments,
@@ -17,10 +20,54 @@ export const Dashboard = () => {
     yearlySpend,
     categoryBreakdown,
     mostExpensive,
+    isLoading,
+    migrateLocalToCloud,
+    getLocalSubscriptions,
+    clearSubscriptions,
   } = useSubscriptions();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | undefined>();
+  const [showMigration, setShowMigration] = useState(false);
+  const [localDataCount, setLocalDataCount] = useState(0);
+
+  // Check for local data to migrate after login
+  useEffect(() => {
+    if (user && !isLoading) {
+      // Get data from localStorage directly (before it gets cleared)
+      const stored = localStorage.getItem('subscriptions-storage');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          const localSubs = parsed.state?.subscriptions || [];
+          if (localSubs.length > 0) {
+            setLocalDataCount(localSubs.length);
+            setShowMigration(true);
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      }
+    }
+  }, [user, isLoading]);
+
+  const handleMigrate = async (): Promise<boolean> => {
+    const localSubs = getLocalSubscriptions();
+    const success = await migrateLocalToCloud(localSubs);
+    if (success) {
+      // Clear local data after successful migration
+      localStorage.removeItem('subscriptions-storage');
+      setShowMigration(false);
+    }
+    return success ?? false;
+  };
+
+  const handleDiscardMigration = () => {
+    // Clear local data without migrating
+    localStorage.removeItem('subscriptions-storage');
+    clearSubscriptions();
+    setShowMigration(false);
+  };
 
   const handleSubscriptionClick = (subscription: Subscription) => {
     setSelectedSubscription(subscription);
@@ -82,6 +129,37 @@ export const Dashboard = () => {
         onClose={handleCloseModal}
         subscription={selectedSubscription}
       />
+
+      {/* Migration Modal */}
+      {showMigration && (
+        <MigrationModal
+          count={localDataCount}
+          onMigrate={handleMigrate}
+          onDiscard={handleDiscardMigration}
+        />
+      )}
+
+      {/* Loading overlay */}
+      {isLoading && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999,
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid rgba(0, 212, 255, 0.2)',
+            borderTopColor: '#00d4ff',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }} />
+        </div>
+      )}
     </div>
   );
 };

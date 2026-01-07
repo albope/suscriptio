@@ -77,5 +77,28 @@
     "invalidNumber": "Número no válido",
     "minValue": "Valor mínimo: {{min}}",
     "maxValue": "Valor máximo: {{max}}"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "logout": "Cerrar sesión",
+    "errors": {
+      "invalidCredentials": "Credenciales inválidas",
+      "emailInUse": "Este correo ya está registrado",
+      "weakPassword": "La contraseña debe tener al menos 6 caracteres",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    }
+  },
+  "migration": {
+    "title": "Datos encontrados",
+    "message": "Encontramos {{count}} suscripciones guardadas localmente. ¿Deseas migrarlas a tu cuenta?",
+    "migrate": "Migrar datos",
+    "discard": "Descartar"
   }
 }
