@@ -10,114 +10,326 @@ export const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="glass-nav sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src="/logo.png"
-              alt="Suscriptio"
-              style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '12px',
-                objectFit: 'contain',
-              }}
-            />
-            <span className="text-xl font-bold" style={{ color: '#ededed' }}>
-              Suscriptio
-            </span>
-          </div>
-          <nav className="hidden md:flex gap-1 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+    <>
+      <style>
+        {`
+          .header-container {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: linear-gradient(
+              180deg,
+              rgba(8, 8, 8, 0.85) 0%,
+              rgba(8, 8, 8, 0.75) 100%
+            );
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          }
+
+          .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+          }
+
+          .logo-wrapper {
+            position: relative;
+            width: 38px;
+            height: 38px;
+          }
+
+          .logo-glow {
+            position: absolute;
+            inset: -4px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            border-radius: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+
+          .logo-section:hover .logo-glow {
+            opacity: 1;
+          }
+
+          .logo-img {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+          }
+
+          .logo-section:hover .logo-img {
+            transform: scale(1.02);
+          }
+
+          .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+
+          .nav-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+          }
+
+          .nav-link {
+            position: relative;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            overflow: hidden;
+          }
+
+          .nav-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+              100px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+              rgba(255, 255, 255, 0.06),
+              transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.2s ease;
+          }
+
+          .nav-link:hover::before {
+            opacity: 1;
+          }
+
+          .nav-link-inactive {
+            color: #888888;
+          }
+
+          .nav-link-inactive:hover {
+            color: #ededed;
+            background: rgba(255, 255, 255, 0.04);
+          }
+
+          .nav-link-active {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow:
+              0 0 0 1px rgba(0, 212, 255, 0.15),
+              0 0 20px -5px rgba(0, 212, 255, 0.2);
+          }
+
+          .nav-link-active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            border-radius: 1px;
+          }
+
+          .user-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
+
+          .user-email {
+            font-size: 13px;
+            color: #555555;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #00d4ff;
+            text-transform: uppercase;
+          }
+
+          .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666666;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+
+          .logout-btn:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.08);
+          }
+
+          .logout-btn svg {
+            transition: transform 0.2s ease;
+          }
+
+          .logout-btn:hover svg {
+            transform: translateX(2px);
+          }
+
+          .divider {
+            width: 1px;
+            height: 24px;
+            background: linear-gradient(
+              180deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.1) 50%,
+              transparent 100%
+            );
+          }
+
+          @media (max-width: 768px) {
+            .header-inner {
+              padding: 0 16px;
+              height: 56px;
+            }
+
+            .nav-container {
+              display: none;
+            }
+
+            .user-email {
+              display: none;
+            }
+
+            .divider {
+              display: none;
+            }
+          }
+        `}
+      </style>
+
+      <header className="header-container">
+        <div className="header-inner">
+          {/* Logo Section */}
+          <Link to="/" className="logo-section" style={{ textDecoration: 'none' }}>
+            <div className="logo-wrapper">
+              <div className="logo-glow" />
+              <img
+                src="/logo.png"
+                alt="Suscriptio"
+                className="logo-img"
+              />
+            </div>
+            <span className="logo-text">Suscriptio</span>
+          </Link>
+
+          {/* Center Navigation */}
+          <nav className="nav-container">
             <Link
               to="/"
-              style={{
-                padding: '8px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 500,
-                transition: 'all 0.15s ease',
-                ...(isActive('/')
-                  ? { background: 'rgba(0, 212, 255, 0.1)', color: '#00d4ff', border: '1px solid rgba(0, 212, 255, 0.2)' }
-                  : { color: '#888888', border: '1px solid transparent' })
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive('/')) {
-                  e.currentTarget.style.color = '#ededed';
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive('/')) {
-                  e.currentTarget.style.color = '#888888';
-                  e.currentTarget.style.background = 'transparent';
-                }
+              className={`nav-link ${isActive('/') ? 'nav-link-active' : 'nav-link-inactive'}`}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
               }}
             >
+              <svg
+                style={{
+                  width: '14px',
+                  height: '14px',
+                  marginRight: '8px',
+                  verticalAlign: 'middle',
+                  marginTop: '-2px'
+                }}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+              </svg>
               {t('nav.dashboard')}
             </Link>
             <Link
               to="/subscriptions"
-              style={{
-                padding: '8px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 500,
-                transition: 'all 0.15s ease',
-                ...(isActive('/subscriptions')
-                  ? { background: 'rgba(0, 212, 255, 0.1)', color: '#00d4ff', border: '1px solid rgba(0, 212, 255, 0.2)' }
-                  : { color: '#888888', border: '1px solid transparent' })
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive('/subscriptions')) {
-                  e.currentTarget.style.color = '#ededed';
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive('/subscriptions')) {
-                  e.currentTarget.style.color = '#888888';
-                  e.currentTarget.style.background = 'transparent';
-                }
+              className={`nav-link ${isActive('/subscriptions') ? 'nav-link-active' : 'nav-link-inactive'}`}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
               }}
             >
+              <svg
+                style={{
+                  width: '14px',
+                  height: '14px',
+                  marginRight: '8px',
+                  verticalAlign: 'middle',
+                  marginTop: '-2px'
+                }}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
               {t('nav.subscriptions')}
             </Link>
           </nav>
 
-          {/* User menu */}
+          {/* User Section */}
           {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '13px', color: '#666666', display: 'none' }} className="md:block">
-                {user.email}
-              </span>
-              <button
-                onClick={signOut}
-                style={{
-                  padding: '8px 14px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  color: '#888888',
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#ff6b6b';
-                  e.currentTarget.style.borderColor = 'rgba(255, 107, 107, 0.3)';
-                  e.currentTarget.style.background = 'rgba(255, 107, 107, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#888888';
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                }}
-              >
+            <div className="user-section">
+              <span className="user-email">{user.email}</span>
+
+              <div className="user-avatar">
+                {user.email?.charAt(0) || 'U'}
+              </div>
+
+              <div className="divider" />
+
+              <button onClick={signOut} className="logout-btn">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16,17 21,12 16,7" />
@@ -128,7 +340,7 @@ export const Header = () => {
             </div>
           )}
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 };

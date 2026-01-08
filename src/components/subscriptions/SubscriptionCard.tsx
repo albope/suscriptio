@@ -7,9 +7,10 @@ import { formatCurrency } from '@/utils/calculations';
 interface SubscriptionCardProps {
   subscription: Subscription;
   onClick: () => void;
+  onDelete?: (id: string) => void;
 }
 
-export const SubscriptionCard = ({ subscription, onClick }: SubscriptionCardProps) => {
+export const SubscriptionCard = ({ subscription, onClick, onDelete }: SubscriptionCardProps) => {
   const { t } = useTranslation();
   const daysUntil = getDaysUntilPayment(subscription.nextPaymentDate);
   const paymentLabel = getPaymentLabel(daysUntil);
@@ -92,11 +93,49 @@ export const SubscriptionCard = ({ subscription, onClick }: SubscriptionCardProp
           </div>
         </div>
 
-        {/* Right side: Badge + Arrow */}
+        {/* Right side: Badge + Actions */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
-          <Badge variant={subscription.status === 'active' ? 'success' : 'danger'}>
-            {t(`subscriptions.status.${subscription.status}`)}
-          </Badge>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Badge variant={subscription.status === 'active' ? 'success' : 'danger'}>
+              {t(`subscriptions.status.${subscription.status}`)}
+            </Badge>
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(subscription.id);
+                }}
+                title={t('subscriptions.delete', 'Eliminar')}
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '8px',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  padding: 0,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                  e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.15)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <svg style={{ width: '14px', height: '14px', color: '#ef4444' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
           <div
             style={{
               width: '32px',

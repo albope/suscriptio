@@ -12,6 +12,7 @@ export const useSubscriptions = () => {
   const addSubscription = user ? supabase.addSubscription : store.addSubscription;
   const updateSubscription = user ? supabase.updateSubscription : store.updateSubscription;
   const deleteSubscription = user ? supabase.deleteSubscription : store.deleteSubscription;
+  const permanentDelete = user ? supabase.permanentDelete : store.permanentDelete;
 
   return {
     subscriptions: store.subscriptions,
@@ -24,6 +25,7 @@ export const useSubscriptions = () => {
     addSubscription,
     updateSubscription,
     deleteSubscription,
+    permanentDelete,
     // Cloud sync states
     isLoading: supabase.isLoading,
     isSyncing: supabase.isSyncing,

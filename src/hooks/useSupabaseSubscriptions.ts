@@ -67,6 +67,9 @@ export const useSupabaseSubscriptions = () => {
     setIsLoading(true);
     setError(null);
 
+    // Limpiar store antes de fetch para evitar duplicados con datos de localStorage
+    store.clearSubscriptions();
+
     const { data, error: fetchError } = await supabase
       .from('subscriptions')
       .select('*')
@@ -149,9 +152,32 @@ export const useSupabaseSubscriptions = () => {
     setIsSyncing(false);
   };
 
-  // Delete (cancel) subscription
+  // Delete (cancel) subscription - soft delete
   const deleteSubscription = async (id: string) => {
     await updateSubscription(id, { status: SubscriptionStatus.CANCELED });
+  };
+
+  // Permanently delete subscription from database
+  const permanentDelete = async (id: string) => {
+    if (!user) return false;
+
+    setIsSyncing(true);
+    const { error: deleteError } = await supabase
+      .from('subscriptions')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (deleteError) {
+      setError(deleteError.message);
+      setIsSyncing(false);
+      return false;
+    }
+
+    // Remove from local store
+    store.permanentDelete(id);
+    setIsSyncing(false);
+    return true;
   };
 
   // Migrate local data to cloud
@@ -207,6 +233,7 @@ export const useSupabaseSubscriptions = () => {
     addSubscription,
     updateSubscription,
     deleteSubscription,
+    permanentDelete,
     migrateLocalToCloud,
     refetch: fetchSubscriptions,
   };

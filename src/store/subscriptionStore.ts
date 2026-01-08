@@ -8,6 +8,7 @@ interface SubscriptionStore {
   addSubscription: (subscription: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateSubscription: (id: string, updates: Partial<Subscription>) => void;
   deleteSubscription: (id: string) => void;
+  permanentDelete: (id: string) => void;
   getSubscriptionById: (id: string) => Subscription | undefined;
   getActiveSubscriptions: () => Subscription[];
   getCanceledSubscriptions: () => Subscription[];
@@ -50,6 +51,12 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
 
       deleteSubscription: (id) => {
         get().updateSubscription(id, { status: SubscriptionStatus.CANCELED });
+      },
+
+      permanentDelete: (id) => {
+        set((state) => ({
+          subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
+        }));
       },
 
       getSubscriptionById: (id) => {
