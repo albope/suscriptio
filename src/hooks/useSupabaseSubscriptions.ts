@@ -55,8 +55,15 @@ const toDb = (sub: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>, userId:
 
 export const useSupabaseSubscriptions = () => {
   const { user } = useAuth();
-  const store = useSubscriptionStore();
-  const [isLoading, setIsLoading] = useState(true);
+  // Use individual selectors for better reactivity
+  const setSubscriptions = useSubscriptionStore((state) => state.setSubscriptions);
+  const addSubscriptionFromCloud = useSubscriptionStore((state) => state.addSubscriptionFromCloud);
+  const updateSubscriptionInStore = useSubscriptionStore((state) => state.updateSubscription);
+  const permanentDeleteFromStore = useSubscriptionStore((state) => state.permanentDelete);
+  const clearSubscriptions = useSubscriptionStore((state) => state.clearSubscriptions);
+
+  // Only show loading if user is authenticated (will fetch from cloud)
+  const [isLoading, setIsLoading] = useState(!!user);
   const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,7 +75,7 @@ export const useSupabaseSubscriptions = () => {
     setError(null);
 
     // Limpiar store antes de fetch para evitar duplicados con datos de localStorage
-    store.clearSubscriptions();
+    clearSubscriptions();
 
     const { data, error: fetchError } = await supabase
       .from('subscriptions')
@@ -84,9 +91,9 @@ export const useSupabaseSubscriptions = () => {
 
     // Update store with cloud data
     const subscriptions = (data || []).map(fromDb);
-    store.setSubscriptions(subscriptions);
+    setSubscriptions(subscriptions);
     setIsLoading(false);
-  }, [user]);
+  }, [user, clearSubscriptions, setSubscriptions]);
 
   // Add subscription to Supabase
   const addSubscription = async (subscription: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -108,7 +115,7 @@ export const useSupabaseSubscriptions = () => {
     // Add to local store
     if (data) {
       const newSub = fromDb(data);
-      store.addSubscriptionFromCloud(newSub);
+      addSubscriptionFromCloud(newSub);
     }
     setIsSyncing(false);
   };
@@ -148,7 +155,7 @@ export const useSupabaseSubscriptions = () => {
     }
 
     // Update local store
-    store.updateSubscription(id, updates);
+    updateSubscriptionInStore(id, updates);
     setIsSyncing(false);
   };
 
@@ -175,7 +182,7 @@ export const useSupabaseSubscriptions = () => {
     }
 
     // Remove from local store
-    store.permanentDelete(id);
+    permanentDeleteFromStore(id);
     setIsSyncing(false);
     return true;
   };
