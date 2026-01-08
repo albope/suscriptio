@@ -28,7 +28,7 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
           `,
         }}
       >
-        {/* Animated Icon */}
+        {/* Icon */}
         <div
           style={{
             width: '120px',
@@ -41,7 +41,6 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
             justifyContent: 'center',
             marginBottom: '32px',
             boxShadow: '0 0 40px rgba(0, 212, 255, 0.2)',
-            animation: 'pulse-glow 2s ease-in-out infinite',
           }}
         >
           <svg
@@ -149,19 +148,6 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
         </p>
       </div>
 
-      {/* CSS for animation */}
-      <style>{`
-        @keyframes pulse-glow {
-          0%, 100% {
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
-            transform: scale(1);
-          }
-          50% {
-            box-shadow: 0 0 60px rgba(0, 212, 255, 0.4);
-            transform: scale(1.02);
-          }
-        }
-      `}</style>
     </div>
   );
 };
