@@ -5,6 +5,8 @@ import { formatCurrency } from '@/utils/calculations';
 interface KeyMetricsProps {
   activeCount: number;
   mostExpensive: Subscription | null;
+  averageCost: number;
+  subscriptionsByFrequency: { monthly: number; yearly: number };
 }
 
 // Shared card styles for consistency with SpendOverview
@@ -52,7 +54,7 @@ const cardHoverStyle = `
   }
 `;
 
-export const KeyMetrics = ({ activeCount, mostExpensive }: KeyMetricsProps) => {
+export const KeyMetrics = ({ activeCount, mostExpensive, averageCost, subscriptionsByFrequency }: KeyMetricsProps) => {
   const { t } = useTranslation();
 
   const mostExpensiveCost = mostExpensive
@@ -98,7 +100,7 @@ export const KeyMetrics = ({ activeCount, mostExpensive }: KeyMetricsProps) => {
               {activeCount}
             </h3>
             <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.4)' }}>
-              Suscripciones activas
+              {subscriptionsByFrequency.monthly} {t('dashboard.monthly')} · {subscriptionsByFrequency.yearly} {t('dashboard.yearly')}
             </p>
           </div>
           <div
@@ -125,6 +127,71 @@ export const KeyMetrics = ({ activeCount, mostExpensive }: KeyMetricsProps) => {
           marginTop: '20px',
           height: '2px',
           background: 'linear-gradient(90deg, #3b82f6 0%, rgba(59, 130, 246, 0.3) 50%, transparent 100%)',
+          borderRadius: '1px',
+          opacity: 0.6,
+        }} />
+      </div>
+
+      {/* Average Cost Card */}
+      <div
+        className="metric-card"
+        style={cardStyle}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+          e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <p style={{
+              fontSize: '12px',
+              fontWeight: 600,
+              color: 'rgba(255, 255, 255, 0.5)',
+              marginBottom: '12px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em'
+            }}>
+              {t('dashboard.averageCost')}
+            </p>
+            <h3 style={{
+              fontSize: '32px',
+              fontWeight: 700,
+              color: '#ededed',
+              marginBottom: '8px',
+              letterSpacing: '-0.02em',
+              lineHeight: 1,
+            }}>
+              {formatCurrency(averageCost, '€')}
+            </h3>
+            <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.4)' }}>
+              {t('dashboard.perSubscription')}
+            </p>
+          </div>
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%)',
+              border: '1px solid rgba(34, 197, 94, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 20px rgba(34, 197, 94, 0.1)',
+            }}
+          >
+            <svg style={{ width: '22px', height: '22px', color: '#22c55e' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Subtle accent line */}
+        <div style={{
+          marginTop: '20px',
+          height: '2px',
+          background: 'linear-gradient(90deg, #22c55e 0%, rgba(34, 197, 94, 0.3) 50%, transparent 100%)',
           borderRadius: '1px',
           opacity: 0.6,
         }} />

@@ -1,30 +1,37 @@
 # Architecture Design
 
+**Status:** ✅ Implemented
+
 ## Technology Stack Summary
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| Framework | React 18+ | UI components |
-| Language | TypeScript | Type safety |
-| Build Tool | Vite | Fast dev server and bundling |
-| Styling | Tailwind CSS | Utility-first styling |
-| State Management | Zustand | Global state + localStorage |
-| Routing | React Router v6 | Client-side routing |
-| Charts | Recharts | Data visualization |
-| i18n | react-i18next | Spanish localization |
-| PWA | Vite PWA Plugin | Service worker + manifest |
-| Date Handling | date-fns | Date manipulation |
-| Storage | localStorage | Data persistence (MVP) |
+| Layer | Technology | Version | Purpose |
+|-------|------------|---------|---------|
+| Framework | React | 19.2.3 | UI components |
+| Language | TypeScript | 5.9.3 | Type safety |
+| Build Tool | Vite | 7.3.0 | Fast dev server and bundling |
+| Styling | Tailwind CSS | 4.1.18 | Utility-first styling |
+| State Management | Zustand | 5.0.9 | Global state + localStorage |
+| Routing | React Router | 7.11.0 | Client-side routing |
+| Charts | Recharts | 3.6.0 | Data visualization |
+| i18n | react-i18next | 16.5.0 | Spanish localization |
+| PWA | Vite PWA Plugin | 1.2.0 | Service worker + manifest |
+| Date Handling | date-fns | 4.1.0 | Date manipulation |
+| Backend | Supabase | 2.90.0 | PostgreSQL + Auth ✅ *Post-MVP* |
+| Storage | localStorage + Supabase | - | Data persistence |
 
-## Project Structure
+## Project Structure (Actual Implementation)
 
 ```
 suscriptio/
 ├── public/
-│   ├── icons/              # PWA icons (192x192, 512x512)
-│   └── manifest.json       # PWA manifest
+│   ├── icons/              # PWA icons
+│   ├── logo.svg            # App logo
+│   └── favicon.ico
 ├── src/
-│   ├── components/         # React components
+│   ├── components/
+│   │   ├── auth/                      # ✅ Added post-MVP
+│   │   │   ├── MigrationModal.tsx     # localStorage to cloud migration
+│   │   │   └── ProtectedRoute.tsx     # Auth guard for routes
 │   │   ├── layout/
 │   │   │   ├── AppLayout.tsx          # Main app shell
 │   │   │   ├── Header.tsx             # Top navigation
@@ -33,26 +40,28 @@ suscriptio/
 │   │   │   ├── Dashboard.tsx          # Main dashboard page
 │   │   │   ├── SpendOverview.tsx      # Monthly/yearly totals
 │   │   │   ├── UpcomingPayments.tsx   # Next 30 days list
-│   │   │   ├── CategoryBreakdown.tsx  # Pie/bar chart
-│   │   │   ├── KeyMetrics.tsx         # Quick stats
-│   │   │   └── TrendsChart.tsx        # Optional trends (v2)
+│   │   │   ├── CategoryBreakdown.tsx  # Bar chart
+│   │   │   └── KeyMetrics.tsx         # Quick stats
 │   │   ├── subscriptions/
 │   │   │   ├── SubscriptionList.tsx   # List page
-│   │   │   ├── SubscriptionCard.tsx   # Individual card/row
+│   │   │   ├── SubscriptionCard.tsx   # Individual card
 │   │   │   ├── SubscriptionModal.tsx  # Add/edit modal
 │   │   │   ├── SubscriptionForm.tsx   # Form fields
-│   │   │   └── EmptyState.tsx         # No subscriptions view
-│   │   ├── ui/
-│   │   │   ├── Button.tsx
-│   │   │   ├── Input.tsx
-│   │   │   ├── Select.tsx
-│   │   │   ├── DatePicker.tsx
-│   │   │   ├── Modal.tsx
-│   │   │   ├── Badge.tsx
-│   │   │   └── ConfirmDialog.tsx
-│   │   └── shared/
-│   │       ├── LoadingSpinner.tsx
-│   │       └── ErrorBoundary.tsx
+│   │   │   ├── EmptyState.tsx         # No subscriptions view
+│   │   │   └── DeleteConfirmModal.tsx # Confirm delete dialog
+│   │   └── ui/
+│   │       ├── Button.tsx
+│   │       ├── Input.tsx
+│   │       ├── Select.tsx
+│   │       ├── Modal.tsx
+│   │       └── Badge.tsx
+│   ├── contexts/                       # ✅ Added post-MVP
+│   │   └── AuthContext.tsx            # Authentication state
+│   ├── lib/                            # ✅ Added post-MVP
+│   │   └── supabase.ts                # Supabase client
+│   ├── pages/                          # ✅ Added post-MVP
+│   │   ├── Login.tsx                  # Login page
+│   │   └── Register.tsx               # Registration page
 │   ├── store/
 │   │   └── subscriptionStore.ts       # Zustand store
 │   ├── types/
@@ -61,16 +70,14 @@ suscriptio/
 │   ├── utils/
 │   │   ├── calculations.ts            # Spend calculations
 │   │   ├── dateUtils.ts               # Date manipulation
-│   │   ├── validation.ts              # Form validation
-│   │   └── storage.ts                 # localStorage helpers
+│   │   └── validation.ts              # Form validation
 │   ├── hooks/
 │   │   ├── useSubscriptions.ts        # Custom hook for store
-│   │   └── useAutoAdvanceDates.ts     # Auto-advance logic
+│   │   ├── useAutoAdvanceDates.ts     # Auto-advance logic
+│   │   └── useSupabaseSubscriptions.ts # ✅ Cloud sync
 │   ├── locales/
-│   │   ├── es/
-│   │   │   └── translation.json       # Spanish translations
-│   │   └── en/
-│   │       └── translation.json       # English (v2)
+│   │   └── es/
+│   │       └── translation.json       # Spanish translations
 │   ├── config/
 │   │   └── i18n.ts                    # i18n configuration
 │   ├── App.tsx                        # Root component
@@ -78,6 +85,7 @@ suscriptio/
 │   ├── index.css                      # Tailwind imports
 │   └── vite-env.d.ts                  # Vite types
 ├── docs/                               # Project documentation
+├── .env.local                          # Environment variables (not committed)
 ├── .gitignore
 ├── package.json
 ├── tsconfig.json
@@ -86,33 +94,41 @@ suscriptio/
 └── README.md
 ```
 
-## Component Hierarchy
+## Component Hierarchy (Actual Implementation)
 
 ```
 App
-├── AppLayout
-│   ├── Header
-│   │   └── Navigation links
-│   ├── MobileNav (mobile only)
-│   └── Router Outlet
-│       ├── Dashboard (/)
-│       │   ├── SpendOverview
-│       │   ├── UpcomingPayments
-│       │   │   └── SubscriptionCard (list)
-│       │   ├── CategoryBreakdown
-│       │   │   └── Recharts PieChart
-│       │   └── KeyMetrics
-│       └── SubscriptionList (/subscriptions)
-│           ├── Filters (status, sort)
-│           ├── SubscriptionCard (list)
-│           └── EmptyState (if no subscriptions)
+├── AuthProvider                        # ✅ Authentication context
+│   └── BrowserRouter
+│       ├── /login → Login
+│       ├── /register → Register
+│       └── ProtectedRoute              # ✅ Auth guard
+│           └── AppLayout
+│               ├── Header
+│               │   ├── Logo
+│               │   ├── Navigation links
+│               │   └── Logout button
+│               ├── MobileNav (mobile only)
+│               │   └── Bottom navigation bar
+│               └── Router Outlet
+│                   ├── Dashboard (/)
+│                   │   ├── SpendOverview
+│                   │   ├── UpcomingPayments
+│                   │   │   └── SubscriptionCard (list)
+│                   │   ├── CategoryBreakdown
+│                   │   │   └── Recharts BarChart
+│                   │   └── KeyMetrics
+│                   └── SubscriptionList (/subscriptions)
+│                       ├── Filters (status)
+│                       ├── SubscriptionCard (list)
+│                       └── EmptyState (if no subscriptions)
 ├── SubscriptionModal (global, controlled)
 │   └── SubscriptionForm
 │       ├── Input (name, cost, url)
 │       ├── Select (frequency, status, category)
-│       ├── DatePicker (next payment)
-│       └── Textarea (notes)
-└── ConfirmDialog (global, controlled)
+│       └── DatePicker (next payment)
+├── DeleteConfirmModal (confirmation dialog)
+└── MigrationModal                      # ✅ localStorage migration
 ```
 
 ## State Management (Zustand)
@@ -898,18 +914,27 @@ class ErrorBoundary extends Component<
 }
 ```
 
-## Next Steps
+## Implementation Status
 
-With architecture defined, proceed to **Phase 4: Implementation**
+All phases completed:
 
-1. Project setup (Vite + dependencies)
-2. Type definitions
-3. Store implementation
-4. UI components (bottom-up)
-5. Feature components
-6. Routing & layout
-7. PWA configuration
-8. i18n setup
-9. Build & deploy
+1. ✅ Project setup (Vite + dependencies)
+2. ✅ Type definitions
+3. ✅ Store implementation
+4. ✅ UI components
+5. ✅ Feature components
+6. ✅ Routing & layout
+7. ✅ PWA configuration
+8. ✅ i18n setup
+9. ✅ Backend integration (Supabase)
+10. ✅ Authentication system
 
-See [workflow/03-build.md](workflow/03-build.md) for implementation steps.
+## Next Steps (v2)
+
+1. Testing (Vitest + React Testing Library)
+2. Push notifications
+3. Password recovery
+4. Multi-currency support
+5. Additional billing frequencies
+
+See [backend-plan.md](backend-plan.md) for backend architecture details.

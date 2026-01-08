@@ -134,15 +134,15 @@ Success is primarily practical and personal, not adoption-based.
 
 ### Timeline
 
-**MVP target:** Today
+**MVP target:** Today ✅ **COMPLETADO**
 
 The MVP must be:
 
-- Small
-- Focused
-- Fully usable by the end of the day
+- Small ✅
+- Focused ✅
+- Fully usable by the end of the day ✅
 
-**Anything that delays reaching a usable MVP today is out of scope.**
+**Estado actual:** MVP completado. Backend con Supabase integrado como extension post-MVP.
 
 ### Budget
 
@@ -183,3 +183,26 @@ The following are **not included** in the MVP:
 - Complex permissions or role systems
 
 **The MVP is manual, personal, and focused by design.**
+
+## Achievements (Post-MVP)
+
+### MVP Goals - All Achieved ✅
+
+| Goal | Status |
+|------|--------|
+| See total monthly/yearly spend at a glance | ✅ Completado |
+| Subscription registry (CRUD) | ✅ Completado |
+| Next payments view | ✅ Completado |
+| Category breakdown | ✅ Completado |
+| PWA installable | ✅ Completado |
+| Spanish UI | ✅ Completado |
+| Dark mode | ✅ Completado (bonus) |
+
+### Extended Goals - Achieved ✅
+
+| Goal | Status |
+|------|--------|
+| User authentication | ✅ Completado |
+| Cloud backend (Supabase) | ✅ Completado |
+| Data sync across devices | ✅ Completado |
+| Migration from localStorage | ✅ Completado |

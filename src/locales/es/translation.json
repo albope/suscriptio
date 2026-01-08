@@ -10,7 +10,8 @@
   },
   "nav": {
     "dashboard": "Panel",
-    "subscriptions": "Suscripciones"
+    "subscriptions": "Suscripciones",
+    "settings": "Configuración"
   },
   "dashboard": {
     "title": "Panel de control",
@@ -21,7 +22,15 @@
     "activeSubscriptions": "Suscripciones activas",
     "mostExpensive": "Más cara",
     "next30Days": "Próximos 30 días",
-    "noUpcoming": "No hay pagos próximos en los próximos 30 días"
+    "noUpcoming": "No hay pagos próximos en los próximos 30 días",
+    "averageCost": "Coste promedio",
+    "perSubscription": "Por suscripción",
+    "monthly": "mensuales",
+    "yearly": "anuales",
+    "emptyTitle": "Aún no tienes suscripciones",
+    "emptySubtitle": "Comienza agregando tu primera suscripción para llevar un control de tus gastos recurrentes",
+    "emptyAction": "Agregar primera suscripción",
+    "emptyHint": "Controla tus gastos en un solo lugar"
   },
   "subscriptions": {
     "title": "Suscripciones",
@@ -100,5 +109,34 @@
     "message": "Encontramos {{count}} suscripciones guardadas localmente. ¿Deseas migrarlas a tu cuenta?",
     "migrate": "Migrar datos",
     "discard": "Descartar"
+  },
+  "toasts": {
+    "subscriptionCreated": "Suscripción creada correctamente",
+    "subscriptionUpdated": "Suscripción actualizada",
+    "subscriptionDeleted": "Suscripción eliminada",
+    "undo": "Deshacer",
+    "undoSuccess": "Suscripción restaurada",
+    "exportSuccess": "Backup descargado correctamente",
+    "exportEmpty": "No hay suscripciones para exportar",
+    "importSuccess": "{{count}} suscripciones importadas correctamente",
+    "importError": "Error al importar: archivo inválido",
+    "importReplaced": "Datos reemplazados correctamente",
+    "importAdded": "{{count}} suscripciones añadidas"
+  },
+  "settings": {
+    "title": "Configuración",
+    "dataSection": "Gestión de datos",
+    "dataDescription": "Exporta tus suscripciones como backup o importa datos desde un archivo",
+    "export": "Exportar backup",
+    "exportDescription": "Descarga todas tus suscripciones en formato JSON",
+    "import": "Importar datos",
+    "importDescription": "Restaura suscripciones desde un archivo de backup",
+    "importConfirmTitle": "Importar datos",
+    "importConfirmMessage": "¿Cómo deseas importar los datos?",
+    "importReplace": "Reemplazar todo",
+    "importReplaceDescription": "Elimina las suscripciones actuales y las reemplaza con las del archivo",
+    "importAdd": "Añadir a existentes",
+    "importAddDescription": "Mantiene las suscripciones actuales y añade las del archivo",
+    "subscriptionsCount": "{{count}} suscripciones en el archivo"
   }
 }

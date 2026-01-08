@@ -6,6 +6,7 @@ import { SpendOverview } from './SpendOverview';
 import { KeyMetrics } from './KeyMetrics';
 import { UpcomingPayments } from './UpcomingPayments';
 import { CategoryBreakdown } from './CategoryBreakdown';
+import { DashboardEmptyState } from './DashboardEmptyState';
 import { SubscriptionModal } from '@/components/subscriptions/SubscriptionModal';
 import { MigrationModal } from '@/components/auth/MigrationModal';
 import { Subscription } from '@/types';
@@ -20,6 +21,8 @@ export const Dashboard = () => {
     yearlySpend,
     categoryBreakdown,
     mostExpensive,
+    averageCost,
+    subscriptionsByFrequency,
     isLoading,
     migrateLocalToCloud,
     getLocalSubscriptions,
@@ -95,6 +98,30 @@ export const Dashboard = () => {
     setIsModalOpen(false);
     setSelectedSubscription(undefined);
   };
+
+  // Show empty state if no active subscriptions
+  if (activeSubscriptions.length === 0 && !isLoading) {
+    return (
+      <>
+        <DashboardEmptyState onAddSubscription={handleAddNew} />
+
+        <SubscriptionModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          subscription={selectedSubscription}
+        />
+
+        {/* Migration Modal */}
+        {showMigration && (
+          <MigrationModal
+            count={localDataCount}
+            onMigrate={handleMigrate}
+            onDiscard={handleDiscardMigration}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -177,7 +204,12 @@ export const Dashboard = () => {
       {/* KPI Cards - 2x2 Grid */}
       <div className="animate-slide-up animate-delay-100" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
         <SpendOverview monthlySpend={monthlySpend} yearlySpend={yearlySpend} />
-        <KeyMetrics activeCount={activeSubscriptions.length} mostExpensive={mostExpensive} />
+        <KeyMetrics
+          activeCount={activeSubscriptions.length}
+          mostExpensive={mostExpensive}
+          averageCost={averageCost}
+          subscriptionsByFrequency={subscriptionsByFrequency}
+        />
       </div>
 
       {/* Content Grid */}

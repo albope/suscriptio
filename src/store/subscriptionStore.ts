@@ -3,12 +3,17 @@ import { persist } from 'zustand/middleware';
 import { Subscription, BillingFrequency, SubscriptionStatus, CategoryBreakdown } from '@/types';
 import { addDays } from 'date-fns';
 
+// Undo state (outside store to avoid persistence)
+let lastDeletedSubscription: Subscription | null = null;
+let undoTimeout: ReturnType<typeof setTimeout> | null = null;
+
 interface SubscriptionStore {
   subscriptions: Subscription[];
   addSubscription: (subscription: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateSubscription: (id: string, updates: Partial<Subscription>) => void;
   deleteSubscription: (id: string) => void;
   permanentDelete: (id: string) => void;
+  undoDelete: () => boolean;
   getSubscriptionById: (id: string) => Subscription | undefined;
   getActiveSubscriptions: () => Subscription[];
   getCanceledSubscriptions: () => Subscription[];
@@ -17,11 +22,16 @@ interface SubscriptionStore {
   getYearlySpend: () => number;
   getCategoryBreakdown: () => CategoryBreakdown[];
   getMostExpensiveSubscription: () => Subscription | null;
+  getAverageCost: () => number;
+  getSubscriptionsByFrequency: () => { monthly: number; yearly: number };
   // Cloud sync methods
   setSubscriptions: (subscriptions: Subscription[]) => void;
   addSubscriptionFromCloud: (subscription: Subscription) => void;
   clearSubscriptions: () => void;
   getLocalSubscriptions: () => Subscription[];
+  // Import methods
+  replaceAllSubscriptions: (subscriptions: Subscription[]) => void;
+  addMultipleSubscriptions: (subscriptions: Subscription[]) => void;
 }
 
 export const useSubscriptionStore = create<SubscriptionStore>()(
@@ -54,9 +64,47 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
       },
 
       permanentDelete: (id) => {
+        const sub = get().subscriptions.find((s) => s.id === id);
+        if (sub) {
+          // Store for potential undo
+          lastDeletedSubscription = sub;
+
+          // Clear any existing timeout
+          if (undoTimeout) {
+            clearTimeout(undoTimeout);
+          }
+
+          // Auto-clear undo after 5 seconds
+          undoTimeout = setTimeout(() => {
+            lastDeletedSubscription = null;
+            undoTimeout = null;
+          }, 5000);
+        }
+
         set((state) => ({
-          subscriptions: state.subscriptions.filter((sub) => sub.id !== id),
+          subscriptions: state.subscriptions.filter((s) => s.id !== id),
         }));
+      },
+
+      undoDelete: () => {
+        if (lastDeletedSubscription) {
+          const subToRestore = lastDeletedSubscription;
+
+          // Clear undo state
+          if (undoTimeout) {
+            clearTimeout(undoTimeout);
+            undoTimeout = null;
+          }
+          lastDeletedSubscription = null;
+
+          // Restore the subscription
+          set((state) => ({
+            subscriptions: [...state.subscriptions, subToRestore],
+          }));
+
+          return true;
+        }
+        return false;
       },
 
       getSubscriptionById: (id) => {
@@ -144,6 +192,21 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         });
       },
 
+      getAverageCost: () => {
+        const active = get().getActiveSubscriptions();
+        if (active.length === 0) return 0;
+
+        const totalMonthly = get().getMonthlySpend();
+        return totalMonthly / active.length;
+      },
+
+      getSubscriptionsByFrequency: () => {
+        const active = get().getActiveSubscriptions();
+        const monthly = active.filter((sub) => sub.billingFrequency === BillingFrequency.MONTHLY).length;
+        const yearly = active.filter((sub) => sub.billingFrequency === BillingFrequency.YEARLY).length;
+        return { monthly, yearly };
+      },
+
       // Cloud sync methods
       setSubscriptions: (subscriptions) => {
         set({ subscriptions });
@@ -161,6 +224,22 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
 
       getLocalSubscriptions: () => {
         return get().subscriptions;
+      },
+
+      // Import methods
+      replaceAllSubscriptions: (subscriptions) => {
+        set({ subscriptions });
+      },
+
+      addMultipleSubscriptions: (newSubscriptions) => {
+        set((state) => {
+          // Filter out duplicates by ID
+          const existingIds = new Set(state.subscriptions.map((s) => s.id));
+          const uniqueNew = newSubscriptions.filter((s) => !existingIds.has(s.id));
+          return {
+            subscriptions: [...state.subscriptions, ...uniqueNew],
+          };
+        });
       },
     }),
     {

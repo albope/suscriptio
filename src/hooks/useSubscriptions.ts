@@ -22,6 +22,8 @@ export const useSubscriptions = () => {
     yearlySpend: store.getYearlySpend(),
     categoryBreakdown: store.getCategoryBreakdown(),
     mostExpensive: store.getMostExpensiveSubscription(),
+    averageCost: store.getAverageCost(),
+    subscriptionsByFrequency: store.getSubscriptionsByFrequency(),
     addSubscription,
     updateSubscription,
     deleteSubscription,

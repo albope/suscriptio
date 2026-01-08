@@ -6,23 +6,27 @@
 
 **Target:** Personal subscription tracking and financial awareness
 
-**Timeline:** MVP today
+**Timeline:** MVP today ✅ **COMPLETADO**
 
 **Platform:** Progressive Web App (PWA)
 
 **Primary Language:** Spanish (English in v2)
 
+**Current Status:** MVP + Backend integration complete
+
 ## Technical Stack
 
 ### Core Technologies
 
-- **Frontend Framework:** React 18+ with TypeScript
-- **Build Tool:** Vite
-- **Styling:** Tailwind CSS
-- **State Management:** Zustand with localStorage persistence
+- **Frontend Framework:** React 19 with TypeScript
+- **Build Tool:** Vite 7
+- **Styling:** Tailwind CSS 4
+- **State Management:** Zustand with localStorage persistence + Supabase sync
 - **Charting:** Recharts (for category breakdown visualization)
 - **Internationalization:** react-i18next with JSON translation files
 - **PWA:** Installable from day one, minimal offline support
+- **Backend:** Supabase (PostgreSQL + Auth) ✅ *Added post-MVP*
+- **Authentication:** Supabase Auth (email/password) ✅ *Added post-MVP*
 
 ### Rationale
 
@@ -524,14 +528,14 @@ The following are explicitly **NOT** in MVP:
 - Native mobile apps (iOS/Android)
 - Complex permissions or role systems
 - Push notifications
-- Backend/database (localStorage only)
-- Authentication
+- ~~Backend/database (localStorage only)~~ ✅ *Implemented with Supabase*
+- ~~Authentication~~ ✅ *Implemented with Supabase Auth*
 - Multi-currency support (EUR only)
 - Custom billing frequencies (weekly, quarterly, custom)
 - Payment history tracking
 - Email reminders
 - Export/import functionality
-- Dark mode (can be quick-win if time permits)
+- ~~Dark mode (can be quick-win if time permits)~~ ✅ *Implemented*
 
 ## Success Metrics (Reiteration)
 
@@ -549,8 +553,20 @@ The following are explicitly **NOT** in MVP:
 
 See [architecture.md](architecture.md) for technical architecture and implementation plan.
 
-## Next Steps
+## Implementation Status
 
-1. **Phase 3:** Architecture design (component structure, state management, data flow)
-2. **Phase 4:** Implementation (setup, build, deploy)
-3. **Phase 5:** Testing and refinement
+### Completed Phases
+
+1. **Phase 1:** Planning ✅
+2. **Phase 2:** Specification ✅
+3. **Phase 3:** Architecture design ✅
+4. **Phase 4:** MVP Implementation ✅
+5. **Phase 5:** Backend Integration (Supabase) ✅
+
+### Next Steps (v2)
+
+1. Testing (Vitest + React Testing Library)
+2. Push notifications for reminders
+3. Password recovery flow
+4. Multi-currency support
+5. Additional billing frequencies

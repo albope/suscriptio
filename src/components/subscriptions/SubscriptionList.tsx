@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
 import { SubscriptionCard } from './SubscriptionCard';
@@ -21,7 +22,7 @@ const sortOptions: { value: SortOption; label: string }[] = [
 
 export const SubscriptionList = () => {
   const { t } = useTranslation();
-  const { subscriptions } = useSubscriptionStore();
+  const { subscriptions, undoDelete } = useSubscriptionStore();
   const { permanentDelete } = useSubscriptions();
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled'>('active');
   const [searchQuery, setSearchQuery] = useState('');
@@ -103,6 +104,20 @@ export const SubscriptionList = () => {
     setIsDeleting(false);
     setIsDeleteModalOpen(false);
     setSubscriptionToDelete(null);
+
+    // Show toast with undo option
+    toast.success(t('toasts.subscriptionDeleted'), {
+      action: {
+        label: t('toasts.undo'),
+        onClick: () => {
+          const restored = undoDelete();
+          if (restored) {
+            toast.success(t('toasts.undoSuccess'));
+          }
+        },
+      },
+      duration: 5000,
+    });
   };
 
   const handleCancelDelete = () => {
