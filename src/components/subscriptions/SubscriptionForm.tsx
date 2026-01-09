@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { BillingFrequency, SubscriptionStatus, Category, Subscription } from '@/types';
+import { CURRENCIES, DEFAULT_CURRENCY } from '@/constants/currencies';
 
 interface SubscriptionFormProps {
   initialData?: Subscription;
@@ -17,6 +18,7 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
     cost: initialData?.cost?.toString() || '',
+    currency: initialData?.currency || DEFAULT_CURRENCY,
     billingFrequency: initialData?.billingFrequency || BillingFrequency.MONTHLY,
     nextPaymentDate: initialData?.nextPaymentDate
       ? new Date(initialData.nextPaymentDate).toISOString().split('T')[0]
@@ -37,7 +39,6 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       category: formData.category || undefined,
       notes: formData.notes || undefined,
       providerUrl: formData.providerUrl || undefined,
-      currency: 'EUR',
     };
 
     onSubmit(data);
@@ -54,16 +55,30 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
         maxLength={60}
       />
 
-      <Input
-        label={t('subscriptions.fields.cost')}
-        type="number"
-        step="0.01"
-        min="0.01"
-        max="9999"
-        value={formData.cost}
-        onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-        required
-      />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'end' }}>
+        <Input
+          label={t('subscriptions.fields.cost')}
+          type="number"
+          step="0.01"
+          min="0.01"
+          max="9999"
+          value={formData.cost}
+          onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
+          required
+        />
+        <Select
+          label={t('subscriptions.fields.currency')}
+          value={formData.currency}
+          onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+          required
+        >
+          {CURRENCIES.map((currency) => (
+            <option key={currency.code} value={currency.code}>
+              {currency.symbol} {currency.code}
+            </option>
+          ))}
+        </Select>
+      </div>
 
       <Select
         label={t('subscriptions.fields.billingFrequency')}

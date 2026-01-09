@@ -347,6 +347,26 @@ body {
 }
 
 /* ============================================
+   SELECT / DROPDOWN STYLES (Dark Mode Fix)
+   ============================================ */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #111111;
+  color: #ededed;
+  padding: 8px 12px;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: #1a1a1a;
+  color: #00d4ff;
+}
+
+/* ============================================
    SCROLLBAR
    ============================================ */
 ::-webkit-scrollbar {

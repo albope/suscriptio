@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { CategoryBreakdown as CategoryData } from '@/types';
+import { formatCurrency } from '@/utils/calculations';
 
 interface CategoryBreakdownProps {
   data: CategoryData[];
@@ -139,10 +140,49 @@ export const CategoryBreakdown = ({ data }: CategoryBreakdownProps) => {
     );
   }
 
+  // Use count for the pie chart (universal across currencies)
   const chartData = data.map((item) => ({
     name: t(`subscriptions.categories.${item.category}`),
-    value: parseFloat(item.total.toFixed(2)),
+    value: item.count,
+    category: item.category,
+    totalsByCurrency: item.totalsByCurrency,
   }));
+
+  // Custom tooltip to show currency breakdown
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: typeof chartData[0] }> }) => {
+    if (!active || !payload || !payload.length) return null;
+
+    const item = payload[0].payload;
+    const hasMultipleCurrencies = item.totalsByCurrency.length > 1;
+
+    return (
+      <div style={{
+        backgroundColor: 'rgba(10, 10, 10, 0.95)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '12px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
+        backdropFilter: 'blur(10px)',
+        padding: '12px 16px',
+        minWidth: '140px',
+      }}>
+        <p style={{ color: '#ededed', fontWeight: 600, marginBottom: '8px' }}>
+          {item.name}
+        </p>
+        <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '13px', marginBottom: hasMultipleCurrencies ? '8px' : 0 }}>
+          {item.value} {item.value === 1 ? t('dashboard.subscription') : t('dashboard.subscriptions')}
+        </p>
+        {item.totalsByCurrency.length > 0 && (
+          <div style={{ borderTop: hasMultipleCurrencies ? '1px solid rgba(255, 255, 255, 0.1)' : 'none', paddingTop: hasMultipleCurrencies ? '8px' : 0 }}>
+            {item.totalsByCurrency.map((curr) => (
+              <p key={curr.currency} style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '13px' }}>
+                {formatCurrency(curr.amount, curr.currency)}/mes
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div
@@ -221,20 +261,7 @@ export const CategoryBreakdown = ({ data }: CategoryBreakdownProps) => {
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip
-            formatter={(value) => `€${value}`}
-            contentStyle={{
-              backgroundColor: 'rgba(10, 10, 10, 0.95)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '12px',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
-              backdropFilter: 'blur(10px)',
-              color: '#ededed',
-              padding: '12px 16px',
-            }}
-            labelStyle={{ color: '#ededed', fontWeight: 600, marginBottom: '4px' }}
-            itemStyle={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '13px' }}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Legend
             wrapperStyle={{
               paddingTop: '20px',

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Subscription, BillingFrequency, SubscriptionStatus, CategoryBreakdown } from '@/types';
 import { addDays } from 'date-fns';
+import { DEFAULT_CURRENCY } from '@/constants/currencies';
 
 // Undo state (outside store to avoid persistence)
 let lastDeletedSubscription: Subscription | null = null;
@@ -158,23 +159,29 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
       },
 
       getCategoryBreakdown: () => {
-        const breakdown = new Map<string, { total: number; count: number }>();
+        const breakdown = new Map<string, { totalsByCurrency: Map<string, number>; count: number }>();
 
         get().getActiveSubscriptions().forEach((sub) => {
           const category = sub.category || 'other';
+          const currency = sub.currency || 'EUR';
           const monthlyCost =
             sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
 
-          const existing = breakdown.get(category) || { total: 0, count: 0 };
-          breakdown.set(category, {
-            total: existing.total + monthlyCost,
-            count: existing.count + 1,
-          });
+          const existing = breakdown.get(category) || { totalsByCurrency: new Map(), count: 0 };
+          const currentTotal = existing.totalsByCurrency.get(currency) || 0;
+          existing.totalsByCurrency.set(currency, currentTotal + monthlyCost);
+          existing.count += 1;
+          breakdown.set(category, existing);
         });
 
         return Array.from(breakdown.entries()).map(([category, data]) => ({
           category,
-          ...data,
+          count: data.count,
+          total: 0, // Deprecated, kept for compatibility
+          totalsByCurrency: Array.from(data.totalsByCurrency.entries()).map(([currency, amount]) => ({
+            currency,
+            amount,
+          })),
         }));
       },
 
@@ -244,6 +251,24 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
     }),
     {
       name: 'subscriptions-storage',
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as { subscriptions: Subscription[] };
+
+        // Migration from version 0 to 1: Add currency field
+        if (version === 0) {
+          console.log('[Migration] Migrating subscriptions to version 1: adding currency field');
+          return {
+            ...state,
+            subscriptions: state.subscriptions.map((sub) => ({
+              ...sub,
+              currency: sub.currency || DEFAULT_CURRENCY,
+            })),
+          };
+        }
+
+        return state;
+      },
     }
   )
 );

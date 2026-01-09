@@ -36,8 +36,14 @@ export interface Subscription {
   updatedAt: Date;
 }
 
+export interface CurrencyAmount {
+  currency: string;
+  amount: number;
+}
+
 export interface CategoryBreakdown {
   category: string;
   total: number;
   count: number;
+  totalsByCurrency: CurrencyAmount[];
 }

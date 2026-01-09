@@ -7,6 +7,7 @@ interface KeyMetricsProps {
   mostExpensive: Subscription | null;
   averageCost: number;
   subscriptionsByFrequency: { monthly: number; yearly: number };
+  preferredCurrency: string;
 }
 
 // Shared card styles for consistency with SpendOverview
@@ -54,14 +55,14 @@ const cardHoverStyle = `
   }
 `;
 
-export const KeyMetrics = ({ activeCount, mostExpensive, averageCost, subscriptionsByFrequency }: KeyMetricsProps) => {
+export const KeyMetrics = ({ activeCount, mostExpensive, averageCost, subscriptionsByFrequency, preferredCurrency }: KeyMetricsProps) => {
   const { t } = useTranslation();
 
   const mostExpensiveCost = mostExpensive
     ? mostExpensive.billingFrequency === BillingFrequency.MONTHLY
-      ? formatCurrency(mostExpensive.cost, '€')
-      : formatCurrency(mostExpensive.cost / 12, '€')
-    : '€0.00';
+      ? formatCurrency(mostExpensive.cost, mostExpensive.currency || preferredCurrency)
+      : formatCurrency(mostExpensive.cost / 12, mostExpensive.currency || preferredCurrency)
+    : formatCurrency(0, preferredCurrency);
 
   return (
     <>
@@ -162,7 +163,7 @@ export const KeyMetrics = ({ activeCount, mostExpensive, averageCost, subscripti
               letterSpacing: '-0.02em',
               lineHeight: 1,
             }}>
-              {formatCurrency(averageCost, '€')}
+              {formatCurrency(averageCost, preferredCurrency)}
             </h3>
             <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.4)' }}>
               {t('dashboard.perSubscription')}

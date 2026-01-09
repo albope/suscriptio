@@ -56,7 +56,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
           {/* Price + Frequency */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
             <span style={{ fontSize: '16px', fontWeight: 700, color: '#00d4ff' }}>
-              {formatCurrency(subscription.cost, '€')}
+              {formatCurrency(subscription.cost, subscription.currency)}
             </span>
             <span style={{ fontSize: '12px', color: '#555555' }}>·</span>
             <span style={{ fontSize: '12px', color: '#888888' }}>

@@ -18,12 +18,12 @@ export const Dashboard = () => {
     subscriptions,
     activeSubscriptions,
     upcomingPayments,
-    monthlySpend,
-    yearlySpend,
     categoryBreakdown,
     mostExpensive,
     averageCost,
     subscriptionsByFrequency,
+    preferredCurrency,
+    spendByCurrency,
     isLoading,
     migrateLocalToCloud,
     getLocalSubscriptions,
@@ -205,12 +205,15 @@ export const Dashboard = () => {
 
           {/* KPI Cards - 2x2 Grid */}
           <div className="animate-slide-up animate-delay-100" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            <SpendOverview monthlySpend={monthlySpend} yearlySpend={yearlySpend} />
+            <SpendOverview
+              spendByCurrency={spendByCurrency}
+            />
             <KeyMetrics
               activeCount={activeSubscriptions.length}
               mostExpensive={mostExpensive}
               averageCost={averageCost}
               subscriptionsByFrequency={subscriptionsByFrequency}
+              preferredCurrency={preferredCurrency}
             />
           </div>
 

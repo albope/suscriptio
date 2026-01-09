@@ -2,14 +2,18 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { useSettingsStore } from '@/store/settingsStore';
 import { exportToJson, importFromJson } from '@/utils/exportImport';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
+import { Select } from '@/components/ui/Select';
+import { CURRENCIES } from '@/constants/currencies';
 import type { Subscription } from '@/types';
 
 export const Settings = () => {
   const { t } = useTranslation();
   const { subscriptions, replaceAllSubscriptions, addMultipleSubscriptions } = useSubscriptionStore();
+  const { preferredCurrency, setPreferredCurrency } = useSettingsStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
@@ -81,6 +85,76 @@ export const Settings = () => {
       >
         {t('settings.title')}
       </h1>
+
+      {/* Preferences Section */}
+      <section
+        style={{
+          background: 'rgba(17, 17, 17, 0.6)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          borderRadius: '16px',
+          padding: '24px',
+          marginBottom: '24px',
+        }}
+      >
+        <h2
+          style={{
+            fontSize: '18px',
+            fontWeight: 600,
+            color: '#ededed',
+            marginBottom: '8px',
+          }}
+        >
+          {t('settings.preferencesSection')}
+        </h2>
+        <p
+          style={{
+            fontSize: '14px',
+            color: '#666666',
+            marginBottom: '24px',
+          }}
+        >
+          {t('settings.preferencesDescription')}
+        </p>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px',
+            background: 'rgba(0, 0, 0, 0.3)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.04)',
+          }}
+        >
+          <div>
+            <h3
+              style={{
+                fontSize: '15px',
+                fontWeight: 600,
+                color: '#ededed',
+                marginBottom: '4px',
+              }}
+            >
+              {t('settings.preferredCurrency')}
+            </h3>
+            <p style={{ fontSize: '13px', color: '#666666' }}>
+              {t('settings.preferredCurrencyDescription')}
+            </p>
+          </div>
+          <Select
+            value={preferredCurrency}
+            onChange={(e) => setPreferredCurrency(e.target.value)}
+            style={{ minWidth: '140px' }}
+          >
+            {CURRENCIES.map((currency) => (
+              <option key={currency.code} value={currency.code}>
+                {currency.symbol} {currency.code}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </section>
 
       {/* Data Management Section */}
       <section

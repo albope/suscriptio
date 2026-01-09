@@ -30,7 +30,11 @@
     "emptyTitle": "Aún no tienes suscripciones",
     "emptySubtitle": "Comienza agregando tu primera suscripción para llevar un control de tus gastos recurrentes",
     "emptyAction": "Agregar primera suscripción",
-    "emptyHint": "Controla tus gastos en un solo lugar"
+    "emptyHint": "Controla tus gastos en un solo lugar",
+    "monthlySpendSubtitle": "Gasto mensual actual",
+    "yearlySpendSubtitle": "Proyección anual total",
+    "subscription": "suscripción",
+    "subscriptions": "suscripciones"
   },
   "subscriptions": {
     "title": "Suscripciones",
@@ -49,6 +53,7 @@
     "fields": {
       "name": "Nombre",
       "cost": "Coste",
+      "currency": "Moneda",
       "billingFrequency": "Frecuencia de pago",
       "nextPaymentDate": "Próxima fecha de pago",
       "status": "Estado",
@@ -125,6 +130,10 @@
   },
   "settings": {
     "title": "Configuración",
+    "preferencesSection": "Preferencias",
+    "preferencesDescription": "Personaliza cómo se muestran los datos en la aplicación",
+    "preferredCurrency": "Moneda preferida",
+    "preferredCurrencyDescription": "Los totales del dashboard se mostrarán en esta moneda",
     "dataSection": "Gestión de datos",
     "dataDescription": "Exporta tus suscripciones como backup o importa datos desde un archivo",
     "export": "Exportar backup",
