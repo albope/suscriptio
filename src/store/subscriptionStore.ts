@@ -25,6 +25,7 @@ interface SubscriptionStore {
   getMostExpensiveSubscription: () => Subscription | null;
   getAverageCost: () => number;
   getSubscriptionsByFrequency: () => { monthly: number; yearly: number };
+  getAllTags: () => string[];
   // Cloud sync methods
   setSubscriptions: (subscriptions: Subscription[]) => void;
   addSubscriptionFromCloud: (subscription: Subscription) => void;
@@ -214,6 +215,16 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         return { monthly, yearly };
       },
 
+      getAllTags: () => {
+        const tagSet = new Set<string>();
+        get().subscriptions.forEach((sub) => {
+          sub.tags?.forEach((tag) => {
+            if (tag.trim()) tagSet.add(tag.trim());
+          });
+        });
+        return Array.from(tagSet).sort();
+      },
+
       // Cloud sync methods
       setSubscriptions: (subscriptions) => {
         set({ subscriptions });
@@ -251,20 +262,26 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
     }),
     {
       name: 'subscriptions-storage',
-      version: 1,
+      version: 2,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as { subscriptions: Subscription[] };
 
         // Migration from version 0 to 1: Add currency field
         if (version === 0) {
           console.log('[Migration] Migrating subscriptions to version 1: adding currency field');
-          return {
-            ...state,
-            subscriptions: state.subscriptions.map((sub) => ({
-              ...sub,
-              currency: sub.currency || DEFAULT_CURRENCY,
-            })),
-          };
+          state.subscriptions = state.subscriptions.map((sub) => ({
+            ...sub,
+            currency: sub.currency || DEFAULT_CURRENCY,
+          }));
+        }
+
+        // Migration from version 1 to 2: Add tags field
+        if (version < 2) {
+          console.log('[Migration] Migrating subscriptions to version 2: adding tags field');
+          state.subscriptions = state.subscriptions.map((sub) => ({
+            ...sub,
+            tags: sub.tags || [],
+          }));
         }
 
         return state;

@@ -58,6 +58,7 @@
       "nextPaymentDate": "Próxima fecha de pago",
       "status": "Estado",
       "category": "Categoría",
+      "tags": "Etiquetas",
       "notes": "Notas",
       "providerUrl": "URL del proveedor"
     },
@@ -147,5 +148,46 @@
     "importAdd": "Añadir a existentes",
     "importAddDescription": "Mantiene las suscripciones actuales y añade las del archivo",
     "subscriptionsCount": "{{count}} suscripciones en el archivo"
+  },
+  "filters": {
+    "advanced": "Filtros avanzados",
+    "categories": "Categorías",
+    "tags": "Etiquetas",
+    "priceRange": "Rango de precio",
+    "dateRange": "Rango de fechas",
+    "minPrice": "Mín",
+    "maxPrice": "Máx",
+    "dateFrom": "Desde",
+    "dateTo": "Hasta",
+    "clearAll": "Limpiar filtros",
+    "activeFilters": "{{count}} filtro activo",
+    "activeFilters_other": "{{count}} filtros activos",
+    "noCategory": "Sin categoría",
+    "noResults": "No se encontraron suscripciones con estos filtros",
+    "noResultsHint": "Intenta ajustar los criterios de búsqueda",
+    "presets": {
+      "next7days": "Próximos 7 días",
+      "next30days": "Próximos 30 días",
+      "thisMonth": "Este mes",
+      "next3months": "Próximos 3 meses"
+    }
+  },
+  "tags": {
+    "placeholder": "Escribe y presiona Enter para agregar etiquetas",
+    "hint": "Presiona Enter o usa coma (,) para agregar. Backspace para eliminar.",
+    "moreCount": "+{{count}} más"
+  },
+  "timeline": {
+    "title": "Línea de tiempo",
+    "subtitle": "Próximos {{days}} días",
+    "noPayments": "No hay pagos programados en este periodo"
+  },
+  "calendar": {
+    "title": "Calendario",
+    "subtitle": "Vista mensual de pagos"
+  },
+  "view": {
+    "timeline": "Timeline",
+    "calendar": "Calendario"
   }
 }

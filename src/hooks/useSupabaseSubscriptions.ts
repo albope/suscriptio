@@ -15,6 +15,7 @@ interface DbSubscription {
   next_payment_date: string;
   status: string;
   category: string | null;
+  tags: string[] | null;
   notes: string | null;
   provider_url: string | null;
   created_at: string;
@@ -31,6 +32,7 @@ const fromDb = (row: DbSubscription): Subscription => ({
   nextPaymentDate: new Date(row.next_payment_date),
   status: row.status as SubscriptionStatus,
   category: row.category as Category | undefined,
+  tags: row.tags || undefined,
   notes: row.notes || undefined,
   providerUrl: row.provider_url || undefined,
   createdAt: new Date(row.created_at),
@@ -49,6 +51,7 @@ const toDb = (sub: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>, userId:
     : sub.nextPaymentDate,
   status: sub.status,
   category: sub.category || null,
+  tags: sub.tags || null,
   notes: sub.notes || null,
   provider_url: sub.providerUrl || null,
 });
@@ -139,6 +142,7 @@ export const useSupabaseSubscriptions = () => {
     }
     if (updates.status !== undefined) dbUpdates.status = updates.status;
     if (updates.category !== undefined) dbUpdates.category = updates.category || null;
+    if (updates.tags !== undefined) dbUpdates.tags = updates.tags || null;
     if (updates.notes !== undefined) dbUpdates.notes = updates.notes || null;
     if (updates.providerUrl !== undefined) dbUpdates.provider_url = updates.providerUrl || null;
 
@@ -204,6 +208,7 @@ export const useSupabaseSubscriptions = () => {
         : String(sub.nextPaymentDate).split('T')[0],
       status: sub.status,
       category: sub.category || null,
+      tags: sub.tags || null,
       notes: sub.notes || null,
       provider_url: sub.providerUrl || null,
     }));

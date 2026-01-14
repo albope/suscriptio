@@ -29,6 +29,7 @@ export interface Subscription {
   nextPaymentDate: Date;
   status: SubscriptionStatus;
   category?: Category;
+  tags?: string[];
   notes?: string;
   providerUrl?: string;
   reminderDaysBefore?: number;

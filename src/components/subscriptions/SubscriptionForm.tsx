@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { TagInput } from '@/components/ui/TagInput';
+import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { BillingFrequency, SubscriptionStatus, Category, Subscription } from '@/types';
 import { CURRENCIES, DEFAULT_CURRENCY } from '@/constants/currencies';
 
@@ -14,6 +16,7 @@ interface SubscriptionFormProps {
 
 export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: SubscriptionFormProps) => {
   const { t } = useTranslation();
+  const { getAllTags } = useSubscriptionStore();
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -25,6 +28,7 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       : new Date().toISOString().split('T')[0],
     status: initialData?.status || SubscriptionStatus.ACTIVE,
     category: initialData?.category || '',
+    tags: initialData?.tags || [],
     notes: initialData?.notes || '',
     providerUrl: initialData?.providerUrl || '',
   });
@@ -37,6 +41,7 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       cost: parseFloat(formData.cost),
       nextPaymentDate: new Date(formData.nextPaymentDate),
       category: formData.category || undefined,
+      tags: formData.tags.length > 0 ? formData.tags : undefined,
       notes: formData.notes || undefined,
       providerUrl: formData.providerUrl || undefined,
     };
@@ -120,6 +125,22 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
           </option>
         ))}
       </Select>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <label style={{
+          fontSize: '13px',
+          fontWeight: 500,
+          color: '#888888',
+        }}>
+          {t('subscriptions.fields.tags')}
+        </label>
+        <TagInput
+          tags={formData.tags}
+          onChange={(tags) => setFormData({ ...formData, tags })}
+          suggestions={getAllTags()}
+          placeholder={t('tags.placeholder')}
+        />
+      </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <label style={{

@@ -1,14 +1,18 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
+import { useSettingsStore } from '@/store/settingsStore';
+import { useFilterPreferences } from '@/hooks/useFilterPreferences';
+import { applyAllFilters } from '@/utils/filterUtils';
 import { SubscriptionCard } from './SubscriptionCard';
 import { SubscriptionModal } from './SubscriptionModal';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { EmptyState } from './EmptyState';
+import { FilterBar } from './FilterBar';
 import { Button } from '@/components/ui/Button';
-import { Subscription, SubscriptionStatus } from '@/types';
+import { Subscription, SubscriptionStatus, Category } from '@/types';
 
 type SortOption = 'date-asc' | 'date-desc' | 'price-asc' | 'price-desc' | 'name-asc';
 
@@ -22,11 +26,13 @@ const sortOptions: { value: SortOption; label: string }[] = [
 
 export const SubscriptionList = () => {
   const { t } = useTranslation();
-  const { subscriptions, undoDelete } = useSubscriptionStore();
+  const { subscriptions, undoDelete, getAllTags } = useSubscriptionStore();
   const { permanentDelete } = useSubscriptions();
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled'>('active');
+  const { preferredCurrency } = useSettingsStore();
+  const { preferences, updatePreferences, resetPreferences } = useFilterPreferences();
+
+  // Local state for UI
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('date-asc');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | undefined>();
 
@@ -35,24 +41,56 @@ export const SubscriptionList = () => {
   const [subscriptionToDelete, setSubscriptionToDelete] = useState<Subscription | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Filtrar por búsqueda
-  const searchedSubscriptions = useMemo(() => {
-    if (!searchQuery.trim()) return subscriptions;
-    const query = searchQuery.toLowerCase();
-    return subscriptions.filter(sub =>
-      sub.name.toLowerCase().includes(query)
-    );
-  }, [subscriptions, searchQuery]);
+  // Initialize from preferences
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled'>(preferences.statusFilter);
+  const [sortBy, setSortBy] = useState<SortOption>(preferences.sortBy);
+  const [categoryFilters, setCategoryFilters] = useState<(Category | 'no-category')[]>(
+    preferences.categoryFilters as (Category | 'no-category')[]
+  );
+  const [tagFilters, setTagFilters] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState(preferences.priceRange);
+  const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({
+    from: preferences.dateRange.from ? new Date(preferences.dateRange.from) : null,
+    to: preferences.dateRange.to ? new Date(preferences.dateRange.to) : null,
+  });
 
-  // Filtrar por estado
-  const filteredSubscriptions = useMemo(() => {
-    return searchedSubscriptions.filter((sub) => {
-      if (statusFilter === 'all') return true;
-      if (statusFilter === 'active') return sub.status === SubscriptionStatus.ACTIVE;
-      if (statusFilter === 'canceled') return sub.status === SubscriptionStatus.CANCELED;
-      return true;
+  // Sync state changes to preferences
+  useEffect(() => {
+    updatePreferences({
+      statusFilter,
+      sortBy,
+      categoryFilters: categoryFilters as Category[],
+      priceRange,
+      dateRange: {
+        from: dateRange.from ? dateRange.from.toISOString().split('T')[0] : null,
+        to: dateRange.to ? dateRange.to.toISOString().split('T')[0] : null,
+      },
     });
-  }, [searchedSubscriptions, statusFilter]);
+  }, [statusFilter, sortBy, categoryFilters, priceRange, dateRange, updatePreferences]);
+
+  // Calculate active filters count (for FilterBar badge)
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (categoryFilters.length > 0) count++;
+    if (tagFilters.length > 0) count++;
+    if (priceRange.min !== null || priceRange.max !== null) count++;
+    if (dateRange.from !== null || dateRange.to !== null) count++;
+    if (searchQuery.trim()) count++;
+    return count;
+  }, [categoryFilters, tagFilters, priceRange, dateRange, searchQuery]);
+
+  // Apply all filters using utility function
+  const filteredSubscriptions = useMemo(() => {
+    return applyAllFilters(subscriptions, {
+      search: searchQuery,
+      status: statusFilter,
+      categories: categoryFilters,
+      tags: tagFilters,
+      priceRange,
+      dateRange,
+      currency: preferredCurrency,
+    });
+  }, [subscriptions, searchQuery, statusFilter, categoryFilters, tagFilters, priceRange, dateRange, preferredCurrency]);
 
   // Ordenar
   const sortedSubscriptions = useMemo(() => {
@@ -123,6 +161,18 @@ export const SubscriptionList = () => {
   const handleCancelDelete = () => {
     setIsDeleteModalOpen(false);
     setSubscriptionToDelete(null);
+  };
+
+  // Reset all filters
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setCategoryFilters([]);
+    setTagFilters([]);
+    setPriceRange({ min: null, max: null });
+    setDateRange({ from: null, to: null });
+    setStatusFilter('active');
+    setSortBy('date-asc');
+    resetPreferences();
   };
 
   const getFilterButtonStyle = (isActive: boolean): React.CSSProperties => ({
@@ -266,7 +316,7 @@ export const SubscriptionList = () => {
         </div>
       </div>
 
-      {/* Filter */}
+      {/* Status Filter */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
         <button
           onClick={() => setStatusFilter('active')}
@@ -288,9 +338,93 @@ export const SubscriptionList = () => {
         </button>
       </div>
 
+      {/* Advanced Filters */}
+      <FilterBar
+        categories={categoryFilters}
+        onCategoryChange={setCategoryFilters}
+        tags={tagFilters}
+        onTagsChange={setTagFilters}
+        availableTags={getAllTags()}
+        priceRange={priceRange}
+        onPriceRangeChange={setPriceRange}
+        dateRange={{
+          from: dateRange.from ? dateRange.from.toISOString().split('T')[0] : null,
+          to: dateRange.to ? dateRange.to.toISOString().split('T')[0] : null,
+        }}
+        onDateRangeChange={(range) =>
+          setDateRange({
+            from: range.from ? new Date(range.from) : null,
+            to: range.to ? new Date(range.to) : null,
+          })
+        }
+        currency={preferredCurrency}
+        onReset={handleResetFilters}
+        activeFiltersCount={activeFiltersCount}
+      />
+
       {/* Subscriptions Grid */}
       {sortedSubscriptions.length === 0 ? (
-        <EmptyState filter={statusFilter} />
+        activeFiltersCount > 0 ? (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '60px 20px',
+            textAlign: 'center',
+            background: 'rgba(17, 17, 17, 0.4)',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: '16px',
+          }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '20px',
+            }}>
+              <svg style={{ width: '32px', height: '32px', color: '#666666' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#ededed',
+              marginBottom: '8px',
+            }}>
+              {t('filters.noResults')}
+            </h3>
+            <p style={{
+              fontSize: '14px',
+              color: '#666666',
+              marginBottom: '24px',
+            }}>
+              {t('filters.noResultsHint')}
+            </p>
+            <button
+              onClick={handleResetFilters}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '10px',
+                fontSize: '14px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#ededed',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {t('filters.clearAll')}
+            </button>
+          </div>
+        ) : (
+          <EmptyState filter={statusFilter} />
+        )
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {sortedSubscriptions.map((sub) => (
