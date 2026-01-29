@@ -174,6 +174,31 @@ export const useSubscriptions = () => {
     return { monthly, yearly };
   }, [activeSubscriptions]);
 
+  // Top 3 categories by monthly spend (in preferred currency)
+  const topCategories = useMemo(() => {
+    // Calculate totals per category considering only preferred currency
+    const categoryTotals = new Map<string, number>();
+
+    activeInPreferredCurrency.forEach((sub: Subscription) => {
+      const category = sub.category || 'other';
+      const monthlyCost =
+        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const existing = categoryTotals.get(category) || 0;
+      categoryTotals.set(category, existing + monthlyCost);
+    });
+
+    // Convert to array, calculate percentage and sort by total descending
+    const totalMonthly = monthlySpend || 1; // Avoid division by zero
+    return Array.from(categoryTotals.entries())
+      .map(([category, total]) => ({
+        category,
+        total,
+        percentage: (total / totalMonthly) * 100,
+      }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 3);
+  }, [activeInPreferredCurrency, monthlySpend]);
+
   return {
     subscriptions,
     activeSubscriptions,
@@ -184,6 +209,7 @@ export const useSubscriptions = () => {
     mostExpensive,
     averageCost,
     subscriptionsByFrequency,
+    topCategories,
     // Multi-currency info
     preferredCurrency,
     spendByCurrency,

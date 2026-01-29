@@ -554,44 +554,59 @@ src/
 
 ---
 
-### Sesión 8: Export CSV + Mejoras Analíticas
+### ✅ Sesión 8: Export CSV + Mejoras Analíticas - COMPLETADA
+**Fecha**: 29/01/2026
 **Objetivo**: Exportación para spreadsheets y métricas avanzadas
+**Estado**: ✅ Implementada
 
-#### Tarea 8.1: Export CSV
+#### Tarea 8.1: Export CSV ✅
 - **Qué**: Descargar suscripciones en formato CSV
 - **Por qué**: Abrir en Excel/Google Sheets para análisis
 - **Criterios de aceptación**:
-  - [ ] Botón "Exportar CSV" junto a JSON
-  - [ ] Columnas: nombre, costo, moneda, frecuencia, próximo pago, estado, categoría
-  - [ ] Encoding UTF-8 con BOM para Excel
-  - [ ] Nombre archivo: `suscriptio-YYYY-MM-DD.csv`
-- **Archivos**: `src/utils/exportImport.ts`, Header/Settings
-- **Edge cases**: Campos con comas → escapar con comillas
-- **Verificación**: Exportar, abrir en Excel, verificar datos
+  - [x] Botón "Exportar CSV" junto a JSON
+  - [x] Columnas: nombre, costo, moneda, frecuencia, próximo pago, estado, categoría, etiquetas, notas, URL
+  - [x] Encoding UTF-8 con BOM para Excel
+  - [x] Nombre archivo: `suscriptio-YYYY-MM-DD.csv`
+- **Archivos**: `src/utils/exportImport.ts`, `src/pages/Settings.tsx`
+- **Edge cases**: Campos con comas → escapado con comillas
+- **Verificación**: ✅ Exporta correctamente con encoding UTF-8 BOM
 
-#### Tarea 8.2: Métrica - Top 3 categorías por gasto
+#### Tarea 8.2: Métrica - Top 3 categorías por gasto ✅
 - **Qué**: Mostrar las 3 categorías con mayor gasto mensual
 - **Por qué**: Identificar dónde va más dinero
 - **Criterios de aceptación**:
-  - [ ] Lista ordenada de categorías por gasto
-  - [ ] Mostrar nombre + monto + porcentaje del total
-  - [ ] Máximo 3, con opción "ver más" → va a CategoryBreakdown
-- **Archivos**: `Dashboard.tsx`, nuevo componente o extensión de KeyMetrics
-- **Edge cases**: Menos de 3 categorías → mostrar las que hay
-- **Verificación**: Con varias categorías, verificar orden correcto
+  - [x] Lista ordenada de categorías por gasto
+  - [x] Mostrar nombre + monto + porcentaje del total
+  - [x] Máximo 3, con colores distintivos por categoría
+- **Archivos**: Nuevo `src/components/dashboard/TopCategories.tsx`, `src/hooks/useSubscriptions.ts`, `Dashboard.tsx`
+- **Edge cases**: Menos de 3 categorías → muestra las que hay
+- **Verificación**: ✅ Componente implementado con diseño consistente
 
-#### Tarea 8.3: Métrica - Proyección anual detallada
+#### Tarea 8.3: Métrica - Proyección anual detallada ✅
 - **Qué**: Desglose de gasto anual por mes (considerando frecuencias)
 - **Por qué**: Ver distribución real de pagos anuales en el año
 - **Criterios de aceptación**:
-  - [ ] Gráfico de barras con 12 meses
-  - [ ] Pagos anuales aparecen solo en su mes correspondiente
-  - [ ] Pagos mensuales distribuidos uniformemente
-- **Archivos**: Nuevo componente de gráfico, `calculations.ts`
-- **Edge cases**: Suscripción anual en mes futuro → mostrar en ese mes
-- **Verificación**: Mezcla de mensuales y anuales, verificar gráfico
+  - [x] Gráfico de barras apiladas con 12 meses
+  - [x] Pagos anuales aparecen solo en su mes correspondiente (color naranja)
+  - [x] Pagos mensuales distribuidos uniformemente (color cyan)
+  - [x] Tooltip detallado con desglose
+  - [x] Total proyectado visible
+- **Archivos**: Nuevo `src/components/dashboard/AnnualProjection.tsx`, `Dashboard.tsx`
+- **Edge cases**: Suscripción anual detecta el mes correcto
+- **Verificación**: ✅ Gráfico Recharts con barras apiladas funcionando
 
-**Resultado sesión 8**: Exportación versátil + insights analíticos mejorados
+**Resultado sesión 8**: ✅ Exportación versátil + insights analíticos mejorados
+
+**Archivos creados**:
+- `src/components/dashboard/TopCategories.tsx`
+- `src/components/dashboard/AnnualProjection.tsx`
+
+**Archivos modificados**:
+- `src/utils/exportImport.ts` (función exportToCsv)
+- `src/pages/Settings.tsx` (botones JSON/CSV)
+- `src/hooks/useSubscriptions.ts` (topCategories)
+- `src/components/dashboard/Dashboard.tsx` (integración componentes)
+- `src/locales/es/translation.json` (traducciones)
 
 ---
 

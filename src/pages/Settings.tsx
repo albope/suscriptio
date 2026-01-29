@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
-import { exportToJson, importFromJson } from '@/utils/exportImport';
+import { exportToJson, exportToCsv, importFromJson } from '@/utils/exportImport';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
@@ -20,13 +20,22 @@ export const Settings = () => {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [pendingImport, setPendingImport] = useState<Subscription[] | null>(null);
 
-  const handleExport = () => {
+  const handleExportJson = () => {
     if (subscriptions.length === 0) {
       toast.warning(t('toasts.exportEmpty'));
       return;
     }
     exportToJson(subscriptions);
     toast.success(t('toasts.exportSuccess'));
+  };
+
+  const handleExportCsv = () => {
+    if (subscriptions.length === 0) {
+      toast.warning(t('toasts.exportEmpty'));
+      return;
+    }
+    exportToCsv(subscriptions);
+    toast.success(t('toasts.exportCsvSuccess'));
   };
 
   const handleImportClick = () => {
@@ -214,22 +223,40 @@ export const Settings = () => {
                 {t('settings.exportDescription')}
               </p>
             </div>
-            <Button onClick={handleExport} variant="secondary">
-              <svg
-                style={{ width: '16px', height: '16px' }}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-              JSON
-            </Button>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Button onClick={handleExportJson} variant="secondary">
+                <svg
+                  style={{ width: '16px', height: '16px' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                JSON
+              </Button>
+              <Button onClick={handleExportCsv} variant="secondary">
+                <svg
+                  style={{ width: '16px', height: '16px' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                CSV
+              </Button>
+            </div>
           </div>
 
           {/* Import */}

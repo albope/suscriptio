@@ -5,6 +5,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useSettingsStore } from '@/store/settingsStore';
 import { SpendOverview } from './SpendOverview';
 import { KeyMetrics } from './KeyMetrics';
+import { TopCategories } from './TopCategories';
+import { AnnualProjection } from './AnnualProjection';
 import { CategoryBreakdown } from './CategoryBreakdown';
 import { PaymentTimeline } from './PaymentTimeline';
 import { CalendarView } from './CalendarView';
@@ -24,6 +26,7 @@ export const Dashboard = () => {
     mostExpensive,
     averageCost,
     subscriptionsByFrequency,
+    topCategories,
     preferredCurrency,
     spendByCurrency,
     isLoading,
@@ -260,6 +263,10 @@ export const Dashboard = () => {
               subscriptionsByFrequency={subscriptionsByFrequency}
               preferredCurrency={preferredCurrency}
             />
+            <TopCategories
+              topCategories={topCategories}
+              preferredCurrency={preferredCurrency}
+            />
           </div>
 
           {/* Payment Visualization Section */}
@@ -396,6 +403,14 @@ export const Dashboard = () => {
               )}
               <CategoryBreakdown data={categoryBreakdown} />
             </div>
+          </div>
+
+          {/* Annual Projection Section */}
+          <div className="animate-slide-up animate-delay-300">
+            <AnnualProjection
+              subscriptions={activeSubscriptions}
+              preferredCurrency={preferredCurrency}
+            />
           </div>
         </div>
       )}

@@ -1,10 +1,14 @@
 import type { Subscription } from '../types/subscription';
+import { format } from 'date-fns';
 
 export interface BackupData {
   version: number;
   exportedAt: string;
   subscriptions: Subscription[];
 }
+
+// UTF-8 BOM for Excel compatibility
+const UTF8_BOM = '\uFEFF';
 
 export function exportToJson(subscriptions: Subscription[]): void {
   const data: BackupData = {
@@ -57,4 +61,85 @@ export async function importFromJson(file: File): Promise<Subscription[]> {
     createdAt: new Date(sub.createdAt),
     updatedAt: new Date(sub.updatedAt),
   }));
+}
+
+/**
+ * Escapes a value for CSV (handles commas, quotes, and newlines)
+ */
+function escapeCsvValue(value: string | number | undefined | null): string {
+  if (value === null || value === undefined) return '';
+  const str = String(value);
+  // If the value contains comma, quote, or newline, wrap in quotes and escape quotes
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+/**
+ * Export subscriptions to CSV format with UTF-8 BOM for Excel compatibility
+ */
+export function exportToCsv(subscriptions: Subscription[]): void {
+  // CSV headers
+  const headers = [
+    'Nombre',
+    'Coste',
+    'Moneda',
+    'Frecuencia',
+    'Próximo pago',
+    'Estado',
+    'Categoría',
+    'Etiquetas',
+    'Notas',
+    'URL',
+  ];
+
+  // Map frequency and status to Spanish labels
+  const frequencyLabels: Record<string, string> = {
+    monthly: 'Mensual',
+    yearly: 'Anual',
+  };
+
+  const statusLabels: Record<string, string> = {
+    active: 'Activa',
+    canceled: 'Cancelada',
+  };
+
+  const categoryLabels: Record<string, string> = {
+    streaming: 'Streaming',
+    productivity: 'Productividad',
+    cloud_storage: 'Almacenamiento',
+    music: 'Música',
+    gaming: 'Juegos',
+    health_fitness: 'Salud y fitness',
+    news_learning: 'Noticias y aprendizaje',
+    utilities: 'Utilidades',
+    other: 'Otro',
+  };
+
+  // Build CSV rows
+  const rows = subscriptions.map((sub) => [
+    escapeCsvValue(sub.name),
+    escapeCsvValue(sub.cost.toFixed(2)),
+    escapeCsvValue(sub.currency),
+    escapeCsvValue(frequencyLabels[sub.billingFrequency] || sub.billingFrequency),
+    escapeCsvValue(format(new Date(sub.nextPaymentDate), 'dd/MM/yyyy')),
+    escapeCsvValue(statusLabels[sub.status] || sub.status),
+    escapeCsvValue(sub.category ? categoryLabels[sub.category] || sub.category : ''),
+    escapeCsvValue(sub.tags?.join(', ') || ''),
+    escapeCsvValue(sub.notes || ''),
+    escapeCsvValue(sub.providerUrl || ''),
+  ]);
+
+  // Combine headers and rows
+  const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
+
+  // Create blob with UTF-8 BOM
+  const blob = new Blob([UTF8_BOM + csvContent], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `suscriptio-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
