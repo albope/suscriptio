@@ -66,18 +66,22 @@ export const Register = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      background: '#000000',
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '400px',
-      }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        background: '#000000',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+        }}
+      >
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <img
@@ -90,62 +94,71 @@ export const Register = () => {
               marginBottom: '16px',
             }}
           />
-          <h1 style={{
-            fontSize: '28px',
-            fontWeight: 700,
-            color: '#ededed',
-            marginBottom: '8px',
-          }}>
+          <h1
+            style={{
+              fontSize: '28px',
+              fontWeight: 700,
+              color: '#ededed',
+              marginBottom: '8px',
+            }}
+          >
             Suscriptio
           </h1>
-          <p style={{ color: '#666666', fontSize: '14px' }}>
-            {t('auth.register')}
-          </p>
+          <p style={{ color: '#666666', fontSize: '14px' }}>{t('auth.register')}</p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} style={{
-          background: '#111111',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '16px',
-          padding: '32px',
-        }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            background: '#111111',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '32px',
+          }}
+        >
           {error && (
-            <div style={{
-              background: 'rgba(255, 68, 68, 0.1)',
-              border: '1px solid rgba(255, 68, 68, 0.2)',
-              borderRadius: '10px',
-              padding: '12px 16px',
-              marginBottom: '20px',
-              color: '#ff6b6b',
-              fontSize: '14px',
-            }}>
+            <div
+              style={{
+                background: 'rgba(255, 68, 68, 0.1)',
+                border: '1px solid rgba(255, 68, 68, 0.2)',
+                borderRadius: '10px',
+                padding: '12px 16px',
+                marginBottom: '20px',
+                color: '#ff6b6b',
+                fontSize: '14px',
+              }}
+            >
               {error}
             </div>
           )}
 
           {success && (
-            <div style={{
-              background: 'rgba(0, 212, 255, 0.1)',
-              border: '1px solid rgba(0, 212, 255, 0.2)',
-              borderRadius: '10px',
-              padding: '12px 16px',
-              marginBottom: '20px',
-              color: '#00d4ff',
-              fontSize: '14px',
-            }}>
+            <div
+              style={{
+                background: 'rgba(0, 212, 255, 0.1)',
+                border: '1px solid rgba(0, 212, 255, 0.2)',
+                borderRadius: '10px',
+                padding: '12px 16px',
+                marginBottom: '20px',
+                color: '#00d4ff',
+                fontSize: '14px',
+              }}
+            >
               {success}
             </div>
           )}
 
           <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: '#888888',
-              marginBottom: '8px',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#888888',
+                marginBottom: '8px',
+              }}
+            >
               {t('auth.email')}
             </label>
             <input
@@ -166,13 +179,15 @@ export const Register = () => {
           </div>
 
           <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: '#888888',
-              marginBottom: '8px',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#888888',
+                marginBottom: '8px',
+              }}
+            >
               {t('auth.password')}
             </label>
             <input
@@ -194,13 +209,15 @@ export const Register = () => {
           </div>
 
           <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: '#888888',
-              marginBottom: '8px',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#888888',
+                marginBottom: '8px',
+              }}
+            >
               {t('auth.confirmPassword')}
             </label>
             <input
@@ -227,9 +244,7 @@ export const Register = () => {
             style={{
               width: '100%',
               padding: '14px 20px',
-              background: loading
-                ? '#333333'
-                : 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)',
+              background: loading ? '#333333' : 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)',
               color: loading ? '#666666' : '#000',
               fontWeight: 600,
               fontSize: '14px',
@@ -245,12 +260,14 @@ export const Register = () => {
         </form>
 
         {/* Login link */}
-        <p style={{
-          textAlign: 'center',
-          marginTop: '24px',
-          color: '#666666',
-          fontSize: '14px',
-        }}>
+        <p
+          style={{
+            textAlign: 'center',
+            marginTop: '24px',
+            color: '#666666',
+            fontSize: '14px',
+          }}
+        >
           {t('auth.hasAccount')}{' '}
           <Link
             to="/login"

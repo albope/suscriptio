@@ -34,7 +34,10 @@ export const formatCurrency = (amount: number, currencyCode: string = DEFAULT_CU
  * @param currencyCode - ISO currency code
  * @returns Formatted string like "€15.99 EUR" or "$15.99 USD"
  */
-export const formatCurrencyWithCode = (amount: number, currencyCode: string = DEFAULT_CURRENCY): string => {
+export const formatCurrencyWithCode = (
+  amount: number,
+  currencyCode: string = DEFAULT_CURRENCY
+): string => {
   const currency = getCurrencyByCode(currencyCode);
   if (!currency) {
     return `${amount.toFixed(2)} ${currencyCode}`;

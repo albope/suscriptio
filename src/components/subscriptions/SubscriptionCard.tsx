@@ -28,11 +28,27 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
       }}
       className="hover:bg-white/[0.04] hover:border-cyan-500/20"
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: '12px',
+        }}
+      >
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Name + Warning Label */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: 600, color: '#ededed', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <h3
+              style={{
+                fontSize: '15px',
+                fontWeight: 600,
+                color: '#ededed',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {subscription.name}
             </h3>
             {paymentLabel && (
@@ -67,11 +83,30 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
           </div>
 
           {/* Date + Category */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: subscription.tags && subscription.tags.length > 0 ? '8px' : '0' }}>
-            <svg style={{ width: '14px', height: '14px', color: '#666666' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginBottom: subscription.tags && subscription.tags.length > 0 ? '8px' : '0',
+            }}
+          >
+            <svg
+              style={{ width: '14px', height: '14px', color: '#666666' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
-            <span style={{ fontSize: '12px', color: '#888888', fontWeight: 500 }}>{formatDate(subscription.nextPaymentDate)}</span>
+            <span style={{ fontSize: '12px', color: '#888888', fontWeight: 500 }}>
+              {formatDate(subscription.nextPaymentDate)}
+            </span>
             {subscription.category && (
               <>
                 <span style={{ fontSize: '12px', color: '#444444' }}>·</span>
@@ -102,11 +137,31 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
                   hash = tag.charCodeAt(i) + ((hash << 5) - hash);
                 }
                 const colors = [
-                  { bg: 'rgba(0, 212, 255, 0.12)', text: '#00d4ff', border: 'rgba(0, 212, 255, 0.3)' },
-                  { bg: 'rgba(138, 43, 226, 0.12)', text: '#b37fe8', border: 'rgba(138, 43, 226, 0.3)' },
-                  { bg: 'rgba(255, 107, 107, 0.12)', text: '#ff6b6b', border: 'rgba(255, 107, 107, 0.3)' },
-                  { bg: 'rgba(72, 219, 251, 0.12)', text: '#48dbfb', border: 'rgba(72, 219, 251, 0.3)' },
-                  { bg: 'rgba(255, 159, 64, 0.12)', text: '#ff9f40', border: 'rgba(255, 159, 64, 0.3)' },
+                  {
+                    bg: 'rgba(0, 212, 255, 0.12)',
+                    text: '#00d4ff',
+                    border: 'rgba(0, 212, 255, 0.3)',
+                  },
+                  {
+                    bg: 'rgba(138, 43, 226, 0.12)',
+                    text: '#b37fe8',
+                    border: 'rgba(138, 43, 226, 0.3)',
+                  },
+                  {
+                    bg: 'rgba(255, 107, 107, 0.12)',
+                    text: '#ff6b6b',
+                    border: 'rgba(255, 107, 107, 0.3)',
+                  },
+                  {
+                    bg: 'rgba(72, 219, 251, 0.12)',
+                    text: '#48dbfb',
+                    border: 'rgba(72, 219, 251, 0.3)',
+                  },
+                  {
+                    bg: 'rgba(255, 159, 64, 0.12)',
+                    text: '#ff9f40',
+                    border: 'rgba(255, 159, 64, 0.3)',
+                  },
                 ];
                 const color = colors[Math.abs(hash) % colors.length];
 
@@ -147,7 +202,9 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
         </div>
 
         {/* Right side: Badge + Actions */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Badge variant={subscription.status === 'active' ? 'success' : 'danger'}>
               {t(`subscriptions.status.${subscription.status}`)}
@@ -183,7 +240,13 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                <svg style={{ width: '14px', height: '14px', color: '#ef4444' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg
+                  style={{ width: '14px', height: '14px', color: '#ef4444' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -201,7 +264,13 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
               justifyContent: 'center',
             }}
           >
-            <svg style={{ width: '16px', height: '16px', color: '#666666' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg
+              style={{ width: '16px', height: '16px', color: '#666666' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </div>

@@ -110,24 +110,26 @@ export const FilterBar = ({
   };
 
   const isPriceRangeInvalid =
-    priceRange.min !== null &&
-    priceRange.max !== null &&
-    priceRange.max < priceRange.min;
+    priceRange.min !== null && priceRange.max !== null && priceRange.max < priceRange.min;
 
   return (
-    <div style={{
-      background: 'rgba(17, 17, 17, 0.6)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
-      borderRadius: '12px',
-      padding: '16px',
-    }}>
+    <div
+      style={{
+        background: 'rgba(17, 17, 17, 0.6)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '12px',
+        padding: '16px',
+      }}
+    >
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: isExpanded ? '20px' : '0',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: isExpanded ? '20px' : '0',
+        }}
+      >
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           style={{
@@ -159,15 +161,17 @@ export const FilterBar = ({
           </svg>
           {t('filters.advanced')}
           {activeFiltersCount > 0 && (
-            <span style={{
-              background: 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)',
-              color: '#000',
-              fontSize: '11px',
-              fontWeight: 700,
-              padding: '3px 8px',
-              borderRadius: '12px',
-              boxShadow: '0 0 15px rgba(0, 212, 255, 0.3)',
-            }}>
+            <span
+              style={{
+                background: 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)',
+                color: '#000',
+                fontSize: '11px',
+                fontWeight: 700,
+                padding: '3px 8px',
+                borderRadius: '12px',
+                boxShadow: '0 0 15px rgba(0, 212, 255, 0.3)',
+              }}
+            >
               {activeFiltersCount}
             </span>
           )}
@@ -204,15 +208,17 @@ export const FilterBar = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {/* Categories */}
           <div>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: '#888888',
-              marginBottom: '12px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#888888',
+                marginBottom: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+            >
               {t('filters.categories')}
             </label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -259,15 +265,17 @@ export const FilterBar = ({
           {/* Tags */}
           {availableTags.length > 0 && (
             <div>
-              <label style={{
-                display: 'block',
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#888888',
-                marginBottom: '12px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#888888',
+                  marginBottom: '12px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
                 {t('filters.tags')}
               </label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -279,11 +287,31 @@ export const FilterBar = ({
                     hash = tag.charCodeAt(i) + ((hash << 5) - hash);
                   }
                   const colors = [
-                    { bg: 'rgba(0, 212, 255, 0.12)', text: '#00d4ff', border: 'rgba(0, 212, 255, 0.3)' },
-                    { bg: 'rgba(138, 43, 226, 0.12)', text: '#b37fe8', border: 'rgba(138, 43, 226, 0.3)' },
-                    { bg: 'rgba(255, 107, 107, 0.12)', text: '#ff6b6b', border: 'rgba(255, 107, 107, 0.3)' },
-                    { bg: 'rgba(72, 219, 251, 0.12)', text: '#48dbfb', border: 'rgba(72, 219, 251, 0.3)' },
-                    { bg: 'rgba(255, 159, 64, 0.12)', text: '#ff9f40', border: 'rgba(255, 159, 64, 0.3)' },
+                    {
+                      bg: 'rgba(0, 212, 255, 0.12)',
+                      text: '#00d4ff',
+                      border: 'rgba(0, 212, 255, 0.3)',
+                    },
+                    {
+                      bg: 'rgba(138, 43, 226, 0.12)',
+                      text: '#b37fe8',
+                      border: 'rgba(138, 43, 226, 0.3)',
+                    },
+                    {
+                      bg: 'rgba(255, 107, 107, 0.12)',
+                      text: '#ff6b6b',
+                      border: 'rgba(255, 107, 107, 0.3)',
+                    },
+                    {
+                      bg: 'rgba(72, 219, 251, 0.12)',
+                      text: '#48dbfb',
+                      border: 'rgba(72, 219, 251, 0.3)',
+                    },
+                    {
+                      bg: 'rgba(255, 159, 64, 0.12)',
+                      text: '#ff9f40',
+                      border: 'rgba(255, 159, 64, 0.3)',
+                    },
                   ];
                   const color = colors[Math.abs(hash) % colors.length];
 
@@ -326,15 +354,17 @@ export const FilterBar = ({
 
           {/* Price Range */}
           <div>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: '#888888',
-              marginBottom: '12px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#888888',
+                marginBottom: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+            >
               {t('filters.priceRange')} ({currencySymbol})
             </label>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -379,12 +409,14 @@ export const FilterBar = ({
               />
             </div>
             {isPriceRangeInvalid && (
-              <p style={{
-                fontSize: '12px',
-                color: '#ff3b30',
-                marginTop: '6px',
-                marginBottom: '0',
-              }}>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: '#ff3b30',
+                  marginTop: '6px',
+                  marginBottom: '0',
+                }}
+              >
                 El precio máximo debe ser mayor que el mínimo
               </p>
             )}
@@ -392,15 +424,17 @@ export const FilterBar = ({
 
           {/* Date Range */}
           <div>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: '#888888',
-              marginBottom: '12px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#888888',
+                marginBottom: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+              }}
+            >
               {t('filters.dateRange')}
             </label>
 

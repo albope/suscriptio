@@ -12,7 +12,7 @@ import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { EmptyState } from './EmptyState';
 import { FilterBar } from './FilterBar';
 import { Button } from '@/components/ui/Button';
-import { Subscription, SubscriptionStatus, Category } from '@/types';
+import { Subscription, Category } from '@/types';
 
 type SortOption = 'date-asc' | 'date-desc' | 'price-asc' | 'price-desc' | 'name-asc';
 
@@ -42,7 +42,9 @@ export const SubscriptionList = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Initialize from preferences
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled'>(preferences.statusFilter);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled'>(
+    preferences.statusFilter
+  );
   const [sortBy, setSortBy] = useState<SortOption>(preferences.sortBy);
   const [categoryFilters, setCategoryFilters] = useState<(Category | 'no-category')[]>(
     preferences.categoryFilters as (Category | 'no-category')[]
@@ -90,16 +92,29 @@ export const SubscriptionList = () => {
       dateRange,
       currency: preferredCurrency,
     });
-  }, [subscriptions, searchQuery, statusFilter, categoryFilters, tagFilters, priceRange, dateRange, preferredCurrency]);
+  }, [
+    subscriptions,
+    searchQuery,
+    statusFilter,
+    categoryFilters,
+    tagFilters,
+    priceRange,
+    dateRange,
+    preferredCurrency,
+  ]);
 
   // Ordenar
   const sortedSubscriptions = useMemo(() => {
     const subs = [...filteredSubscriptions];
     switch (sortBy) {
       case 'date-asc':
-        return subs.sort((a, b) => new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime());
+        return subs.sort(
+          (a, b) => new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime()
+        );
       case 'date-desc':
-        return subs.sort((a, b) => new Date(b.nextPaymentDate).getTime() - new Date(a.nextPaymentDate).getTime());
+        return subs.sort(
+          (a, b) => new Date(b.nextPaymentDate).getTime() - new Date(a.nextPaymentDate).getTime()
+        );
       case 'price-asc':
         return subs.sort((a, b) => a.cost - b.cost);
       case 'price-desc':
@@ -128,7 +143,7 @@ export const SubscriptionList = () => {
 
   // Delete handlers
   const handleDeleteClick = (id: string) => {
-    const sub = subscriptions.find(s => s.id === id);
+    const sub = subscriptions.find((s) => s.id === id);
     if (sub) {
       setSubscriptionToDelete(sub);
       setIsDeleteModalOpen(true);
@@ -190,17 +205,42 @@ export const SubscriptionList = () => {
   });
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div
+      style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '28px',
+      }}
+    >
       {/* Header */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: '16px',
+        }}
+      >
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#ededed', marginBottom: '8px' }}>{t('subscriptions.title')}</h1>
+          <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#ededed', marginBottom: '8px' }}>
+            {t('subscriptions.title')}
+          </h1>
           <p style={{ fontSize: '14px', color: '#666666' }}>
-            {sortedSubscriptions.length} {sortedSubscriptions.length === 1 ? 'suscripción' : 'suscripciones'}
+            {sortedSubscriptions.length}{' '}
+            {sortedSubscriptions.length === 1 ? 'suscripción' : 'suscripciones'}
           </p>
         </div>
         <Button onClick={handleAddNew}>
-          <svg style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg
+            style={{ width: '16px', height: '16px' }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           {t('subscriptions.add')}
@@ -211,17 +251,29 @@ export const SubscriptionList = () => {
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
         {/* Search Input */}
         <div style={{ position: 'relative', flex: '1', minWidth: '200px', maxWidth: '400px' }}>
-          <div style={{
-            position: 'absolute',
-            left: '14px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: '#555555',
-            display: 'flex',
-            alignItems: 'center',
-          }}>
-            <svg style={{ width: '18px', height: '18px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <div
+            style={{
+              position: 'absolute',
+              left: '14px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#555555',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <svg
+              style={{ width: '18px', height: '18px' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </div>
           <input
@@ -269,7 +321,13 @@ export const SubscriptionList = () => {
                 color: '#888888',
               }}
             >
-              <svg style={{ width: '12px', height: '12px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg
+                style={{ width: '12px', height: '12px' }}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -301,15 +359,23 @@ export const SubscriptionList = () => {
               </option>
             ))}
           </select>
-          <div style={{
-            position: 'absolute',
-            right: '14px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            pointerEvents: 'none',
-            color: '#666666',
-          }}>
-            <svg style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div
+            style={{
+              position: 'absolute',
+              right: '14px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              pointerEvents: 'none',
+              color: '#666666',
+            }}
+          >
+            <svg
+              style={{ width: '16px', height: '16px' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
             </svg>
           </div>
@@ -365,44 +431,62 @@ export const SubscriptionList = () => {
       {/* Subscriptions Grid */}
       {sortedSubscriptions.length === 0 ? (
         activeFiltersCount > 0 ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '60px 20px',
-            textAlign: 'center',
-            background: 'rgba(17, 17, 17, 0.4)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            borderRadius: '16px',
-          }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.05)',
+          <div
+            style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '20px',
-            }}>
-              <svg style={{ width: '32px', height: '32px', color: '#666666' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              padding: '60px 20px',
+              textAlign: 'center',
+              background: 'rgba(17, 17, 17, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: '16px',
+            }}
+          >
+            <div
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.05)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+              }}
+            >
+              <svg
+                style={{ width: '32px', height: '32px', color: '#666666' }}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: 600,
-              color: '#ededed',
-              marginBottom: '8px',
-            }}>
+            <h3
+              style={{
+                fontSize: '18px',
+                fontWeight: 600,
+                color: '#ededed',
+                marginBottom: '8px',
+              }}
+            >
               {t('filters.noResults')}
             </h3>
-            <p style={{
-              fontSize: '14px',
-              color: '#666666',
-              marginBottom: '24px',
-            }}>
+            <p
+              style={{
+                fontSize: '14px',
+                color: '#666666',
+                marginBottom: '24px',
+              }}
+            >
               {t('filters.noResultsHint')}
             </p>
             <button

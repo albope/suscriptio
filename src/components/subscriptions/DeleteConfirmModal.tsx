@@ -48,7 +48,8 @@ export const DeleteConfirmModal = ({
           position: 'relative',
           width: '100%',
           maxWidth: '400px',
-          background: 'linear-gradient(145deg, rgba(20, 20, 20, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%)',
+          background:
+            'linear-gradient(145deg, rgba(20, 20, 20, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%)',
           border: '1px solid rgba(255, 255, 255, 0.08)',
           borderRadius: '16px',
           padding: '28px',
@@ -82,7 +83,8 @@ export const DeleteConfirmModal = ({
             height: '56px',
             margin: '0 auto 20px',
             borderRadius: '14px',
-            background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%)',
+            background:
+              'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%)',
             border: '1px solid rgba(239, 68, 68, 0.25)',
             display: 'flex',
             alignItems: 'center',

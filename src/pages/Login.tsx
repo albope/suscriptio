@@ -5,28 +5,65 @@ import { useAuth } from '@/contexts/AuthContext';
 
 // Icons
 const MailIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
   </svg>
 );
 
 const LockIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 
 const ArrowIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M5 12h14" />
     <path d="m12 5 7 7-7 7" />
   </svg>
 );
 
 const SpinnerIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ animation: 'spin 1s linear infinite' }}
+  >
     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
   </svg>
 );
@@ -58,97 +95,115 @@ export const Login = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      background: '#000000',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        background: '#000000',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
       {/* Background Effects */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: `
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: `
           radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 212, 255, 0.12), transparent),
           radial-gradient(ellipse 60% 40% at 80% 0%, rgba(168, 85, 247, 0.08), transparent),
           radial-gradient(ellipse 40% 30% at 20% 100%, rgba(0, 212, 255, 0.06), transparent)
         `,
-        pointerEvents: 'none',
-      }} />
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* Grid Pattern */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundImage: `
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `
           linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
           linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
         `,
-        backgroundSize: '64px 64px',
-        pointerEvents: 'none',
-        maskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent)',
-        WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent)',
-      }} />
+          backgroundSize: '64px 64px',
+          pointerEvents: 'none',
+          maskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent)',
+        }}
+      />
 
       {/* Floating Orbs */}
-      <div style={{
-        position: 'absolute',
-        top: '15%',
-        left: '10%',
-        width: '300px',
-        height: '300px',
-        background: 'radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%)',
-        borderRadius: '50%',
-        filter: 'blur(40px)',
-        animation: 'float 8s ease-in-out infinite',
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: '20%',
-        right: '10%',
-        width: '250px',
-        height: '250px',
-        background: 'radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%)',
-        borderRadius: '50%',
-        filter: 'blur(40px)',
-        animation: 'float 10s ease-in-out infinite reverse',
-        pointerEvents: 'none',
-      }} />
+      <div
+        style={{
+          position: 'absolute',
+          top: '15%',
+          left: '10%',
+          width: '300px',
+          height: '300px',
+          background: 'radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(40px)',
+          animation: 'float 8s ease-in-out infinite',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '20%',
+          right: '10%',
+          width: '250px',
+          height: '250px',
+          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(40px)',
+          animation: 'float 10s ease-in-out infinite reverse',
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* Content */}
-      <div style={{
-        width: '100%',
-        maxWidth: '400px',
-        position: 'relative',
-        zIndex: 1,
-      }}>
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* Logo Section - Centered */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginBottom: '48px',
-          animation: 'fadeIn 0.6s ease-out',
-        }}>
-          <div style={{
-            position: 'relative',
-            marginBottom: '20px',
-          }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginBottom: '48px',
+            animation: 'fadeIn 0.6s ease-out',
+          }}
+        >
+          <div
+            style={{
+              position: 'relative',
+              marginBottom: '20px',
+            }}
+          >
             {/* Logo Glow */}
-            <div style={{
-              position: 'absolute',
-              inset: '-10px',
-              background: 'radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%)',
-              borderRadius: '50%',
-              filter: 'blur(20px)',
-              animation: 'pulse-glow 3s ease-in-out infinite',
-            }} />
+            <div
+              style={{
+                position: 'absolute',
+                inset: '-10px',
+                background: 'radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%)',
+                borderRadius: '50%',
+                filter: 'blur(20px)',
+                animation: 'pulse-glow 3s ease-in-out infinite',
+              }}
+            />
             <img
               src="/logo.png"
               alt="Suscriptio"
@@ -161,20 +216,24 @@ export const Login = () => {
               }}
             />
           </div>
-          <h1 style={{
-            fontSize: '32px',
-            fontWeight: 700,
-            color: '#ededed',
-            marginBottom: '8px',
-            letterSpacing: '-0.02em',
-          }}>
+          <h1
+            style={{
+              fontSize: '32px',
+              fontWeight: 700,
+              color: '#ededed',
+              marginBottom: '8px',
+              letterSpacing: '-0.02em',
+            }}
+          >
             Suscriptio
           </h1>
-          <p style={{
-            color: '#666666',
-            fontSize: '15px',
-            fontWeight: 400,
-          }}>
+          <p
+            style={{
+              color: '#666666',
+              fontSize: '15px',
+              fontWeight: 400,
+            }}
+          >
             {t('auth.login')}
           </p>
         </div>
@@ -183,7 +242,8 @@ export const Login = () => {
         <form
           onSubmit={handleSubmit}
           style={{
-            background: 'linear-gradient(145deg, rgba(17, 17, 17, 0.9) 0%, rgba(17, 17, 17, 0.95) 100%)',
+            background:
+              'linear-gradient(145deg, rgba(17, 17, 17, 0.9) 0%, rgba(17, 17, 17, 0.95) 100%)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '20px',
             padding: '36px',
@@ -197,56 +257,64 @@ export const Login = () => {
           }}
         >
           {error && (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              background: 'rgba(255, 68, 68, 0.08)',
-              border: '1px solid rgba(255, 68, 68, 0.15)',
-              borderRadius: '12px',
-              padding: '14px 16px',
-              marginBottom: '24px',
-              animation: 'shake 0.5s ease-in-out',
-            }}>
-              <div style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: '#ff6b6b',
-                boxShadow: '0 0 10px rgba(255, 68, 68, 0.5)',
-              }} />
-              <span style={{ color: '#ff8a8a', fontSize: '14px', fontWeight: 500 }}>
-                {error}
-              </span>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'rgba(255, 68, 68, 0.08)',
+                border: '1px solid rgba(255, 68, 68, 0.15)',
+                borderRadius: '12px',
+                padding: '14px 16px',
+                marginBottom: '24px',
+                animation: 'shake 0.5s ease-in-out',
+              }}
+            >
+              <div
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: '#ff6b6b',
+                  boxShadow: '0 0 10px rgba(255, 68, 68, 0.5)',
+                }}
+              />
+              <span style={{ color: '#ff8a8a', fontSize: '14px', fontWeight: 500 }}>{error}</span>
             </div>
           )}
 
           {/* Email Input */}
           <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: focusedField === 'email' ? '#00d4ff' : '#888888',
-              marginBottom: '10px',
-              transition: 'color 0.2s ease',
-              letterSpacing: '0.02em',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: focusedField === 'email' ? '#00d4ff' : '#888888',
+                marginBottom: '10px',
+                transition: 'color 0.2s ease',
+                letterSpacing: '0.02em',
+              }}
+            >
               {t('auth.email')}
             </label>
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-              <div style={{
-                position: 'absolute',
-                left: '16px',
-                color: focusedField === 'email' ? '#00d4ff' : '#555555',
-                transition: 'color 0.2s ease',
+            <div
+              style={{
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-              }}>
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '16px',
+                  color: focusedField === 'email' ? '#00d4ff' : '#555555',
+                  transition: 'color 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
                 <MailIcon />
               </div>
               <input
@@ -260,20 +328,21 @@ export const Login = () => {
                 style={{
                   width: '100%',
                   padding: '14px 16px 14px 48px',
-                  border: focusedField === 'email'
-                    ? '1px solid rgba(0, 212, 255, 0.5)'
-                    : '1px solid rgba(255, 255, 255, 0.08)',
+                  border:
+                    focusedField === 'email'
+                      ? '1px solid rgba(0, 212, 255, 0.5)'
+                      : '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '12px',
                   fontSize: '14px',
                   color: '#ededed',
-                  backgroundColor: focusedField === 'email'
-                    ? 'rgba(0, 212, 255, 0.03)'
-                    : 'rgba(0, 0, 0, 0.3)',
+                  backgroundColor:
+                    focusedField === 'email' ? 'rgba(0, 212, 255, 0.03)' : 'rgba(0, 0, 0, 0.3)',
                   outline: 'none',
                   transition: 'all 0.2s ease',
-                  boxShadow: focusedField === 'email'
-                    ? '0 0 0 4px rgba(0, 212, 255, 0.08), 0 0 20px rgba(0, 212, 255, 0.1)'
-                    : 'none',
+                  boxShadow:
+                    focusedField === 'email'
+                      ? '0 0 0 4px rgba(0, 212, 255, 0.08), 0 0 20px rgba(0, 212, 255, 0.1)'
+                      : 'none',
                 }}
               />
             </div>
@@ -281,30 +350,36 @@ export const Login = () => {
 
           {/* Password Input */}
           <div style={{ marginBottom: '28px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '13px',
-              fontWeight: 500,
-              color: focusedField === 'password' ? '#00d4ff' : '#888888',
-              marginBottom: '10px',
-              transition: 'color 0.2s ease',
-              letterSpacing: '0.02em',
-            }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: focusedField === 'password' ? '#00d4ff' : '#888888',
+                marginBottom: '10px',
+                transition: 'color 0.2s ease',
+                letterSpacing: '0.02em',
+              }}
+            >
               {t('auth.password')}
             </label>
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-            }}>
-              <div style={{
-                position: 'absolute',
-                left: '16px',
-                color: focusedField === 'password' ? '#00d4ff' : '#555555',
-                transition: 'color 0.2s ease',
+            <div
+              style={{
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-              }}>
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '16px',
+                  color: focusedField === 'password' ? '#00d4ff' : '#555555',
+                  transition: 'color 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
                 <LockIcon />
               </div>
               <input
@@ -319,20 +394,21 @@ export const Login = () => {
                 style={{
                   width: '100%',
                   padding: '14px 16px 14px 48px',
-                  border: focusedField === 'password'
-                    ? '1px solid rgba(0, 212, 255, 0.5)'
-                    : '1px solid rgba(255, 255, 255, 0.08)',
+                  border:
+                    focusedField === 'password'
+                      ? '1px solid rgba(0, 212, 255, 0.5)'
+                      : '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '12px',
                   fontSize: '14px',
                   color: '#ededed',
-                  backgroundColor: focusedField === 'password'
-                    ? 'rgba(0, 212, 255, 0.03)'
-                    : 'rgba(0, 0, 0, 0.3)',
+                  backgroundColor:
+                    focusedField === 'password' ? 'rgba(0, 212, 255, 0.03)' : 'rgba(0, 0, 0, 0.3)',
                   outline: 'none',
                   transition: 'all 0.2s ease',
-                  boxShadow: focusedField === 'password'
-                    ? '0 0 0 4px rgba(0, 212, 255, 0.08), 0 0 20px rgba(0, 212, 255, 0.1)'
-                    : 'none',
+                  boxShadow:
+                    focusedField === 'password'
+                      ? '0 0 0 4px rgba(0, 212, 255, 0.08), 0 0 20px rgba(0, 212, 255, 0.1)'
+                      : 'none',
                 }}
               />
             </div>
@@ -405,13 +481,15 @@ export const Login = () => {
         </form>
 
         {/* Register Link */}
-        <p style={{
-          textAlign: 'center',
-          marginTop: '28px',
-          color: '#555555',
-          fontSize: '14px',
-          animation: 'fadeIn 0.6s ease-out 0.3s backwards',
-        }}>
+        <p
+          style={{
+            textAlign: 'center',
+            marginTop: '28px',
+            color: '#555555',
+            fontSize: '14px',
+            animation: 'fadeIn 0.6s ease-out 0.3s backwards',
+          }}
+        >
           {t('auth.noAccount')}{' '}
           <Link
             to="/register"

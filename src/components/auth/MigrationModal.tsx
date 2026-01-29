@@ -20,36 +20,49 @@ export const MigrationModal = ({ count, onMigrate, onDiscard }: MigrationModalPr
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      zIndex: 1000,
-    }}>
-      <div style={{
-        background: '#111111',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: '16px',
-        padding: '32px',
-        maxWidth: '400px',
-        width: '100%',
-      }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        zIndex: 1000,
+      }}
+    >
+      <div
+        style={{
+          background: '#111111',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '16px',
+          padding: '32px',
+          maxWidth: '400px',
+          width: '100%',
+        }}
+      >
         {/* Icon */}
-        <div style={{
-          width: '56px',
-          height: '56px',
-          borderRadius: '14px',
-          background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2))',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: '20px',
-        }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" strokeWidth="2">
+        <div
+          style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '14px',
+            background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '20px',
+          }}
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#00d4ff"
+            strokeWidth="2"
+          >
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="17,8 12,3 7,8" />
             <line x1="12" y1="3" x2="12" y2="15" />
@@ -57,22 +70,26 @@ export const MigrationModal = ({ count, onMigrate, onDiscard }: MigrationModalPr
         </div>
 
         {/* Title */}
-        <h2 style={{
-          fontSize: '20px',
-          fontWeight: 600,
-          color: '#ededed',
-          marginBottom: '12px',
-        }}>
+        <h2
+          style={{
+            fontSize: '20px',
+            fontWeight: 600,
+            color: '#ededed',
+            marginBottom: '12px',
+          }}
+        >
           {t('migration.title')}
         </h2>
 
         {/* Message */}
-        <p style={{
-          fontSize: '14px',
-          color: '#888888',
-          lineHeight: 1.6,
-          marginBottom: '24px',
-        }}>
+        <p
+          style={{
+            fontSize: '14px',
+            color: '#888888',
+            lineHeight: 1.6,
+            marginBottom: '24px',
+          }}
+        >
           {t('migration.message', { count })}
         </p>
 

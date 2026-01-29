@@ -130,7 +130,9 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
             const paymentDate = new Date(sub.nextPaymentDate);
             return paymentDate >= now && paymentDate <= futureDate;
           })
-          .sort((a, b) => new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime());
+          .sort(
+            (a, b) => new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime()
+          );
       },
 
       getMonthlySpend: () => {
@@ -160,29 +162,36 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
       },
 
       getCategoryBreakdown: () => {
-        const breakdown = new Map<string, { totalsByCurrency: Map<string, number>; count: number }>();
+        const breakdown = new Map<
+          string,
+          { totalsByCurrency: Map<string, number>; count: number }
+        >();
 
-        get().getActiveSubscriptions().forEach((sub) => {
-          const category = sub.category || 'other';
-          const currency = sub.currency || 'EUR';
-          const monthlyCost =
-            sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+        get()
+          .getActiveSubscriptions()
+          .forEach((sub) => {
+            const category = sub.category || 'other';
+            const currency = sub.currency || 'EUR';
+            const monthlyCost =
+              sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
 
-          const existing = breakdown.get(category) || { totalsByCurrency: new Map(), count: 0 };
-          const currentTotal = existing.totalsByCurrency.get(currency) || 0;
-          existing.totalsByCurrency.set(currency, currentTotal + monthlyCost);
-          existing.count += 1;
-          breakdown.set(category, existing);
-        });
+            const existing = breakdown.get(category) || { totalsByCurrency: new Map(), count: 0 };
+            const currentTotal = existing.totalsByCurrency.get(currency) || 0;
+            existing.totalsByCurrency.set(currency, currentTotal + monthlyCost);
+            existing.count += 1;
+            breakdown.set(category, existing);
+          });
 
         return Array.from(breakdown.entries()).map(([category, data]) => ({
           category,
           count: data.count,
           total: 0, // Deprecated, kept for compatibility
-          totalsByCurrency: Array.from(data.totalsByCurrency.entries()).map(([currency, amount]) => ({
-            currency,
-            amount,
-          })),
+          totalsByCurrency: Array.from(data.totalsByCurrency.entries()).map(
+            ([currency, amount]) => ({
+              currency,
+              amount,
+            })
+          ),
         }));
       },
 
@@ -210,8 +219,12 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
 
       getSubscriptionsByFrequency: () => {
         const active = get().getActiveSubscriptions();
-        const monthly = active.filter((sub) => sub.billingFrequency === BillingFrequency.MONTHLY).length;
-        const yearly = active.filter((sub) => sub.billingFrequency === BillingFrequency.YEARLY).length;
+        const monthly = active.filter(
+          (sub) => sub.billingFrequency === BillingFrequency.MONTHLY
+        ).length;
+        const yearly = active.filter(
+          (sub) => sub.billingFrequency === BillingFrequency.YEARLY
+        ).length;
         return { monthly, yearly };
       },
 

@@ -12,7 +12,8 @@ import type { Subscription } from '@/types';
 
 export const Settings = () => {
   const { t } = useTranslation();
-  const { subscriptions, replaceAllSubscriptions, addMultipleSubscriptions } = useSubscriptionStore();
+  const { subscriptions, replaceAllSubscriptions, addMultipleSubscriptions } =
+    useSubscriptionStore();
   const { preferredCurrency, setPreferredCurrency } = useSettingsStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -295,7 +296,8 @@ export const Settings = () => {
           }}
         >
           <p style={{ fontSize: '13px', color: '#00d4ff' }}>
-            {subscriptions.length} {subscriptions.length === 1 ? 'suscripcion' : 'suscripciones'} guardadas localmente
+            {subscriptions.length} {subscriptions.length === 1 ? 'suscripcion' : 'suscripciones'}{' '}
+            guardadas localmente
           </p>
         </div>
       </section>
@@ -307,9 +309,7 @@ export const Settings = () => {
         title={t('settings.importConfirmTitle')}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <p style={{ fontSize: '14px', color: '#888888' }}>
-            {t('settings.importConfirmMessage')}
-          </p>
+          <p style={{ fontSize: '14px', color: '#888888' }}>{t('settings.importConfirmMessage')}</p>
 
           {pendingImport && (
             <div
@@ -350,7 +350,9 @@ export const Settings = () => {
               e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.2)';
             }}
           >
-            <span style={{ fontSize: '15px', fontWeight: 600, color: '#ef4444', marginBottom: '4px' }}>
+            <span
+              style={{ fontSize: '15px', fontWeight: 600, color: '#ef4444', marginBottom: '4px' }}
+            >
               {t('settings.importReplace')}
             </span>
             <span style={{ fontSize: '13px', color: '#888888' }}>
@@ -382,7 +384,9 @@ export const Settings = () => {
               e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.2)';
             }}
           >
-            <span style={{ fontSize: '15px', fontWeight: 600, color: '#00d4ff', marginBottom: '4px' }}>
+            <span
+              style={{ fontSize: '15px', fontWeight: 600, color: '#00d4ff', marginBottom: '4px' }}
+            >
               {t('settings.importAdd')}
             </span>
             <span style={{ fontSize: '13px', color: '#888888' }}>

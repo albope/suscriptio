@@ -60,7 +60,9 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
         maxLength={60}
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'end' }}>
+      <div
+        style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '12px', alignItems: 'end' }}
+      >
         <Input
           label={t('subscriptions.fields.cost')}
           type="number"
@@ -88,7 +90,9 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       <Select
         label={t('subscriptions.fields.billingFrequency')}
         value={formData.billingFrequency}
-        onChange={(e) => setFormData({ ...formData, billingFrequency: e.target.value as BillingFrequency })}
+        onChange={(e) =>
+          setFormData({ ...formData, billingFrequency: e.target.value as BillingFrequency })
+        }
         required
       >
         <option value={BillingFrequency.MONTHLY}>{t('subscriptions.frequency.monthly')}</option>
@@ -127,11 +131,13 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       </Select>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{
-          fontSize: '13px',
-          fontWeight: 500,
-          color: '#888888',
-        }}>
+        <label
+          style={{
+            fontSize: '13px',
+            fontWeight: 500,
+            color: '#888888',
+          }}
+        >
           {t('subscriptions.fields.tags')}
         </label>
         <TagInput
@@ -143,11 +149,13 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{
-          fontSize: '13px',
-          fontWeight: 500,
-          color: '#888888',
-        }}>
+        <label
+          style={{
+            fontSize: '13px',
+            fontWeight: 500,
+            color: '#888888',
+          }}
+        >
           {t('subscriptions.fields.notes')}
         </label>
         <textarea
@@ -187,14 +195,16 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
         onChange={(e) => setFormData({ ...formData, providerUrl: e.target.value })}
       />
 
-      <div style={{
-        display: 'flex',
-        gap: '12px',
-        justifyContent: 'flex-end',
-        paddingTop: '20px',
-        marginTop: '8px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '12px',
+          justifyContent: 'flex-end',
+          paddingTop: '20px',
+          marginTop: '8px',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+        }}
+      >
         <Button type="button" variant="secondary" onClick={onCancel}>
           {t('common.cancel')}
         </Button>

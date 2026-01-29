@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSettingsStore } from '@/store/settingsStore';
 import { SpendOverview } from './SpendOverview';
 import { KeyMetrics } from './KeyMetrics';
-import { UpcomingPayments } from './UpcomingPayments';
 import { CategoryBreakdown } from './CategoryBreakdown';
+import { PaymentTimeline } from './PaymentTimeline';
+import { CalendarView } from './CalendarView';
 import { DashboardEmptyState } from './DashboardEmptyState';
 import { SubscriptionModal } from '@/components/subscriptions/SubscriptionModal';
 import { MigrationModal } from '@/components/auth/MigrationModal';
@@ -14,10 +16,10 @@ import { Subscription } from '@/types';
 export const Dashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { paymentView, setPaymentView } = useSettingsStore();
   const {
     subscriptions,
     activeSubscriptions,
-    upcomingPayments,
     categoryBreakdown,
     mostExpensive,
     averageCost,
@@ -110,45 +112,77 @@ export const Dashboard = () => {
       {isEmpty ? (
         <DashboardEmptyState onAddSubscription={handleAddNew} />
       ) : isLoading ? (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '60vh',
-        }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            border: '3px solid rgba(0, 212, 255, 0.2)',
-            borderTopColor: '#00d4ff',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-          }} />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '60vh',
+          }}
+        >
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              border: '3px solid rgba(0, 212, 255, 0.2)',
+              borderTopColor: '#00d4ff',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+            }}
+          />
         </div>
       ) : (
-        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div
+          className="animate-fade-in"
+          style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}
+        >
           {/* Header */}
-          <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+          <div
+            className="animate-slide-up"
+            style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+                gap: '16px',
+              }}
+            >
               <div>
-                <h1 style={{
-                  fontSize: '32px',
-                  fontWeight: 700,
-                  color: '#ededed',
-                  marginBottom: '8px',
-                  letterSpacing: '-0.02em'
-                }}>
+                <h1
+                  style={{
+                    fontSize: '32px',
+                    fontWeight: 700,
+                    color: '#ededed',
+                    marginBottom: '8px',
+                    letterSpacing: '-0.02em',
+                  }}
+                >
                   {t('dashboard.title')}
                 </h1>
-                <p style={{
-                  fontSize: '14px',
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}>
-                  <svg style={{ width: '16px', height: '16px', color: '#00d4ff' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <p
+                  style={{
+                    fontSize: '14px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <svg
+                    style={{ width: '16px', height: '16px', color: '#00d4ff' }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
                   </svg>
                   Gestiona tus suscripciones en un solo lugar
                 </p>
@@ -195,7 +229,13 @@ export const Dashboard = () => {
                   `;
                 }}
               >
-                <svg style={{ width: '18px', height: '18px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg
+                  style={{ width: '18px', height: '18px' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
                 <span>{t('subscriptions.add')}</span>
@@ -204,10 +244,15 @@ export const Dashboard = () => {
           </div>
 
           {/* KPI Cards - 2x2 Grid */}
-          <div className="animate-slide-up animate-delay-100" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            <SpendOverview
-              spendByCurrency={spendByCurrency}
-            />
+          <div
+            className="animate-slide-up animate-delay-100"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '20px',
+            }}
+          >
+            <SpendOverview spendByCurrency={spendByCurrency} />
             <KeyMetrics
               activeCount={activeSubscriptions.length}
               mostExpensive={mostExpensive}
@@ -217,13 +262,140 @@ export const Dashboard = () => {
             />
           </div>
 
-          {/* Content Grid */}
-          <div className="animate-slide-up animate-delay-200" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
-            <UpcomingPayments
-              subscriptions={upcomingPayments}
-              onSubscriptionClick={handleSubscriptionClick}
-            />
-            <CategoryBreakdown data={categoryBreakdown} />
+          {/* Payment Visualization Section */}
+          <div className="animate-slide-up animate-delay-200">
+            {/* View Toggle */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '16px',
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  color: '#ededed',
+                }}
+              >
+                {paymentView === 'timeline' ? t('timeline.title') : t('calendar.title')}
+              </h2>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  background: 'rgba(17, 17, 17, 0.8)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '10px',
+                  padding: '4px',
+                }}
+              >
+                <button
+                  onClick={() => setPaymentView('timeline')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    border: 'none',
+                    background:
+                      paymentView === 'timeline'
+                        ? 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)'
+                        : 'transparent',
+                    color: paymentView === 'timeline' ? '#000' : '#888888',
+                    boxShadow:
+                      paymentView === 'timeline' ? '0 0 15px rgba(0, 212, 255, 0.2)' : 'none',
+                  }}
+                >
+                  <svg
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      display: 'inline',
+                      marginRight: '6px',
+                      verticalAlign: 'text-bottom',
+                    }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
+                  </svg>
+                  {t('view.timeline')}
+                </button>
+                <button
+                  onClick={() => setPaymentView('calendar')}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    border: 'none',
+                    background:
+                      paymentView === 'calendar'
+                        ? 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)'
+                        : 'transparent',
+                    color: paymentView === 'calendar' ? '#000' : '#888888',
+                    boxShadow:
+                      paymentView === 'calendar' ? '0 0 15px rgba(0, 212, 255, 0.2)' : 'none',
+                  }}
+                >
+                  <svg
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      display: 'inline',
+                      marginRight: '6px',
+                      verticalAlign: 'text-bottom',
+                    }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  {t('view.calendar')}
+                </button>
+              </div>
+            </div>
+
+            {/* Views */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                gap: '24px',
+              }}
+            >
+              {paymentView === 'timeline' ? (
+                <PaymentTimeline
+                  subscriptions={activeSubscriptions}
+                  onSubscriptionClick={handleSubscriptionClick}
+                  daysToShow={60}
+                />
+              ) : (
+                <CalendarView
+                  subscriptions={activeSubscriptions}
+                  onSubscriptionClick={handleSubscriptionClick}
+                />
+              )}
+              <CategoryBreakdown data={categoryBreakdown} />
+            </div>
           </div>
         </div>
       )}

@@ -19,10 +19,7 @@ export const getPaymentLabel = (daysUntil: number): string => {
   return '';
 };
 
-export const advancePaymentDate = (
-  currentDate: Date,
-  frequency: BillingFrequency
-): Date => {
+export const advancePaymentDate = (currentDate: Date, frequency: BillingFrequency): Date => {
   if (frequency === BillingFrequency.MONTHLY) {
     return addMonths(currentDate, 1);
   } else if (frequency === BillingFrequency.YEARLY) {

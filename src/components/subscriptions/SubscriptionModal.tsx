@@ -36,11 +36,7 @@ export const SubscriptionModal = ({ isOpen, onClose, subscription }: Subscriptio
       onClose={onClose}
       title={subscription ? t('subscriptions.edit') : t('subscriptions.add')}
     >
-      <SubscriptionForm
-        initialData={subscription}
-        onSubmit={handleSubmit}
-        onCancel={onClose}
-      />
+      <SubscriptionForm initialData={subscription} onSubmit={handleSubmit} onCancel={onClose} />
     </Modal>
   );
 };

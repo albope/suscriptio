@@ -15,15 +15,17 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 
       <div className="relative z-10">
         <Header />
-        <main style={{
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          paddingTop: '40px',
-          paddingBottom: '112px',
-          maxWidth: '1280px',
-          marginLeft: 'auto',
-          marginRight: 'auto'
-        }}>
+        <main
+          style={{
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: '40px',
+            paddingBottom: '112px',
+            maxWidth: '1280px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
           {children}
         </main>
         <MobileNav />

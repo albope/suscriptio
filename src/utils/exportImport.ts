@@ -51,7 +51,7 @@ export async function importFromJson(file: File): Promise<Subscription[]> {
   }
 
   // Convert date strings back to Date objects
-  return data.subscriptions.map(sub => ({
+  return data.subscriptions.map((sub) => ({
     ...sub,
     nextPaymentDate: new Date(sub.nextPaymentDate),
     createdAt: new Date(sub.createdAt),

@@ -53,8 +53,9 @@ export const useSubscriptions = () => {
         const paymentDate = new Date(sub.nextPaymentDate);
         return paymentDate >= now && paymentDate <= futureDate;
       })
-      .sort((a: Subscription, b: Subscription) =>
-        new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime()
+      .sort(
+        (a: Subscription, b: Subscription) =>
+          new Date(a.nextPaymentDate).getTime() - new Date(b.nextPaymentDate).getTime()
       );
   }, [activeSubscriptions]);
 
@@ -93,8 +94,10 @@ export const useSubscriptions = () => {
       const currency = sub.currency || preferredCurrency;
       const existing = byCurrency.get(currency) || { monthly: 0, yearly: 0, count: 0 };
 
-      const monthlyCost = sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
-      const yearlyCost = sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost * 12 : sub.cost;
+      const monthlyCost =
+        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const yearlyCost =
+        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost * 12 : sub.cost;
 
       byCurrency.set(currency, {
         monthly: existing.monthly + monthlyCost,
@@ -120,7 +123,8 @@ export const useSubscriptions = () => {
     activeSubscriptions.forEach((sub: Subscription) => {
       const category = sub.category || 'other';
       const currency = sub.currency || preferredCurrency;
-      const monthlyCost = sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const monthlyCost =
+        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
 
       const existing = breakdown.get(category) || { totalsByCurrency: new Map(), count: 0 };
       const currentTotal = existing.totalsByCurrency.get(currency) || 0;
@@ -146,8 +150,10 @@ export const useSubscriptions = () => {
     if (activeSubscriptions.length === 0) return null;
 
     return activeSubscriptions.reduce((max: Subscription, sub: Subscription) => {
-      const maxMonthlyCost = max.billingFrequency === BillingFrequency.MONTHLY ? max.cost : max.cost / 12;
-      const subMonthlyCost = sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const maxMonthlyCost =
+        max.billingFrequency === BillingFrequency.MONTHLY ? max.cost : max.cost / 12;
+      const subMonthlyCost =
+        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
 
       return subMonthlyCost > maxMonthlyCost ? sub : max;
     });
@@ -159,8 +165,12 @@ export const useSubscriptions = () => {
   }, [activeInPreferredCurrency, monthlySpend]);
 
   const subscriptionsByFrequency = useMemo(() => {
-    const monthly = activeSubscriptions.filter((sub: Subscription) => sub.billingFrequency === BillingFrequency.MONTHLY).length;
-    const yearly = activeSubscriptions.filter((sub: Subscription) => sub.billingFrequency === BillingFrequency.YEARLY).length;
+    const monthly = activeSubscriptions.filter(
+      (sub: Subscription) => sub.billingFrequency === BillingFrequency.MONTHLY
+    ).length;
+    const yearly = activeSubscriptions.filter(
+      (sub: Subscription) => sub.billingFrequency === BillingFrequency.YEARLY
+    ).length;
     return { monthly, yearly };
   }, [activeSubscriptions]);
 

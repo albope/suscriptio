@@ -11,11 +11,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {label && (
-          <label style={{
-            fontSize: '13px',
-            fontWeight: 500,
-            color: '#888888',
-          }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#888888',
+            }}
+          >
             {label}
           </label>
         )}
@@ -53,11 +55,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         >
           {children}
         </select>
-        {error && (
-          <span style={{ fontSize: '12px', color: '#ff6b6b' }}>
-            {error}
-          </span>
-        )}
+        {error && <span style={{ fontSize: '12px', color: '#ff6b6b' }}>{error}</span>}
       </div>
     );
   }

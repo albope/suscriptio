@@ -7,7 +7,10 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (email: string, password: string) => Promise<{ data: AuthResponse['data']; error: AuthError | null }>;
+  signUp: (
+    email: string,
+    password: string
+  ) => Promise<{ data: AuthResponse['data']; error: AuthError | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -27,13 +30,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, []);

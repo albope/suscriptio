@@ -98,7 +98,13 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                 boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)',
               }}
             >
-              <svg style={{ width: '20px', height: '20px', color: '#000' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg
+                style={{ width: '20px', height: '20px', color: '#000' }}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
             </div>
@@ -128,7 +134,13 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
               e.currentTarget.style.color = '#666666';
             }}
           >
-            <svg style={{ width: '20px', height: '20px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg
+              style={{ width: '20px', height: '20px' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>

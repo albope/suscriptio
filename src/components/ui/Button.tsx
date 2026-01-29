@@ -5,7 +5,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-export const Button = ({ variant = 'primary', children, className = '', ...props }: ButtonProps) => {
+export const Button = ({
+  variant = 'primary',
+  children,
+  className = '',
+  ...props
+}: ButtonProps) => {
   const baseStyles: React.CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',

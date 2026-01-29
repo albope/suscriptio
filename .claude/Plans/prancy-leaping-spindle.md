@@ -482,59 +482,75 @@ src/
 
 ---
 
-### Sesión 7: Calidad de Código + CI Básico
+### ✅ Sesión 7: Calidad de Código + CI Básico - COMPLETADA
+**Fecha**: 29/01/2026
 **Objetivo**: Establecer estándares de código y automatización
+**Estado**: ✅ Implementada
 
-#### Tarea 7.1: Configurar ESLint
+#### Tarea 7.1: Configurar ESLint ✅
 - **Qué**: Setup ESLint con reglas para React + TypeScript
 - **Por qué**: Detectar errores y mantener consistencia
 - **Criterios de aceptación**:
-  - [ ] `npm install eslint @eslint/js typescript-eslint eslint-plugin-react-hooks`
-  - [ ] Archivo `eslint.config.js` configurado
-  - [ ] Script `npm run lint` funciona
-  - [ ] Cero errores críticos (warnings OK por ahora)
-- **Archivos**: `package.json`, nuevo `eslint.config.js`
-- **Edge cases**: Reglas muy estrictas → ajustar
-- **Verificación**: `npm run lint` pasa
+  - [x] `npm install eslint @eslint/js typescript-eslint eslint-plugin-react-hooks`
+  - [x] Archivo `eslint.config.js` configurado (flat config)
+  - [x] Script `npm run lint` funciona
+  - [x] Cero errores críticos (13 warnings aceptables)
+- **Archivos**: `package.json`, `eslint.config.js`
+- **Verificación**: ✅ `npm run lint` pasa con 0 errores
 
-#### Tarea 7.2: Configurar Prettier
+#### Tarea 7.2: Configurar Prettier ✅
 - **Qué**: Formateo automático de código
 - **Por qué**: Consistencia de estilo sin discusiones
 - **Criterios de aceptación**:
-  - [ ] `npm install prettier`
-  - [ ] Archivo `.prettierrc` con config básica
-  - [ ] Script `npm run format`
-  - [ ] Integración con ESLint (sin conflictos)
-- **Archivos**: `package.json`, nuevo `.prettierrc`
-- **Edge cases**: Conflictos ESLint/Prettier → eslint-config-prettier
-- **Verificación**: `npm run format` formatea archivos
+  - [x] `npm install prettier eslint-config-prettier`
+  - [x] Archivo `.prettierrc` con config básica
+  - [x] Script `npm run format` y `npm run format:check`
+  - [x] Integración con ESLint (eslint-config-prettier)
+- **Archivos**: `package.json`, `.prettierrc`, `.prettierignore`
+- **Verificación**: ✅ `npm run format` formatea archivos correctamente
 
-#### Tarea 7.3: Tests unitarios para utils
+#### Tarea 7.3: Tests unitarios para utils ✅
 - **Qué**: Tests para calculations.ts, dateUtils.ts, validation.ts
 - **Por qué**: Confianza en lógica crítica de cálculos
 - **Criterios de aceptación**:
-  - [ ] Setup Vitest (ya en stack Vite)
-  - [ ] Tests para normalizeToMonthly, normalizeToYearly
-  - [ ] Tests para formatDate, getDaysUntilPayment
-  - [ ] Tests para validateSubscriptionForm
-  - [ ] Script `npm run test`
-- **Archivos**: `package.json`, nuevos `*.test.ts` junto a utils
-- **Edge cases**: Fechas edge (fin de mes, año bisiesto)
-- **Verificación**: `npm run test` pasa
+  - [x] Setup Vitest en `vite.config.ts`
+  - [x] Tests para normalizeToMonthly, normalizeToYearly, formatCurrency
+  - [x] Tests para formatDate, getDaysUntilPayment, advancePaymentDate
+  - [x] Tests para validateSubscriptionForm (todos los campos)
+  - [x] Script `npm run test` y `npm run test:watch`
+- **Archivos**: `vite.config.ts`, `src/utils/*.test.ts`
+- **Edge cases**: Fechas edge (fin de mes, año bisiesto) cubiertos
+- **Verificación**: ✅ 64 tests pasando
 
-#### Tarea 7.4: GitHub Actions - CI básico
+#### Tarea 7.4: GitHub Actions - CI básico ✅
 - **Qué**: Workflow que ejecuta lint + test + build en PRs
 - **Por qué**: Validación automática antes de merge
 - **Criterios de aceptación**:
-  - [ ] Archivo `.github/workflows/ci.yml`
-  - [ ] Jobs: lint, test, build
-  - [ ] Ejecuta en push a main y PRs
-  - [ ] Badge de status en README
-- **Archivos**: Nuevo `.github/workflows/ci.yml`, `README.md`
-- **Edge cases**: Secrets/env vars → no necesarios por ahora
-- **Verificación**: Push PR, ver checks pasar
+  - [x] Archivo `.github/workflows/ci.yml`
+  - [x] Jobs: lint, test, build (build depende de lint y test)
+  - [x] Ejecuta en push a main/master y PRs
+  - [ ] Badge de status en README (pendiente para próxima sesión)
+- **Archivos**: `.github/workflows/ci.yml`
+- **Verificación**: ✅ Workflow configurado, listo para activarse en push
 
-**Resultado sesión 7**: Pipeline de calidad establecido
+**Resultado sesión 7**: ✅ Pipeline de calidad establecido
+- ESLint con reglas para React + TypeScript
+- Prettier con eslint-config-prettier
+- 64 tests unitarios para utils
+- GitHub Actions CI con lint, test y build
+
+**Archivos creados**:
+- `eslint.config.js`
+- `.prettierrc`
+- `.prettierignore`
+- `src/utils/calculations.test.ts`
+- `src/utils/dateUtils.test.ts`
+- `src/utils/validation.test.ts`
+- `.github/workflows/ci.yml`
+
+**Archivos modificados**:
+- `package.json` (scripts y dependencias)
+- `vite.config.ts` (configuración Vitest)
 
 ---
 

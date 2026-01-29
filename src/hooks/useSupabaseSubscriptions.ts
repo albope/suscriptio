@@ -46,9 +46,10 @@ const toDb = (sub: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>, userId:
   cost: sub.cost,
   currency: sub.currency,
   billing_frequency: sub.billingFrequency,
-  next_payment_date: sub.nextPaymentDate instanceof Date
-    ? sub.nextPaymentDate.toISOString().split('T')[0]
-    : sub.nextPaymentDate,
+  next_payment_date:
+    sub.nextPaymentDate instanceof Date
+      ? sub.nextPaymentDate.toISOString().split('T')[0]
+      : sub.nextPaymentDate,
   status: sub.status,
   category: sub.category || null,
   tags: sub.tags || null,
@@ -99,7 +100,9 @@ export const useSupabaseSubscriptions = () => {
   }, [user, clearSubscriptions, setSubscriptions]);
 
   // Add subscription to Supabase
-  const addSubscription = async (subscription: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const addSubscription = async (
+    subscription: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>
+  ) => {
     if (!user) return;
 
     setIsSyncing(true);
@@ -134,11 +137,13 @@ export const useSupabaseSubscriptions = () => {
     if (updates.name !== undefined) dbUpdates.name = updates.name;
     if (updates.cost !== undefined) dbUpdates.cost = updates.cost;
     if (updates.currency !== undefined) dbUpdates.currency = updates.currency;
-    if (updates.billingFrequency !== undefined) dbUpdates.billing_frequency = updates.billingFrequency;
+    if (updates.billingFrequency !== undefined)
+      dbUpdates.billing_frequency = updates.billingFrequency;
     if (updates.nextPaymentDate !== undefined) {
-      dbUpdates.next_payment_date = updates.nextPaymentDate instanceof Date
-        ? updates.nextPaymentDate.toISOString().split('T')[0]
-        : updates.nextPaymentDate;
+      dbUpdates.next_payment_date =
+        updates.nextPaymentDate instanceof Date
+          ? updates.nextPaymentDate.toISOString().split('T')[0]
+          : updates.nextPaymentDate;
     }
     if (updates.status !== undefined) dbUpdates.status = updates.status;
     if (updates.category !== undefined) dbUpdates.category = updates.category || null;
@@ -197,15 +202,16 @@ export const useSupabaseSubscriptions = () => {
 
     setIsSyncing(true);
 
-    const dbSubscriptions = localSubscriptions.map(sub => ({
+    const dbSubscriptions = localSubscriptions.map((sub) => ({
       user_id: user.id,
       name: sub.name,
       cost: sub.cost,
       currency: sub.currency,
       billing_frequency: sub.billingFrequency,
-      next_payment_date: sub.nextPaymentDate instanceof Date
-        ? sub.nextPaymentDate.toISOString().split('T')[0]
-        : String(sub.nextPaymentDate).split('T')[0],
+      next_payment_date:
+        sub.nextPaymentDate instanceof Date
+          ? sub.nextPaymentDate.toISOString().split('T')[0]
+          : String(sub.nextPaymentDate).split('T')[0],
       status: sub.status,
       category: sub.category || null,
       tags: sub.tags || null,
@@ -213,9 +219,7 @@ export const useSupabaseSubscriptions = () => {
       provider_url: sub.providerUrl || null,
     }));
 
-    const { error: insertError } = await supabase
-      .from('subscriptions')
-      .insert(dbSubscriptions);
+    const { error: insertError } = await supabase.from('subscriptions').insert(dbSubscriptions);
 
     if (insertError) {
       setError(insertError.message);

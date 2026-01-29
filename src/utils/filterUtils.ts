@@ -4,15 +4,10 @@ import { normalizeToMonthly } from './calculations';
 /**
  * Filter subscriptions by search query (name)
  */
-export function filterBySearch(
-  subscriptions: Subscription[],
-  query: string
-): Subscription[] {
+export function filterBySearch(subscriptions: Subscription[], query: string): Subscription[] {
   if (!query.trim()) return subscriptions;
   const lowerQuery = query.toLowerCase();
-  return subscriptions.filter((sub) =>
-    sub.name.toLowerCase().includes(lowerQuery)
-  );
+  return subscriptions.filter((sub) => sub.name.toLowerCase().includes(lowerQuery));
 }
 
 /**
@@ -109,10 +104,7 @@ export function filterByDateRange(
 /**
  * Filter subscriptions by tags (OR logic)
  */
-export function filterByTags(
-  subscriptions: Subscription[],
-  tags: string[]
-): Subscription[] {
+export function filterByTags(subscriptions: Subscription[], tags: string[]): Subscription[] {
   if (tags.length === 0) return subscriptions;
 
   return subscriptions.filter((sub) => {

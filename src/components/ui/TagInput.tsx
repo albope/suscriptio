@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent, useRef, useEffect } from 'react';
+import { useState, KeyboardEvent, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface TagInputProps {
@@ -16,9 +16,9 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
 
   // Filter suggestions based on input and exclude already added tags
   const filteredSuggestions = suggestions
-    .filter((suggestion) =>
-      suggestion.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !tags.includes(suggestion)
+    .filter(
+      (suggestion) =>
+        suggestion.toLowerCase().includes(inputValue.toLowerCase()) && !tags.includes(suggestion)
     )
     .slice(0, 5);
 
@@ -82,17 +82,19 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
   return (
     <div style={{ position: 'relative' }}>
       {/* Tags container */}
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '8px',
-        padding: '12px',
-        background: 'rgba(17, 17, 17, 0.8)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        borderRadius: '10px',
-        minHeight: '48px',
-        alignItems: 'center',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          padding: '12px',
+          background: 'rgba(17, 17, 17, 0.8)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '10px',
+          minHeight: '48px',
+          alignItems: 'center',
+        }}
+      >
         {/* Existing tags */}
         {tags.map((tag) => {
           const color = getTagColor(tag);
@@ -127,10 +129,16 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
                   opacity: 0.7,
                   transition: 'opacity 0.15s ease',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.7')}
               >
-                <svg style={{ width: '14px', height: '14px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg
+                  style={{ width: '14px', height: '14px' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -147,7 +155,7 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
           onKeyDown={handleKeyDown}
           onFocus={() => inputValue && setShowSuggestions(filteredSuggestions.length > 0)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-          placeholder={tags.length === 0 ? (placeholder || t('tags.placeholder')) : ''}
+          placeholder={tags.length === 0 ? placeholder || t('tags.placeholder') : ''}
           style={{
             flex: '1',
             minWidth: '120px',
@@ -163,18 +171,20 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
 
       {/* Suggestions dropdown */}
       {showSuggestions && filteredSuggestions.length > 0 && (
-        <div style={{
-          position: 'absolute',
-          top: 'calc(100% + 4px)',
-          left: 0,
-          right: 0,
-          background: 'rgba(17, 17, 17, 0.95)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '8px',
-          padding: '4px',
-          zIndex: 10,
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-        }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 4px)',
+            left: 0,
+            right: 0,
+            background: 'rgba(17, 17, 17, 0.95)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+            padding: '4px',
+            zIndex: 10,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+        >
           {filteredSuggestions.map((suggestion) => {
             const color = getTagColor(suggestion);
             return (
@@ -197,15 +207,19 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
                   transition: 'background 0.15s ease',
                   textAlign: 'left',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')
+                }
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: color.text,
-                }} />
+                <div
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: color.text,
+                  }}
+                />
                 {suggestion}
               </button>
             );
@@ -214,12 +228,14 @@ export const TagInput = ({ tags, onChange, placeholder, suggestions = [] }: TagI
       )}
 
       {/* Hint text */}
-      <p style={{
-        fontSize: '12px',
-        color: '#666666',
-        marginTop: '6px',
-        marginBottom: '0',
-      }}>
+      <p
+        style={{
+          fontSize: '12px',
+          color: '#666666',
+          marginTop: '6px',
+          marginBottom: '0',
+        }}
+      >
         {t('tags.hint')}
       </p>
     </div>

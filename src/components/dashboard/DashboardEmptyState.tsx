@@ -8,19 +8,23 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
   const { t } = useTranslation();
 
   return (
-    <div className="animate-fade-in" style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '60vh'
-    }}>
+    <div
+      className="animate-fade-in"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '60vh',
+      }}
+    >
       <div
         style={{
           maxWidth: '480px',
           textAlign: 'center',
           padding: '48px 32px',
           borderRadius: '24px',
-          background: 'linear-gradient(145deg, rgba(17, 17, 17, 0.6) 0%, rgba(10, 10, 10, 0.8) 100%)',
+          background:
+            'linear-gradient(145deg, rgba(17, 17, 17, 0.6) 0%, rgba(10, 10, 10, 0.8) 100%)',
           border: '1px solid rgba(255, 255, 255, 0.06)',
           boxShadow: `
             0 0 0 1px rgba(255, 255, 255, 0.03) inset,
@@ -34,7 +38,8 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
             width: '120px',
             height: '120px',
             borderRadius: '24px',
-            background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 212, 255, 0.05) 100%)',
+            background:
+              'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 212, 255, 0.05) 100%)',
             border: '2px solid rgba(0, 212, 255, 0.3)',
             display: 'inline-flex',
             alignItems: 'center',
@@ -48,7 +53,7 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
               width: '56px',
               height: '56px',
               color: '#00d4ff',
-              filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.3))'
+              filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.3))',
             }}
             fill="none"
             viewBox="0 0 24 24"
@@ -64,23 +69,27 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
         </div>
 
         {/* Title */}
-        <h2 style={{
-          fontSize: '28px',
-          fontWeight: 700,
-          color: '#ededed',
-          marginBottom: '12px',
-          letterSpacing: '-0.02em',
-        }}>
+        <h2
+          style={{
+            fontSize: '28px',
+            fontWeight: 700,
+            color: '#ededed',
+            marginBottom: '12px',
+            letterSpacing: '-0.02em',
+          }}
+        >
           {t('dashboard.emptyTitle')}
         </h2>
 
         {/* Subtitle */}
-        <p style={{
-          fontSize: '15px',
-          color: 'rgba(255, 255, 255, 0.5)',
-          marginBottom: '32px',
-          lineHeight: 1.6,
-        }}>
+        <p
+          style={{
+            fontSize: '15px',
+            color: 'rgba(255, 255, 255, 0.5)',
+            marginBottom: '32px',
+            lineHeight: 1.6,
+          }}
+        >
           {t('dashboard.emptySubtitle')}
         </p>
 
@@ -125,29 +134,42 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
             `;
           }}
         >
-          <svg style={{ width: '20px', height: '20px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg
+            style={{ width: '20px', height: '20px' }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           <span>{t('dashboard.emptyAction')}</span>
         </button>
 
         {/* Subtle hint */}
-        <p style={{
-          fontSize: '13px',
-          color: 'rgba(255, 255, 255, 0.3)',
-          marginTop: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-        }}>
-          <svg style={{ width: '14px', height: '14px', color: '#00d4ff' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <p
+          style={{
+            fontSize: '13px',
+            color: 'rgba(255, 255, 255, 0.3)',
+            marginTop: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+          }}
+        >
+          <svg
+            style={{ width: '14px', height: '14px', color: '#00d4ff' }}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           {t('dashboard.emptyHint')}
         </p>
       </div>
-
     </div>
   );
 };
