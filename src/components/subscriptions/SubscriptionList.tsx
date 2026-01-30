@@ -16,16 +16,17 @@ import { Subscription, Category } from '@/types';
 
 type SortOption = 'date-asc' | 'date-desc' | 'price-asc' | 'price-desc' | 'name-asc';
 
-const sortOptions: { value: SortOption; label: string }[] = [
-  { value: 'date-asc', label: 'Fecha (próximas primero)' },
-  { value: 'date-desc', label: 'Fecha (lejanas primero)' },
-  { value: 'price-desc', label: 'Precio (mayor a menor)' },
-  { value: 'price-asc', label: 'Precio (menor a mayor)' },
-  { value: 'name-asc', label: 'Nombre (A-Z)' },
-];
-
 export const SubscriptionList = () => {
   const { t } = useTranslation();
+
+  // Sort options with translations
+  const sortOptions: { value: SortOption; label: string }[] = [
+    { value: 'date-asc', label: t('subscriptions.sortDateAsc') },
+    { value: 'date-desc', label: t('subscriptions.sortDateDesc') },
+    { value: 'price-desc', label: t('subscriptions.sortPriceDesc') },
+    { value: 'price-asc', label: t('subscriptions.sortPriceAsc') },
+    { value: 'name-asc', label: t('subscriptions.sortNameAsc') },
+  ];
   const { subscriptions, undoDelete, getAllTags } = useSubscriptionStore();
   const { permanentDelete } = useSubscriptions();
   const { preferredCurrency } = useSettingsStore();
@@ -230,7 +231,9 @@ export const SubscriptionList = () => {
           </h1>
           <p style={{ fontSize: '14px', color: '#666666' }}>
             {sortedSubscriptions.length}{' '}
-            {sortedSubscriptions.length === 1 ? 'suscripción' : 'suscripciones'}
+            {sortedSubscriptions.length === 1
+              ? t('dashboard.subscription')
+              : t('dashboard.subscriptions')}
           </p>
         </div>
         <Button onClick={handleAddNew}>
@@ -280,7 +283,7 @@ export const SubscriptionList = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar suscripción..."
+            placeholder={t('subscriptions.searchPlaceholder')}
             style={{
               width: '100%',
               padding: '12px 14px 12px 44px',

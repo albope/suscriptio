@@ -1,8 +1,37 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Subscription, BillingFrequency, SubscriptionStatus, CategoryBreakdown } from '@/types';
-import { addDays } from 'date-fns';
+import { addDays, addMonths, addYears, isBefore, startOfDay } from 'date-fns';
 import { DEFAULT_CURRENCY } from '@/constants/currencies';
+
+// Helper function to advance past payment dates
+function advancePaymentDates(subscriptions: Subscription[]): Subscription[] {
+  const today = startOfDay(new Date());
+
+  return subscriptions.map((sub) => {
+    if (sub.status !== SubscriptionStatus.ACTIVE) return sub;
+
+    const nextPayment = startOfDay(new Date(sub.nextPaymentDate));
+    if (!isBefore(nextPayment, today)) return sub;
+
+    let newDate = nextPayment;
+    if (sub.billingFrequency === BillingFrequency.MONTHLY) {
+      while (isBefore(newDate, today)) {
+        newDate = addMonths(newDate, 1);
+      }
+    } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
+      while (isBefore(newDate, today)) {
+        newDate = addYears(newDate, 1);
+      }
+    }
+
+    if (newDate.getTime() !== nextPayment.getTime()) {
+      return { ...sub, nextPaymentDate: newDate, updatedAt: new Date() };
+    }
+
+    return sub;
+  });
+}
 
 // Undo state (outside store to avoid persistence)
 let lastDeletedSubscription: Subscription | null = null;
@@ -298,6 +327,25 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         }
 
         return state;
+      },
+      onRehydrateStorage: () => {
+        return (state) => {
+          if (state && state.subscriptions.length > 0) {
+            // Auto-advance payment dates on app load
+            const advanced = advancePaymentDates(state.subscriptions);
+            // Check if any subscription was actually updated (compare by timestamp)
+            const hasChanges = advanced.some((sub, i) => {
+              const original = state.subscriptions[i];
+              if (!original) return true;
+              const newTime = new Date(sub.nextPaymentDate).getTime();
+              const oldTime = new Date(original.nextPaymentDate).getTime();
+              return newTime !== oldTime;
+            });
+            if (hasChanges) {
+              useSubscriptionStore.setState({ subscriptions: advanced });
+            }
+          }
+        };
       },
     }
   )

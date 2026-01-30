@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
+import { useReminderStore } from '@/store/reminderStore';
+import { useReminders } from '@/hooks/useReminders';
 import { exportToJson, exportToCsv, importFromJson } from '@/utils/exportImport';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
@@ -14,11 +16,36 @@ export const Settings = () => {
   const { t } = useTranslation();
   const { subscriptions, replaceAllSubscriptions, addMultipleSubscriptions } =
     useSubscriptionStore();
-  const { preferredCurrency, setPreferredCurrency } = useSettingsStore();
+  const { preferredCurrency, setPreferredCurrency, language, setLanguage } = useSettingsStore();
+  const {
+    enabled: remindersEnabled,
+    daysBeforePayment,
+    setEnabled,
+    setDaysBeforePayment,
+  } = useReminderStore();
+  const { isSupported, notificationPermission, requestPermission } = useReminders();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [pendingImport, setPendingImport] = useState<Subscription[] | null>(null);
+
+  const handleToggleReminders = async () => {
+    if (!remindersEnabled) {
+      // Enabling reminders - request permission first
+      if (notificationPermission !== 'granted') {
+        const permission = await requestPermission();
+        if (permission !== 'granted') {
+          toast.error(t('reminders.permissionDenied'));
+          return;
+        }
+      }
+      setEnabled(true);
+      toast.success(t('reminders.enabled'));
+    } else {
+      setEnabled(false);
+      toast.success(t('reminders.disabled'));
+    }
+  };
 
   const handleExportJson = () => {
     if (subscriptions.length === 0) {
@@ -164,7 +191,197 @@ export const Settings = () => {
             ))}
           </Select>
         </div>
+
+        {/* Language selector */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px',
+            background: 'rgba(0, 0, 0, 0.3)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.04)',
+            marginTop: '16px',
+          }}
+        >
+          <div>
+            <h3
+              style={{
+                fontSize: '15px',
+                fontWeight: 600,
+                color: '#ededed',
+                marginBottom: '4px',
+              }}
+            >
+              {t('settings.language')}
+            </h3>
+            <p style={{ fontSize: '13px', color: '#666666' }}>
+              {t('settings.languageDescription')}
+            </p>
+          </div>
+          <Select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as 'es' | 'en')}
+            style={{ minWidth: '140px' }}
+          >
+            <option value="es">{t('languages.es')}</option>
+            <option value="en">{t('languages.en')}</option>
+          </Select>
+        </div>
       </section>
+
+      {/* Reminders Section */}
+      {isSupported() && (
+        <section
+          style={{
+            background: 'rgba(17, 17, 17, 0.6)',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginBottom: '24px',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#ededed',
+              marginBottom: '8px',
+            }}
+          >
+            {t('reminders.section')}
+          </h2>
+          <p
+            style={{
+              fontSize: '14px',
+              color: '#666666',
+              marginBottom: '24px',
+            }}
+          >
+            {t('reminders.description')}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Enable/Disable Toggle */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '16px',
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 600,
+                    color: '#ededed',
+                    marginBottom: '4px',
+                  }}
+                >
+                  {t('reminders.enableTitle')}
+                </h3>
+                <p style={{ fontSize: '13px', color: '#666666' }}>
+                  {t('reminders.enableDescription')}
+                </p>
+              </div>
+              <button
+                onClick={handleToggleReminders}
+                role="switch"
+                aria-checked={remindersEnabled}
+                style={{
+                  width: '52px',
+                  height: '28px',
+                  borderRadius: '14px',
+                  background: remindersEnabled
+                    ? 'linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%)'
+                    : 'rgba(255, 255, 255, 0.1)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '3px',
+                    left: remindersEnabled ? '26px' : '3px',
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: '50%',
+                    background: '#fff',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                  }}
+                />
+              </button>
+            </div>
+
+            {/* Days before payment selector */}
+            {remindersEnabled && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '16px',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255, 255, 255, 0.04)',
+                }}
+              >
+                <div>
+                  <h3
+                    style={{
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      color: '#ededed',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    {t('reminders.daysTitle')}
+                  </h3>
+                  <p style={{ fontSize: '13px', color: '#666666' }}>
+                    {t('reminders.daysDescription')}
+                  </p>
+                </div>
+                <Select
+                  value={daysBeforePayment.toString()}
+                  onChange={(e) => setDaysBeforePayment(parseInt(e.target.value))}
+                  style={{ minWidth: '120px' }}
+                  aria-label={t('reminders.daysTitle')}
+                >
+                  <option value="1">{t('reminders.days.1')}</option>
+                  <option value="2">{t('reminders.days.2')}</option>
+                  <option value="3">{t('reminders.days.3')}</option>
+                  <option value="7">{t('reminders.days.7')}</option>
+                </Select>
+              </div>
+            )}
+          </div>
+
+          {/* Disclaimer */}
+          <div
+            style={{
+              marginTop: '16px',
+              padding: '12px 16px',
+              background: 'rgba(245, 158, 11, 0.08)',
+              borderRadius: '8px',
+              border: '1px solid rgba(245, 158, 11, 0.15)',
+            }}
+          >
+            <p style={{ fontSize: '12px', color: '#f59e0b', lineHeight: 1.5 }}>
+              {t('reminders.disclaimer')}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Data Management Section */}
       <section
@@ -323,8 +540,10 @@ export const Settings = () => {
           }}
         >
           <p style={{ fontSize: '13px', color: '#00d4ff' }}>
-            {subscriptions.length} {subscriptions.length === 1 ? 'suscripcion' : 'suscripciones'}{' '}
-            guardadas localmente
+            {subscriptions.length}{' '}
+            {subscriptions.length === 1
+              ? t('settings.storedLocallyOne')
+              : t('settings.storedLocally')}
           </p>
         </div>
       </section>

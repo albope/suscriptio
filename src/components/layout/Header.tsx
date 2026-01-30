@@ -259,10 +259,11 @@ export const Header = () => {
           </Link>
 
           {/* Center Navigation */}
-          <nav className="nav-container">
+          <nav className="nav-container" aria-label={t('nav.main', 'Navegación principal')}>
             <Link
               to="/"
               className={`nav-link ${isActive('/') ? 'nav-link-active' : 'nav-link-inactive'}`}
+              aria-current={isActive('/') ? 'page' : undefined}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
@@ -270,6 +271,7 @@ export const Header = () => {
               }}
             >
               <svg
+                aria-hidden="true"
                 style={{
                   width: '14px',
                   height: '14px',
@@ -293,6 +295,7 @@ export const Header = () => {
             <Link
               to="/subscriptions"
               className={`nav-link ${isActive('/subscriptions') ? 'nav-link-active' : 'nav-link-inactive'}`}
+              aria-current={isActive('/subscriptions') ? 'page' : undefined}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
@@ -300,6 +303,7 @@ export const Header = () => {
               }}
             >
               <svg
+                aria-hidden="true"
                 style={{
                   width: '14px',
                   height: '14px',
@@ -323,6 +327,7 @@ export const Header = () => {
             <Link
               to="/settings"
               className={`nav-link ${isActive('/settings') ? 'nav-link-active' : 'nav-link-inactive'}`}
+              aria-current={isActive('/settings') ? 'page' : undefined}
               onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
@@ -330,6 +335,7 @@ export const Header = () => {
               }}
             >
               <svg
+                aria-hidden="true"
                 style={{
                   width: '14px',
                   height: '14px',
@@ -366,7 +372,7 @@ export const Header = () => {
 
               <div className="divider" />
 
-              <button onClick={signOut} className="logout-btn">
+              <button onClick={signOut} className="logout-btn" aria-label={t('auth.logout')}>
                 <svg
                   width="14"
                   height="14"
@@ -374,6 +380,7 @@ export const Header = () => {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
+                  aria-hidden="true"
                 >
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16,17 21,12 16,7" />

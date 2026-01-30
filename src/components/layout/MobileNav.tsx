@@ -9,6 +9,7 @@ export const MobileNav = () => {
 
   return (
     <nav
+      aria-label={t('nav.mobile', 'Navegación móvil')}
       style={{
         position: 'fixed',
         bottom: 0,
@@ -24,6 +25,7 @@ export const MobileNav = () => {
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
         <Link
           to="/"
+          aria-current={isActive('/') ? 'page' : undefined}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -35,6 +37,7 @@ export const MobileNav = () => {
           }}
         >
           <div
+            aria-hidden="true"
             style={{
               padding: '10px',
               borderRadius: '12px',
@@ -48,6 +51,7 @@ export const MobileNav = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -63,6 +67,7 @@ export const MobileNav = () => {
         </Link>
         <Link
           to="/subscriptions"
+          aria-current={isActive('/subscriptions') ? 'page' : undefined}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -74,6 +79,7 @@ export const MobileNav = () => {
           }}
         >
           <div
+            aria-hidden="true"
             style={{
               padding: '10px',
               borderRadius: '12px',
@@ -87,6 +93,7 @@ export const MobileNav = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -102,6 +109,7 @@ export const MobileNav = () => {
         </Link>
         <Link
           to="/settings"
+          aria-current={isActive('/settings') ? 'page' : undefined}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -113,6 +121,7 @@ export const MobileNav = () => {
           }}
         >
           <div
+            aria-hidden="true"
             style={{
               padding: '10px',
               borderRadius: '12px',
@@ -126,6 +135,7 @@ export const MobileNav = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

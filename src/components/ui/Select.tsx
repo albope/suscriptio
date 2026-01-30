@@ -1,4 +1,4 @@
-import { SelectHTMLAttributes, forwardRef, ReactNode } from 'react';
+import { SelectHTMLAttributes, forwardRef, ReactNode, useId } from 'react';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -7,11 +7,16 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, children, className = '', ...props }, ref) => {
+  ({ label, error, children, className = '', id: providedId, ...props }, ref) => {
+    const generatedId = useId();
+    const selectId = providedId || generatedId;
+    const errorId = `${selectId}-error`;
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {label && (
           <label
+            htmlFor={selectId}
             style={{
               fontSize: '13px',
               fontWeight: 500,
@@ -19,10 +24,19 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             }}
           >
             {label}
+            {props.required && (
+              <span aria-hidden="true" style={{ color: '#ff6b6b', marginLeft: '4px' }}>
+                *
+              </span>
+            )}
           </label>
         )}
         <select
           ref={ref}
+          id={selectId}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={error ? errorId : undefined}
+          aria-required={props.required}
           style={{
             width: '100%',
             padding: '12px 16px',
@@ -55,7 +69,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         >
           {children}
         </select>
-        {error && <span style={{ fontSize: '12px', color: '#ff6b6b' }}>{error}</span>}
+        {error && (
+          <span id={errorId} role="alert" style={{ fontSize: '12px', color: '#ff6b6b' }}>
+            {error}
+          </span>
+        )}
       </div>
     );
   }

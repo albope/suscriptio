@@ -87,7 +87,30 @@ export const Login = () => {
     const { error } = await signIn(email, password);
 
     if (error) {
-      setError(t('auth.errors.invalidCredentials'));
+      // Map Supabase error codes to user-friendly messages
+      const errorMessage = error.message.toLowerCase();
+
+      if (
+        errorMessage.includes('invalid login credentials') ||
+        errorMessage.includes('invalid_credentials')
+      ) {
+        setError(t('auth.errors.invalidCredentials'));
+      } else if (errorMessage.includes('email not confirmed')) {
+        setError(t('auth.errors.emailNotConfirmed'));
+      } else if (
+        errorMessage.includes('too many requests') ||
+        errorMessage.includes('rate limit')
+      ) {
+        setError(t('auth.errors.tooManyRequests'));
+      } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+        setError(t('auth.errors.networkError'));
+      } else if (errorMessage.includes('user not found')) {
+        setError(t('auth.errors.userNotFound'));
+      } else {
+        // Fallback to generic error
+        setError(t('auth.errors.invalidCredentials'));
+      }
+
       setLoading(false);
     } else {
       navigate('/');

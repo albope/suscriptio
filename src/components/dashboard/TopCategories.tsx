@@ -197,7 +197,7 @@ export const TopCategories = ({
             justifyContent: 'center',
             flexShrink: 0,
             boxShadow: '0 0 20px rgba(168, 85, 247, 0.1)',
-            marginLeft: '16px',
+            marginLeft: '24px',
           }}
         >
           <svg

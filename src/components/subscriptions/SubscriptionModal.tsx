@@ -26,7 +26,7 @@ export const SubscriptionModal = ({ isOpen, onClose, subscription }: Subscriptio
       }
       onClose();
     } catch (error) {
-      toast.error('Error al guardar la suscripción');
+      toast.error(t('subscriptions.saveError'));
     }
   };
 

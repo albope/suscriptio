@@ -29,10 +29,7 @@ interface MonthData {
   isCurrentMonth: boolean;
 }
 
-export const AnnualProjection = ({
-  subscriptions,
-  preferredCurrency,
-}: AnnualProjectionProps) => {
+export const AnnualProjection = ({ subscriptions, preferredCurrency }: AnnualProjectionProps) => {
   const { t } = useTranslation();
 
   // Calculate 12 months of projected spend
@@ -43,9 +40,7 @@ export const AnnualProjection = ({
     const data: MonthData[] = [];
 
     // Filter subscriptions by preferred currency
-    const filteredSubs = subscriptions.filter(
-      (sub) => sub.currency === preferredCurrency
-    );
+    const filteredSubs = subscriptions.filter((sub) => sub.currency === preferredCurrency);
 
     // Generate data for 12 months starting from current month
     for (let i = 0; i < 12; i++) {
@@ -325,7 +320,11 @@ export const AnnualProjection = ({
       {/* Chart */}
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={projectionData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" vertical={false} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="rgba(255, 255, 255, 0.05)"
+            vertical={false}
+          />
           <XAxis
             dataKey="month"
             axisLine={false}
@@ -345,10 +344,7 @@ export const AnnualProjection = ({
           <Bar dataKey="monthly" stackId="a" fill="#00d4ff" radius={[0, 0, 0, 0]} />
           <Bar dataKey="yearly" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]}>
             {projectionData.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.yearly > 0 ? '#f59e0b' : 'transparent'}
-              />
+              <Cell key={`cell-${index}`} fill={entry.yearly > 0 ? '#f59e0b' : 'transparent'} />
             ))}
           </Bar>
         </BarChart>

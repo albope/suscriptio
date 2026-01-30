@@ -15,9 +15,20 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
   const daysUntil = getDaysUntilPayment(subscription.nextPaymentDate);
   const paymentLabel = getPaymentLabel(daysUntil);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`${subscription.name}, ${formatCurrency(subscription.cost, subscription.currency)} ${subscription.billingFrequency === BillingFrequency.MONTHLY ? t('subscriptions.frequency.monthly') : t('subscriptions.frequency.yearly')}`}
       style={{
         padding: '16px 20px',
         background: 'rgba(255, 255, 255, 0.02)',
@@ -26,7 +37,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
         cursor: 'pointer',
         transition: 'all 0.2s ease',
       }}
-      className="hover:bg-white/[0.04] hover:border-cyan-500/20"
+      className="hover:bg-white/[0.04] hover:border-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:ring-offset-2 focus:ring-offset-black"
     >
       <div
         style={{
@@ -97,6 +108,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -215,7 +227,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
                   e.stopPropagation();
                   onDelete(subscription.id);
                 }}
-                title={t('subscriptions.delete', 'Eliminar')}
+                aria-label={`${t('subscriptions.delete', 'Eliminar')} ${subscription.name}`}
                 style={{
                   width: '28px',
                   height: '28px',
@@ -246,6 +258,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2.5}
+                  aria-hidden="true"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -253,6 +266,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
             )}
           </div>
           <div
+            aria-hidden="true"
             style={{
               width: '32px',
               height: '32px',
@@ -270,6 +284,7 @@ export const SubscriptionCard = ({ subscription, onClick, onDelete }: Subscripti
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2.5}
+              aria-hidden="true"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>

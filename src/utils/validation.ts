@@ -42,3 +42,52 @@ const isValidUrl = (url: string): boolean => {
     return false;
   }
 };
+
+// Password validation
+export interface PasswordValidation {
+  isValid: boolean;
+  errors: string[];
+  strength: 'weak' | 'medium' | 'strong';
+}
+
+export const validatePassword = (password: string): PasswordValidation => {
+  const errors: string[] = [];
+
+  if (password.length < 8) {
+    errors.push('validation.password.minLength');
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    errors.push('validation.password.uppercase');
+  }
+
+  if (!/[a-z]/.test(password)) {
+    errors.push('validation.password.lowercase');
+  }
+
+  if (!/[0-9]/.test(password)) {
+    errors.push('validation.password.number');
+  }
+
+  // Calculate strength
+  let strength: 'weak' | 'medium' | 'strong' = 'weak';
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (errors.length === 0) {
+    strength = hasSpecialChar || password.length >= 12 ? 'strong' : 'medium';
+  } else if (errors.length <= 2 && password.length >= 6) {
+    strength = 'medium';
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    strength,
+  };
+};
+
+// Email validation
+export const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};

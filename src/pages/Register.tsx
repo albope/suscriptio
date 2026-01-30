@@ -1,7 +1,8 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { validatePassword, validateEmail } from '@/utils/validation';
 
 export const Register = () => {
   const { t } = useTranslation();
@@ -15,17 +16,37 @@ export const Register = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const passwordValidation = useMemo(() => validatePassword(password), [password]);
+
+  const getStrengthColor = (strength: string) => {
+    switch (strength) {
+      case 'strong':
+        return '#22c55e';
+      case 'medium':
+        return '#f59e0b';
+      default:
+        return '#ef4444';
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (password !== confirmPassword) {
-      setError(t('auth.errors.passwordMismatch'));
+    // Validate email format
+    if (!validateEmail(email)) {
+      setError(t('validation.invalidEmail'));
       return;
     }
 
-    if (password.length < 6) {
-      setError(t('auth.errors.weakPassword'));
+    // Validate password strength
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.errors.map((err) => t(err)).join('. '));
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError(t('auth.errors.passwordMismatch'));
       return;
     }
 
@@ -46,7 +67,7 @@ export const Register = () => {
       setLoading(false);
     } else if (data?.user && !data?.session) {
       // User created but needs email confirmation
-      setSuccess('¡Cuenta creada! Revisa tu email para confirmar tu cuenta.');
+      setSuccess(t('auth.confirmEmail'));
       setLoading(false);
     } else {
       navigate('/');
@@ -195,7 +216,7 @@ export const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               style={inputStyle}
               onFocus={(e) => {
                 e.currentTarget.style.borderColor = '#00d4ff';
@@ -206,6 +227,83 @@ export const Register = () => {
                 e.currentTarget.style.boxShadow = 'none';
               }}
             />
+            {/* Password strength indicator */}
+            {password.length > 0 && (
+              <div style={{ marginTop: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginBottom: '6px',
+                  }}
+                >
+                  <div
+                    style={{
+                      flex: 1,
+                      height: '4px',
+                      borderRadius: '2px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width:
+                          passwordValidation.strength === 'strong'
+                            ? '100%'
+                            : passwordValidation.strength === 'medium'
+                              ? '66%'
+                              : '33%',
+                        height: '100%',
+                        background: getStrengthColor(passwordValidation.strength),
+                        transition: 'all 0.2s ease',
+                      }}
+                    />
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 500,
+                      color: getStrengthColor(passwordValidation.strength),
+                    }}
+                  >
+                    {t(`validation.password.${passwordValidation.strength}`)}
+                  </span>
+                </div>
+                <ul
+                  style={{
+                    margin: 0,
+                    padding: 0,
+                    listStyle: 'none',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '4px 12px',
+                  }}
+                >
+                  {[
+                    { key: 'minLength', check: password.length >= 8 },
+                    { key: 'uppercase', check: /[A-Z]/.test(password) },
+                    { key: 'lowercase', check: /[a-z]/.test(password) },
+                    { key: 'number', check: /[0-9]/.test(password) },
+                  ].map(({ key, check }) => (
+                    <li
+                      key={key}
+                      style={{
+                        fontSize: '11px',
+                        color: check ? '#22c55e' : '#666666',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <span>{check ? '✓' : '○'}</span>
+                      {t(`validation.password.${key}`)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <div style={{ marginBottom: '24px' }}>
@@ -225,7 +323,7 @@ export const Register = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               style={inputStyle}
               onFocus={(e) => {
                 e.currentTarget.style.borderColor = '#00d4ff';

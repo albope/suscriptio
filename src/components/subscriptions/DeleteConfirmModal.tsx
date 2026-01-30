@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useCallback, useId } from 'react';
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -16,6 +17,63 @@ export const DeleteConfirmModal = ({
   isDeleting,
 }: DeleteConfirmModalProps) => {
   const { t } = useTranslation();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descriptionId = useId();
+
+  // Focus trap implementation
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isDeleting) {
+        onCancel();
+        return;
+      }
+
+      if (e.key !== 'Tab' || !modalRef.current) return;
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    },
+    [onCancel, isDeleting]
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      previousActiveElement.current = document.activeElement as HTMLElement;
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        const cancelButton = modalRef.current?.querySelector<HTMLElement>('button');
+        cancelButton?.focus();
+      });
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+
+      if (previousActiveElement.current && isOpen) {
+        previousActiveElement.current.focus();
+      }
+    };
+  }, [isOpen, handleKeyDown]);
 
   if (!isOpen) return null;
 
@@ -33,7 +91,8 @@ export const DeleteConfirmModal = ({
     >
       {/* Backdrop */}
       <div
-        onClick={onCancel}
+        onClick={isDeleting ? undefined : onCancel}
+        aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
@@ -44,6 +103,12 @@ export const DeleteConfirmModal = ({
 
       {/* Modal */}
       <div
+        ref={modalRef}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+        tabIndex={-1}
         style={{
           position: 'relative',
           width: '100%',
@@ -59,6 +124,7 @@ export const DeleteConfirmModal = ({
             0 0 60px rgba(239, 68, 68, 0.1)
           `,
           animation: 'modalIn 0.2s ease-out',
+          outline: 'none',
         }}
       >
         <style>
@@ -78,6 +144,7 @@ export const DeleteConfirmModal = ({
 
         {/* Warning Icon */}
         <div
+          aria-hidden="true"
           style={{
             width: '56px',
             height: '56px',
@@ -98,6 +165,7 @@ export const DeleteConfirmModal = ({
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={1.5}
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -109,6 +177,7 @@ export const DeleteConfirmModal = ({
 
         {/* Title */}
         <h2
+          id={titleId}
           style={{
             fontSize: '18px',
             fontWeight: 700,
@@ -122,6 +191,7 @@ export const DeleteConfirmModal = ({
 
         {/* Description */}
         <p
+          id={descriptionId}
           style={{
             fontSize: '14px',
             color: 'rgba(255, 255, 255, 0.6)',

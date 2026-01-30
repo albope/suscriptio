@@ -1,14 +1,18 @@
+import { useTranslation } from 'react-i18next';
+
 interface EmptyStateProps {
   filter?: 'all' | 'active' | 'canceled';
 }
 
 export const EmptyState = ({ filter = 'active' }: EmptyStateProps) => {
+  const { t } = useTranslation();
+
   const getMessage = () => {
     switch (filter) {
       case 'canceled':
         return {
-          title: 'No hay suscripciones canceladas',
-          subtitle: 'Las suscripciones que canceles aparecerán aquí',
+          title: t('subscriptions.emptyCanceled'),
+          subtitle: t('subscriptions.emptyCanceledSubtitle'),
           icon: (
             <svg
               style={{ width: '32px', height: '32px', color: '#00ff94' }}
@@ -29,8 +33,8 @@ export const EmptyState = ({ filter = 'active' }: EmptyStateProps) => {
         };
       case 'all':
         return {
-          title: 'No hay suscripciones',
-          subtitle: 'Añade tu primera suscripción para comenzar',
+          title: t('subscriptions.emptyAll'),
+          subtitle: t('subscriptions.emptyAllSubtitle'),
           icon: (
             <svg
               style={{ width: '32px', height: '32px', color: '#00d4ff' }}
@@ -52,8 +56,8 @@ export const EmptyState = ({ filter = 'active' }: EmptyStateProps) => {
       case 'active':
       default:
         return {
-          title: 'No hay suscripciones activas',
-          subtitle: 'Añade tu primera suscripción para comenzar',
+          title: t('subscriptions.emptyActive'),
+          subtitle: t('subscriptions.emptyActiveSubtitle'),
           icon: (
             <svg
               style={{ width: '32px', height: '32px', color: '#00d4ff' }}

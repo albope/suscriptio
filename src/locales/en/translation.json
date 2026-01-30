@@ -1,0 +1,262 @@
+{
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "currency": "$",
+    "closeModal": "Close modal"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "subscriptions": "Subscriptions",
+    "settings": "Settings",
+    "main": "Main navigation",
+    "mobile": "Mobile navigation"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "monthlySpend": "Monthly spend",
+    "yearlySpend": "Yearly spend",
+    "upcomingPayments": "Upcoming payments",
+    "categoryBreakdown": "Category breakdown",
+    "activeSubscriptions": "Active subscriptions",
+    "mostExpensive": "Most expensive",
+    "next30Days": "Next 30 days",
+    "noUpcoming": "No upcoming payments in the next 30 days",
+    "averageCost": "Average cost",
+    "perSubscription": "Per subscription",
+    "monthly": "monthly",
+    "yearly": "yearly",
+    "emptyTitle": "You don't have any subscriptions yet",
+    "emptySubtitle": "Start by adding your first subscription to track your recurring expenses",
+    "emptyAction": "Add first subscription",
+    "emptyHint": "Track your expenses in one place",
+    "topCategories": "Top categories",
+    "viewAllCategories": "View full breakdown",
+    "monthlySpendSubtitle": "Current monthly spend",
+    "yearlySpendSubtitle": "Total yearly projection",
+    "subscription": "subscription",
+    "subscriptions": "subscriptions",
+    "annualProjection": "Annual projection",
+    "next12Months": "Expense distribution over the next 12 months",
+    "projectedTotal": "Projected total",
+    "monthlySubscriptions": "Monthly subscriptions",
+    "yearlySubscriptions": "Yearly subscriptions",
+    "monthlyProjection": "Monthly payments",
+    "yearlyPayments": "Yearly payments",
+    "noDataAvailable": "No data available",
+    "addSubscriptionsToSeeBreakdown": "Add subscriptions to see the breakdown"
+  },
+  "subscriptions": {
+    "title": "Subscriptions",
+    "add": "Add subscription",
+    "edit": "Edit subscription",
+    "cancelSubscription": "Cancel subscription",
+    "confirmCancel": "Cancel subscription? It will be excluded from totals, but the record will be kept.",
+    "keepActive": "Keep active",
+    "emptyState": "No subscriptions. Add your first subscription!",
+    "emptyCanceled": "No canceled subscriptions",
+    "emptyCanceledSubtitle": "Canceled subscriptions will appear here",
+    "emptyAll": "No subscriptions",
+    "emptyAllSubtitle": "Add your first subscription to get started",
+    "emptyActive": "No active subscriptions",
+    "emptyActiveSubtitle": "Add your first subscription to get started",
+    "saveError": "Error saving subscription",
+    "filterActive": "Active",
+    "filterCanceled": "Canceled",
+    "filterAll": "All",
+    "sortByDate": "Payment date",
+    "sortByName": "Name",
+    "sortByCost": "Cost",
+    "sortDateAsc": "Date (soonest first)",
+    "sortDateDesc": "Date (latest first)",
+    "sortPriceDesc": "Price (high to low)",
+    "sortPriceAsc": "Price (low to high)",
+    "sortNameAsc": "Name (A-Z)",
+    "searchPlaceholder": "Search subscription...",
+    "fields": {
+      "name": "Name",
+      "cost": "Cost",
+      "currency": "Currency",
+      "billingFrequency": "Billing frequency",
+      "nextPaymentDate": "Next payment date",
+      "status": "Status",
+      "category": "Category",
+      "tags": "Tags",
+      "notes": "Notes",
+      "providerUrl": "Provider URL"
+    },
+    "frequency": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "/ month",
+      "perYear": "/ year"
+    },
+    "status": {
+      "active": "Active",
+      "canceled": "Canceled"
+    },
+    "categories": {
+      "streaming": "Streaming",
+      "productivity": "Productivity",
+      "cloud_storage": "Cloud Storage",
+      "music": "Music",
+      "gaming": "Gaming",
+      "health_fitness": "Health & Fitness",
+      "news_learning": "News & Learning",
+      "utilities": "Utilities",
+      "other": "Other"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "invalidUrl": "Invalid URL",
+    "invalidNumber": "Invalid number",
+    "minValue": "Minimum value: {{min}}",
+    "maxValue": "Maximum value: {{max}}",
+    "password": {
+      "minLength": "Minimum 8 characters",
+      "uppercase": "At least one uppercase letter",
+      "lowercase": "At least one lowercase letter",
+      "number": "At least one number",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "invalidEmail": "Invalid email address"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "logout": "Sign out",
+    "confirmEmail": "Account created! Check your email to confirm your account.",
+    "errors": {
+      "invalidCredentials": "Incorrect email or password",
+      "emailInUse": "This email is already registered",
+      "weakPassword": "Password must meet security requirements",
+      "passwordMismatch": "Passwords do not match",
+      "emailNotConfirmed": "Please confirm your email before signing in. Check your inbox.",
+      "tooManyRequests": "Too many attempts. Please wait a few minutes before trying again.",
+      "networkError": "Connection error. Please check your internet connection.",
+      "userNotFound": "No account exists with this email"
+    }
+  },
+  "migration": {
+    "title": "Data found",
+    "message": "We found {{count}} subscriptions saved locally. Would you like to migrate them to your account?",
+    "migrate": "Migrate data",
+    "discard": "Discard"
+  },
+  "toasts": {
+    "subscriptionCreated": "Subscription created successfully",
+    "subscriptionUpdated": "Subscription updated",
+    "subscriptionDeleted": "Subscription deleted",
+    "undo": "Undo",
+    "undoSuccess": "Subscription restored",
+    "exportSuccess": "JSON backup downloaded successfully",
+    "exportCsvSuccess": "CSV downloaded successfully (Excel compatible)",
+    "exportEmpty": "No subscriptions to export",
+    "importSuccess": "{{count}} subscriptions imported successfully",
+    "importError": "Import error: invalid file",
+    "importReplaced": "Data replaced successfully",
+    "importAdded": "{{count}} subscriptions added"
+  },
+  "settings": {
+    "title": "Settings",
+    "preferencesSection": "Preferences",
+    "preferencesDescription": "Customize how data is displayed in the application",
+    "preferredCurrency": "Preferred currency",
+    "preferredCurrencyDescription": "Dashboard totals will be displayed in this currency",
+    "language": "Language",
+    "languageDescription": "Application display language",
+    "dataSection": "Data management",
+    "dataDescription": "Export your subscriptions as backup or import data from a file",
+    "export": "Export data",
+    "exportDescription": "Download your subscriptions as JSON (backup) or CSV (Excel/Sheets)",
+    "import": "Import data",
+    "importDescription": "Restore subscriptions from a backup file",
+    "importConfirmTitle": "Import data",
+    "importConfirmMessage": "How would you like to import the data?",
+    "importReplace": "Replace all",
+    "importReplaceDescription": "Deletes current subscriptions and replaces them with the file's data",
+    "importAdd": "Add to existing",
+    "importAddDescription": "Keeps current subscriptions and adds the ones from the file",
+    "subscriptionsCount": "{{count}} subscriptions in the file",
+    "storedLocally": "subscriptions stored locally",
+    "storedLocallyOne": "subscription stored locally"
+  },
+  "filters": {
+    "advanced": "Advanced filters",
+    "categories": "Categories",
+    "tags": "Tags",
+    "priceRange": "Price range",
+    "dateRange": "Date range",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "clearAll": "Clear filters",
+    "activeFilters": "{{count}} active filter",
+    "activeFilters_other": "{{count}} active filters",
+    "noCategory": "No category",
+    "noResults": "No subscriptions found with these filters",
+    "noResultsHint": "Try adjusting your search criteria",
+    "presets": {
+      "next7days": "Next 7 days",
+      "next30days": "Next 30 days",
+      "thisMonth": "This month",
+      "next3months": "Next 3 months"
+    }
+  },
+  "tags": {
+    "placeholder": "Type and press Enter to add tags",
+    "hint": "Press Enter or use comma (,) to add. Backspace to delete.",
+    "moreCount": "+{{count}} more"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "subtitle": "Next {{days}} days",
+    "noPayments": "No payments scheduled in this period"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "Monthly payment view"
+  },
+  "view": {
+    "timeline": "Timeline",
+    "calendar": "Calendar"
+  },
+  "reminders": {
+    "section": "Reminders",
+    "description": "Receive notifications about upcoming payments while the app is open",
+    "enableTitle": "Enable reminders",
+    "enableDescription": "Upcoming payment notifications",
+    "daysTitle": "Days in advance",
+    "daysDescription": "How many days before payment to notify",
+    "days": {
+      "1": "1 day before",
+      "2": "2 days before",
+      "3": "3 days before",
+      "7": "1 week before"
+    },
+    "disclaimer": "Reminders only work while the application is open. To avoid missing payments, we recommend opening the app regularly or adding it to your home screen.",
+    "enabled": "Reminders enabled",
+    "disabled": "Reminders disabled",
+    "permissionDenied": "You need to allow notifications to enable reminders"
+  },
+  "languages": {
+    "es": "Spanish",
+    "en": "English"
+  }
+}

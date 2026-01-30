@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeToMonthly, normalizeToYearly, formatCurrency, formatCurrencyWithCode } from './calculations';
+import {
+  normalizeToMonthly,
+  normalizeToYearly,
+  formatCurrency,
+  formatCurrencyWithCode,
+} from './calculations';
 import { BillingFrequency } from '@/types';
 
 describe('normalizeToMonthly', () => {

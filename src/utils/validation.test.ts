@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateSubscriptionForm } from './validation';
+import { validateSubscriptionForm, validatePassword, validateEmail } from './validation';
 import { BillingFrequency } from '@/types';
 
 const validFormData = {
@@ -209,5 +209,121 @@ describe('validateSubscriptionForm', () => {
       });
       expect(Object.keys(errors)).toHaveLength(0);
     });
+  });
+});
+
+describe('validatePassword', () => {
+  describe('password requirements', () => {
+    it('returns invalid for password shorter than 8 characters', () => {
+      const result = validatePassword('Short1A');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContain('validation.password.minLength');
+    });
+
+    it('returns invalid for password without uppercase', () => {
+      const result = validatePassword('password123');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContain('validation.password.uppercase');
+    });
+
+    it('returns invalid for password without lowercase', () => {
+      const result = validatePassword('PASSWORD123');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContain('validation.password.lowercase');
+    });
+
+    it('returns invalid for password without number', () => {
+      const result = validatePassword('PasswordABC');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContain('validation.password.number');
+    });
+
+    it('returns valid for password meeting all requirements', () => {
+      const result = validatePassword('Password123');
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+  });
+
+  describe('password strength', () => {
+    it('returns weak for very short password', () => {
+      const result = validatePassword('abc');
+      expect(result.strength).toBe('weak');
+    });
+
+    it('returns medium for password missing some requirements', () => {
+      const result = validatePassword('password1');
+      expect(result.strength).toBe('medium');
+    });
+
+    it('returns medium for valid password without special chars', () => {
+      const result = validatePassword('Password1');
+      expect(result.strength).toBe('medium');
+    });
+
+    it('returns strong for valid password with special char', () => {
+      const result = validatePassword('Password1!');
+      expect(result.strength).toBe('strong');
+    });
+
+    it('returns strong for long password without special char', () => {
+      const result = validatePassword('Password12345');
+      expect(result.strength).toBe('strong');
+    });
+  });
+
+  describe('edge cases', () => {
+    it('returns invalid for empty password', () => {
+      const result = validatePassword('');
+      expect(result.isValid).toBe(false);
+      expect(result.strength).toBe('weak');
+    });
+
+    it('handles unicode characters', () => {
+      const result = validatePassword('Password1');
+      expect(result.isValid).toBe(true);
+    });
+  });
+});
+
+describe('validateEmail', () => {
+  it('returns true for valid email', () => {
+    expect(validateEmail('user@example.com')).toBe(true);
+  });
+
+  it('returns true for email with subdomain', () => {
+    expect(validateEmail('user@mail.example.com')).toBe(true);
+  });
+
+  it('returns true for email with plus sign', () => {
+    expect(validateEmail('user+tag@example.com')).toBe(true);
+  });
+
+  it('returns true for email with dots in local part', () => {
+    expect(validateEmail('user.name@example.com')).toBe(true);
+  });
+
+  it('returns false for email without @', () => {
+    expect(validateEmail('userexample.com')).toBe(false);
+  });
+
+  it('returns false for email without domain', () => {
+    expect(validateEmail('user@')).toBe(false);
+  });
+
+  it('returns false for email without local part', () => {
+    expect(validateEmail('@example.com')).toBe(false);
+  });
+
+  it('returns false for email with spaces', () => {
+    expect(validateEmail('user @example.com')).toBe(false);
+  });
+
+  it('returns false for empty string', () => {
+    expect(validateEmail('')).toBe(false);
+  });
+
+  it('returns false for email without TLD', () => {
+    expect(validateEmail('user@example')).toBe(false);
   });
 });

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, forwardRef, useId } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -6,11 +6,16 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className = '', ...props }, ref) => {
+  ({ label, error, className = '', id: providedId, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = providedId || generatedId;
+    const errorId = `${inputId}-error`;
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {label && (
           <label
+            htmlFor={inputId}
             style={{
               fontSize: '13px',
               fontWeight: 500,
@@ -18,10 +23,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             }}
           >
             {label}
+            {props.required && (
+              <span aria-hidden="true" style={{ color: '#ff6b6b', marginLeft: '4px' }}>
+                *
+              </span>
+            )}
           </label>
         )}
         <input
           ref={ref}
+          id={inputId}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={error ? errorId : undefined}
+          aria-required={props.required}
           style={{
             width: '100%',
             padding: '12px 16px',
@@ -45,7 +59,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           className={className}
           {...props}
         />
-        {error && <span style={{ fontSize: '12px', color: '#ff6b6b' }}>{error}</span>}
+        {error && (
+          <span id={errorId} role="alert" style={{ fontSize: '12px', color: '#ff6b6b' }}>
+            {error}
+          </span>
+        )}
       </div>
     );
   }

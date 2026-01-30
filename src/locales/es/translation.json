@@ -6,12 +6,15 @@
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "confirm": "Confirmar",
-    "currency": "€"
+    "currency": "€",
+    "closeModal": "Cerrar modal"
   },
   "nav": {
     "dashboard": "Panel",
     "subscriptions": "Suscripciones",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "main": "Navegación principal",
+    "mobile": "Navegación móvil"
   },
   "dashboard": {
     "title": "Panel de control",
@@ -43,7 +46,9 @@
     "monthlySubscriptions": "Suscripciones mensuales",
     "yearlySubscriptions": "Suscripciones anuales",
     "monthlyProjection": "Pagos mensuales",
-    "yearlyPayments": "Pagos anuales"
+    "yearlyPayments": "Pagos anuales",
+    "noDataAvailable": "No hay datos disponibles",
+    "addSubscriptionsToSeeBreakdown": "Agrega suscripciones para ver el desglose"
   },
   "subscriptions": {
     "title": "Suscripciones",
@@ -53,12 +58,25 @@
     "confirmCancel": "¿Cancelar suscripción? Se excluirá de los totales, pero se mantendrá el registro.",
     "keepActive": "Mantener activa",
     "emptyState": "No hay suscripciones. ¡Añade tu primera suscripción!",
+    "emptyCanceled": "No hay suscripciones canceladas",
+    "emptyCanceledSubtitle": "Las suscripciones que canceles aparecerán aquí",
+    "emptyAll": "No hay suscripciones",
+    "emptyAllSubtitle": "Añade tu primera suscripción para comenzar",
+    "emptyActive": "No hay suscripciones activas",
+    "emptyActiveSubtitle": "Añade tu primera suscripción para comenzar",
+    "saveError": "Error al guardar la suscripción",
     "filterActive": "Activas",
     "filterCanceled": "Canceladas",
     "filterAll": "Todas",
     "sortByDate": "Fecha de pago",
     "sortByName": "Nombre",
     "sortByCost": "Coste",
+    "sortDateAsc": "Fecha (próximas primero)",
+    "sortDateDesc": "Fecha (lejanas primero)",
+    "sortPriceDesc": "Precio (mayor a menor)",
+    "sortPriceAsc": "Precio (menor a mayor)",
+    "sortNameAsc": "Nombre (A-Z)",
+    "searchPlaceholder": "Buscar suscripción...",
     "fields": {
       "name": "Nombre",
       "cost": "Coste",
@@ -100,7 +118,17 @@
     "invalidUrl": "URL no válida",
     "invalidNumber": "Número no válido",
     "minValue": "Valor mínimo: {{min}}",
-    "maxValue": "Valor máximo: {{max}}"
+    "maxValue": "Valor máximo: {{max}}",
+    "password": {
+      "minLength": "Mínimo 8 caracteres",
+      "uppercase": "Al menos una mayúscula",
+      "lowercase": "Al menos una minúscula",
+      "number": "Al menos un número",
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "invalidEmail": "Correo electrónico no válido"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -112,11 +140,16 @@
     "noAccount": "¿No tienes cuenta?",
     "hasAccount": "¿Ya tienes cuenta?",
     "logout": "Cerrar sesión",
+    "confirmEmail": "¡Cuenta creada! Revisa tu email para confirmar tu cuenta.",
     "errors": {
-      "invalidCredentials": "Credenciales inválidas",
+      "invalidCredentials": "Email o contraseña incorrectos",
       "emailInUse": "Este correo ya está registrado",
-      "weakPassword": "La contraseña debe tener al menos 6 caracteres",
-      "passwordMismatch": "Las contraseñas no coinciden"
+      "weakPassword": "La contraseña debe cumplir los requisitos de seguridad",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "emailNotConfirmed": "Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.",
+      "tooManyRequests": "Demasiados intentos. Por favor espera unos minutos antes de volver a intentar.",
+      "networkError": "Error de conexión. Comprueba tu conexión a internet.",
+      "userNotFound": "No existe una cuenta con este email"
     }
   },
   "migration": {
@@ -157,7 +190,11 @@
     "importReplaceDescription": "Elimina las suscripciones actuales y las reemplaza con las del archivo",
     "importAdd": "Añadir a existentes",
     "importAddDescription": "Mantiene las suscripciones actuales y añade las del archivo",
-    "subscriptionsCount": "{{count}} suscripciones en el archivo"
+    "subscriptionsCount": "{{count}} suscripciones en el archivo",
+    "storedLocally": "suscripciones guardadas localmente",
+    "storedLocallyOne": "suscripción guardada localmente",
+    "language": "Idioma",
+    "languageDescription": "Idioma de la aplicación"
   },
   "filters": {
     "advanced": "Filtros avanzados",
@@ -199,5 +236,27 @@
   "view": {
     "timeline": "Timeline",
     "calendar": "Calendario"
+  },
+  "reminders": {
+    "section": "Recordatorios",
+    "description": "Recibe notificaciones sobre pagos próximos mientras la app esté abierta",
+    "enableTitle": "Activar recordatorios",
+    "enableDescription": "Notificaciones de pagos próximos",
+    "daysTitle": "Días de anticipación",
+    "daysDescription": "Cuántos días antes del pago notificar",
+    "days": {
+      "1": "1 día antes",
+      "2": "2 días antes",
+      "3": "3 días antes",
+      "7": "1 semana antes"
+    },
+    "disclaimer": "Los recordatorios solo funcionan mientras la aplicación esté abierta. Para no olvidar pagos, te recomendamos abrir la app regularmente o añadirla a tu pantalla de inicio.",
+    "enabled": "Recordatorios activados",
+    "disabled": "Recordatorios desactivados",
+    "permissionDenied": "Necesitas permitir las notificaciones para activar los recordatorios"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "Inglés"
   }
 }

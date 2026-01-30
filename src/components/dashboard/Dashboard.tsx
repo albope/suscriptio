@@ -32,7 +32,6 @@ export const Dashboard = () => {
     isLoading,
     migrateLocalToCloud,
     getLocalSubscriptions,
-    clearSubscriptions,
   } = useSubscriptions();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,9 +83,8 @@ export const Dashboard = () => {
       // Mark migration as handled for this user
       localStorage.setItem(`migration-handled-${user.id}`, 'true');
     }
-    // Clear local data without migrating
-    localStorage.removeItem('subscriptions-storage');
-    clearSubscriptions();
+    // Just dismiss the modal - don't clear subscriptions as they may have come from Supabase
+    // The Zustand store already has the correct data from the Supabase fetch
     setShowMigration(false);
   };
 
@@ -187,7 +185,7 @@ export const Dashboard = () => {
                       d="M13 10V3L4 14h7v7l9-11h-7z"
                     />
                   </svg>
-                  Gestiona tus suscripciones en un solo lugar
+                  {t('dashboard.emptyHint')}
                 </p>
               </div>
               <button
@@ -263,10 +261,7 @@ export const Dashboard = () => {
               subscriptionsByFrequency={subscriptionsByFrequency}
               preferredCurrency={preferredCurrency}
             />
-            <TopCategories
-              topCategories={topCategories}
-              preferredCurrency={preferredCurrency}
-            />
+            <TopCategories topCategories={topCategories} preferredCurrency={preferredCurrency} />
           </div>
 
           {/* Payment Visualization Section */}
@@ -385,7 +380,7 @@ export const Dashboard = () => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))',
                 gap: '24px',
               }}
             >

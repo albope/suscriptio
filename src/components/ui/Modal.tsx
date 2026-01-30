@@ -1,4 +1,5 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef, useId, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ModalProps {
   isOpen: boolean;
@@ -8,21 +9,74 @@ interface ModalProps {
 }
 
 export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
+  const { t } = useTranslation();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
+  const titleId = useId();
 
+  // Focus trap implementation
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      if (e.key !== 'Tab' || !modalRef.current) return;
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    },
+    [onClose]
+  );
+
+  useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
+      // Store currently focused element
+      previousActiveElement.current = document.activeElement as HTMLElement;
+
+      // Add event listener
+      document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+
+      // Focus the modal or first focusable element
+      requestAnimationFrame(() => {
+        const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements && focusableElements.length > 0) {
+          focusableElements[0].focus();
+        } else {
+          modalRef.current?.focus();
+        }
+      });
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
+
+      // Return focus to previously focused element
+      if (previousActiveElement.current && isOpen) {
+        previousActiveElement.current.focus();
+      }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleKeyDown]);
 
   if (!isOpen) return null;
 
@@ -58,6 +112,11 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 
       {/* Modal container */}
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         style={{
           position: 'relative',
           width: '100%',
@@ -71,6 +130,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           display: 'flex',
           flexDirection: 'column',
           animation: 'modalSlideIn 0.3s ease-out',
+          outline: 'none',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -87,6 +147,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
+              aria-hidden="true"
               style={{
                 width: '40px',
                 height: '40px',
@@ -104,14 +165,18 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
             </div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#ededed' }}>{title}</h2>
+            <h2 id={titleId} style={{ fontSize: '18px', fontWeight: 700, color: '#ededed' }}>
+              {title}
+            </h2>
           </div>
           <button
             onClick={onClose}
+            aria-label={t('common.closeModal')}
             style={{
               width: '36px',
               height: '36px',
@@ -140,6 +205,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
+              aria-hidden="true"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>

@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { Subscription, BillingFrequency, SubscriptionStatus, Category } from '@/types';
+import { logger } from '@/lib/logger';
+import { withRetry } from '@/lib/supabaseRetry';
+
+const log = logger.withContext('SupabaseSync');
 
 // Database row type (snake_case from Supabase)
 interface DbSubscription {
@@ -81,22 +85,34 @@ export const useSupabaseSubscriptions = () => {
     // Limpiar store antes de fetch para evitar duplicados con datos de localStorage
     clearSubscriptions();
 
-    const { data, error: fetchError } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('next_payment_date', { ascending: true });
+    try {
+      const { data, error: fetchError } = await withRetry(
+        async () =>
+          await supabase
+            .from('subscriptions')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('next_payment_date', { ascending: true }),
+        'fetchSubscriptions'
+      );
 
-    if (fetchError) {
-      setError(fetchError.message);
+      if (fetchError) {
+        log.error('Failed to fetch subscriptions', fetchError);
+        setError(fetchError.message);
+        setIsLoading(false);
+        return;
+      }
+
+      // Update store with cloud data
+      const subscriptions = (data || []).map(fromDb);
+      log.info(`Fetched ${subscriptions.length} subscriptions`);
+      setSubscriptions(subscriptions);
+    } catch (err) {
+      log.error('Failed to fetch subscriptions after retries', err);
+      setError(err instanceof Error ? err.message : 'Error fetching subscriptions');
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    // Update store with cloud data
-    const subscriptions = (data || []).map(fromDb);
-    setSubscriptions(subscriptions);
-    setIsLoading(false);
   }, [user, clearSubscriptions, setSubscriptions]);
 
   // Add subscription to Supabase
@@ -106,24 +122,35 @@ export const useSupabaseSubscriptions = () => {
     if (!user) return;
 
     setIsSyncing(true);
-    const { data, error: insertError } = await supabase
-      .from('subscriptions')
-      .insert(toDb(subscription, user.id))
-      .select()
-      .single();
+    try {
+      const { data, error: insertError } = await withRetry(
+        async () =>
+          await supabase
+            .from('subscriptions')
+            .insert(toDb(subscription, user.id))
+            .select()
+            .single(),
+        'addSubscription'
+      );
 
-    if (insertError) {
-      setError(insertError.message);
+      if (insertError) {
+        log.error('Failed to add subscription', insertError);
+        setError(insertError.message);
+        return;
+      }
+
+      // Add to local store
+      if (data) {
+        const newSub = fromDb(data);
+        log.info(`Added subscription: ${newSub.name}`);
+        addSubscriptionFromCloud(newSub);
+      }
+    } catch (err) {
+      log.error('Failed to add subscription after retries', err);
+      setError(err instanceof Error ? err.message : 'Error adding subscription');
+    } finally {
       setIsSyncing(false);
-      return;
     }
-
-    // Add to local store
-    if (data) {
-      const newSub = fromDb(data);
-      addSubscriptionFromCloud(newSub);
-    }
-    setIsSyncing(false);
   };
 
   // Update subscription in Supabase
@@ -151,21 +178,32 @@ export const useSupabaseSubscriptions = () => {
     if (updates.notes !== undefined) dbUpdates.notes = updates.notes || null;
     if (updates.providerUrl !== undefined) dbUpdates.provider_url = updates.providerUrl || null;
 
-    const { error: updateError } = await supabase
-      .from('subscriptions')
-      .update(dbUpdates)
-      .eq('id', id)
-      .eq('user_id', user.id);
+    try {
+      const { error: updateError } = await withRetry(
+        async () =>
+          await supabase
+            .from('subscriptions')
+            .update(dbUpdates)
+            .eq('id', id)
+            .eq('user_id', user.id),
+        'updateSubscription'
+      );
 
-    if (updateError) {
-      setError(updateError.message);
+      if (updateError) {
+        log.error('Failed to update subscription', updateError);
+        setError(updateError.message);
+        return;
+      }
+
+      // Update local store
+      log.info(`Updated subscription: ${id}`);
+      updateSubscriptionInStore(id, updates);
+    } catch (err) {
+      log.error('Failed to update subscription after retries', err);
+      setError(err instanceof Error ? err.message : 'Error updating subscription');
+    } finally {
       setIsSyncing(false);
-      return;
     }
-
-    // Update local store
-    updateSubscriptionInStore(id, updates);
-    setIsSyncing(false);
   };
 
   // Delete (cancel) subscription - soft delete
@@ -178,22 +216,30 @@ export const useSupabaseSubscriptions = () => {
     if (!user) return false;
 
     setIsSyncing(true);
-    const { error: deleteError } = await supabase
-      .from('subscriptions')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', user.id);
+    try {
+      const { error: deleteError } = await withRetry(
+        async () =>
+          await supabase.from('subscriptions').delete().eq('id', id).eq('user_id', user.id),
+        'permanentDelete'
+      );
 
-    if (deleteError) {
-      setError(deleteError.message);
-      setIsSyncing(false);
+      if (deleteError) {
+        log.error('Failed to delete subscription', deleteError);
+        setError(deleteError.message);
+        return false;
+      }
+
+      // Remove from local store
+      log.info(`Deleted subscription: ${id}`);
+      permanentDeleteFromStore(id);
+      return true;
+    } catch (err) {
+      log.error('Failed to delete subscription after retries', err);
+      setError(err instanceof Error ? err.message : 'Error deleting subscription');
       return false;
+    } finally {
+      setIsSyncing(false);
     }
-
-    // Remove from local store
-    permanentDeleteFromStore(id);
-    setIsSyncing(false);
-    return true;
   };
 
   // Migrate local data to cloud
@@ -219,18 +265,29 @@ export const useSupabaseSubscriptions = () => {
       provider_url: sub.providerUrl || null,
     }));
 
-    const { error: insertError } = await supabase.from('subscriptions').insert(dbSubscriptions);
+    try {
+      const { error: insertError } = await withRetry(
+        async () => await supabase.from('subscriptions').insert(dbSubscriptions),
+        'migrateLocalToCloud'
+      );
 
-    if (insertError) {
-      setError(insertError.message);
-      setIsSyncing(false);
+      if (insertError) {
+        log.error('Failed to migrate subscriptions', insertError);
+        setError(insertError.message);
+        return false;
+      }
+
+      log.info(`Migrated ${localSubscriptions.length} subscriptions to cloud`);
+      // Refetch to get server-assigned IDs
+      await fetchSubscriptions();
+      return true;
+    } catch (err) {
+      log.error('Failed to migrate subscriptions after retries', err);
+      setError(err instanceof Error ? err.message : 'Error migrating subscriptions');
       return false;
+    } finally {
+      setIsSyncing(false);
     }
-
-    // Refetch to get server-assigned IDs
-    await fetchSubscriptions();
-    setIsSyncing(false);
-    return true;
   };
 
   // Initial fetch when user logs in

@@ -94,7 +94,7 @@ export const CategoryBreakdown = ({ data }: CategoryBreakdownProps) => {
           marginBottom: '8px',
         }}
       >
-        No hay datos disponibles
+        {t('dashboard.noDataAvailable')}
       </p>
       <p
         style={{
@@ -105,7 +105,7 @@ export const CategoryBreakdown = ({ data }: CategoryBreakdownProps) => {
           lineHeight: 1.5,
         }}
       >
-        Agrega suscripciones para ver el desglose
+        {t('dashboard.addSubscriptionsToSeeBreakdown')}
       </p>
     </div>
   );
