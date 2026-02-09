@@ -255,8 +255,146 @@
     "disabled": "Reminders disabled",
     "permissionDenied": "You need to allow notifications to enable reminders"
   },
+  "billing": {
+    "planSection": "Plan & Billing",
+    "planDescription": "Manage your subscription plan",
+    "currentPlan": "Current plan",
+    "free": "Free",
+    "premium": "Premium",
+    "upgrade": "Upgrade to Premium",
+    "manageBilling": "Manage billing",
+    "upgradeRequired": "Upgrade required",
+    "limitReached": "You've reached the limit of {{max}} active subscriptions. Upgrade to Premium to track unlimited subscriptions.",
+    "subscriptionsUsed": "{{current}}/{{max}} subscriptions",
+    "unlimited": "Unlimited",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "monthlyPrice": "€{{amount}}/mo",
+    "annualPrice": "€{{amount}}/yr",
+    "perMonth": "month",
+    "perYear": "year",
+    "savePercent": "Save {{percent}}%",
+    "popularChoice": "Most popular",
+    "selectPlan": "Select plan",
+    "features": {
+      "freeTitle": "Free",
+      "premiumTitle": "Premium",
+      "maxSubscriptions": "Up to {{max}} subscriptions",
+      "unlimitedSubscriptions": "Unlimited subscriptions",
+      "basicAnalytics": "Basic analytics",
+      "fullAnalytics": "Full analytics",
+      "exportData": "Export data",
+      "prioritySupport": "Priority support"
+    },
+    "billingPeriodEnd": "Your plan renews on {{date}}",
+    "paymentSuccess": "Welcome to Premium!",
+    "paymentCancelled": "Payment was cancelled"
+  },
   "languages": {
     "es": "Spanish",
     "en": "English"
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "screenshots": "Demo",
+      "pricing": "Pricing",
+      "signIn": "Sign In",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "Smart subscription management",
+      "title": "Take control of your subscriptions",
+      "subtitle": "Track all your recurring expenses in one place. Visualize your spending, get payment reminders, and never lose track of what you're paying for.",
+      "cta": "Get started free",
+      "ctaSecondary": "See features"
+    },
+    "features": {
+      "title": "Everything you need",
+      "subtitle": "Powerful tools to manage every aspect of your subscriptions",
+      "dashboard": {
+        "title": "Smart Dashboard",
+        "description": "Complete overview of your monthly and yearly spending with interactive charts and projections."
+      },
+      "management": {
+        "title": "Full Management",
+        "description": "Add, edit, categorize, and tag your subscriptions. Filter and sort them any way you want."
+      },
+      "multicurrency": {
+        "title": "Multi-Currency",
+        "description": "Track subscriptions in EUR, USD, GBP, and more. Each currency tracked separately."
+      },
+      "calendar": {
+        "title": "Payment Calendar",
+        "description": "See upcoming payments in a timeline or calendar view. Never miss a payment date again."
+      },
+      "export": {
+        "title": "Export & Import",
+        "description": "Back up your data as JSON or export to CSV for Excel. Import from backups anytime."
+      },
+      "pwa": {
+        "title": "Works Offline",
+        "description": "Install as an app on any device. Works offline and sends payment reminders."
+      }
+    },
+    "showcase": {
+      "title": "See it in action",
+      "subtitle": "A beautiful, intuitive interface designed for clarity"
+    },
+    "pricing": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "Choose the plan that fits you best",
+      "free": "Free",
+      "freePeriod": "forever",
+      "pro": "Pro",
+      "proPeriod": "/month",
+      "proPrice": "6.99",
+      "popular": "Popular",
+      "ctaFree": "Start for free",
+      "ctaPro": "Go Pro",
+      "freeFeatures": {
+        "subscriptions": "Up to 10 subscriptions",
+        "dashboard": "Basic dashboard",
+        "exportJson": "JSON export",
+        "pwa": "Installable app (PWA)",
+        "bilingual": "Spanish & English"
+      },
+      "proFeatures": {
+        "unlimited": "Unlimited subscriptions",
+        "analytics": "Advanced analytics",
+        "multicurrency": "Multi-currency support",
+        "calendar": "Payment calendar",
+        "exportCsv": "CSV + JSON export",
+        "notifications": "Payment reminders",
+        "priority": "Priority support",
+        "allFree": "Everything in Free"
+      }
+    },
+    "social": {
+      "stat1": "Total control",
+      "stat1Desc": "Over all your subscriptions",
+      "stat2": "Multi-device",
+      "stat2Desc": "PWA on any screen",
+      "stat3": "Bilingual",
+      "stat3Desc": "Spanish & English",
+      "stat4": "Privacy first",
+      "stat4Desc": "Your data, your control"
+    },
+    "cta": {
+      "title": "Ready to take control?",
+      "subtitle": "Join and start managing your subscriptions today.",
+      "button": "Create your free account"
+    },
+    "footer": {
+      "description": "Your personal subscription manager. Track, analyze, and control your recurring expenses.",
+      "product": "Product",
+      "account": "Account",
+      "features": "Features",
+      "pricing": "Pricing",
+      "signIn": "Sign In",
+      "register": "Create Account",
+      "copyright": "Suscriptio. All rights reserved.",
+      "madeWith": "Made with"
+    }
   }
 }

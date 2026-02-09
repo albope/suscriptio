@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -9,6 +10,7 @@ import { exportToJson, exportToCsv, importFromJson } from '@/utils/exportImport'
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
+import { BillingSection } from '@/components/billing/BillingSection';
 import { CURRENCIES } from '@/constants/currencies';
 import type { Subscription } from '@/types';
 
@@ -28,6 +30,19 @@ export const Settings = () => {
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [pendingImport, setPendingImport] = useState<Subscription[] | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Handle Stripe payment redirect query params
+  useEffect(() => {
+    const payment = searchParams.get('payment');
+    if (payment === 'success') {
+      toast.success(t('billing.paymentSuccess'));
+      setSearchParams({}, { replace: true });
+    } else if (payment === 'cancelled') {
+      toast.info(t('billing.paymentCancelled'));
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams, t]);
 
   const handleToggleReminders = async () => {
     if (!remindersEnabled) {
@@ -230,6 +245,11 @@ export const Settings = () => {
           </Select>
         </div>
       </section>
+
+      {/* Billing Section */}
+      <div style={{ marginBottom: '24px' }}>
+        <BillingSection />
+      </div>
 
       {/* Reminders Section */}
       {isSupported() && (

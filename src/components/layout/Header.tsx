@@ -1,11 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { PlanBadge } from '@/components/billing/PlanBadge';
+import { useUserProfile } from '@/hooks/useUserProfile';
 
 export const Header = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { profile } = useUserProfile();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -366,6 +369,7 @@ export const Header = () => {
           {/* User Section */}
           {user && (
             <div className="user-section">
+              <PlanBadge tier={profile?.subscriptionTier ?? 'free'} />
               <span className="user-email">{user.email}</span>
 
               <div className="user-avatar">{user.email?.charAt(0) || 'U'}</div>

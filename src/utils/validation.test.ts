@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { validateSubscriptionForm, validatePassword, validateEmail } from './validation';
 import { BillingFrequency } from '@/types';
 

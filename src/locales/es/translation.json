@@ -255,8 +255,146 @@
     "disabled": "Recordatorios desactivados",
     "permissionDenied": "Necesitas permitir las notificaciones para activar los recordatorios"
   },
+  "billing": {
+    "planSection": "Plan y facturación",
+    "planDescription": "Gestiona tu plan de suscripción",
+    "currentPlan": "Plan actual",
+    "free": "Free",
+    "premium": "Premium",
+    "upgrade": "Mejorar a Premium",
+    "manageBilling": "Gestionar facturación",
+    "upgradeRequired": "Mejora necesaria",
+    "limitReached": "Has alcanzado el límite de {{max}} suscripciones activas. Mejora a Premium para rastrear suscripciones ilimitadas.",
+    "subscriptionsUsed": "{{current}}/{{max}} suscripciones",
+    "unlimited": "Ilimitadas",
+    "monthly": "Mensual",
+    "annual": "Anual",
+    "monthlyPrice": "€{{amount}}/mes",
+    "annualPrice": "€{{amount}}/año",
+    "perMonth": "mes",
+    "perYear": "año",
+    "savePercent": "Ahorra {{percent}}%",
+    "popularChoice": "Más popular",
+    "selectPlan": "Seleccionar plan",
+    "features": {
+      "freeTitle": "Free",
+      "premiumTitle": "Premium",
+      "maxSubscriptions": "Hasta {{max}} suscripciones",
+      "unlimitedSubscriptions": "Suscripciones ilimitadas",
+      "basicAnalytics": "Analíticas básicas",
+      "fullAnalytics": "Analíticas completas",
+      "exportData": "Exportar datos",
+      "prioritySupport": "Soporte prioritario"
+    },
+    "billingPeriodEnd": "Tu plan se renueva el {{date}}",
+    "paymentSuccess": "¡Bienvenido a Premium!",
+    "paymentCancelled": "El pago fue cancelado"
+  },
   "languages": {
     "es": "Español",
     "en": "Inglés"
+  },
+  "landing": {
+    "nav": {
+      "features": "Funciones",
+      "screenshots": "Demo",
+      "pricing": "Precios",
+      "signIn": "Iniciar sesión",
+      "getStarted": "Comenzar"
+    },
+    "hero": {
+      "badge": "Gestión inteligente de suscripciones",
+      "title": "Toma el control de tus suscripciones",
+      "subtitle": "Gestiona todos tus gastos recurrentes en un solo lugar. Visualiza tu gasto, recibe recordatorios y nunca pierdas de vista lo que pagas.",
+      "cta": "Comenzar gratis",
+      "ctaSecondary": "Ver funciones"
+    },
+    "features": {
+      "title": "Todo lo que necesitas",
+      "subtitle": "Herramientas potentes para gestionar cada aspecto de tus suscripciones",
+      "dashboard": {
+        "title": "Dashboard inteligente",
+        "description": "Vista completa de tus gastos mensuales y anuales con gráficos interactivos y proyecciones."
+      },
+      "management": {
+        "title": "Gestión completa",
+        "description": "Añade, edita, categoriza y etiqueta tus suscripciones. Filtra y ordena como quieras."
+      },
+      "multicurrency": {
+        "title": "Multi-moneda",
+        "description": "Gestiona suscripciones en EUR, USD, GBP y más. Cada moneda se rastrea por separado."
+      },
+      "calendar": {
+        "title": "Calendario de pagos",
+        "description": "Visualiza próximos pagos en timeline o calendario. No vuelvas a olvidar una fecha de pago."
+      },
+      "export": {
+        "title": "Exportar e importar",
+        "description": "Backup en JSON o exporta a CSV para Excel. Importa desde backups en cualquier momento."
+      },
+      "pwa": {
+        "title": "Funciona offline",
+        "description": "Instala como app en cualquier dispositivo. Funciona sin conexión y envía recordatorios."
+      }
+    },
+    "showcase": {
+      "title": "Mira cómo funciona",
+      "subtitle": "Una interfaz intuitiva diseñada para la claridad"
+    },
+    "pricing": {
+      "title": "Planes simples y transparentes",
+      "subtitle": "Elige el plan que mejor se adapte a ti",
+      "free": "Free",
+      "freePeriod": "para siempre",
+      "pro": "Pro",
+      "proPeriod": "/mes",
+      "proPrice": "6.99",
+      "popular": "Popular",
+      "ctaFree": "Empezar gratis",
+      "ctaPro": "Comenzar Pro",
+      "freeFeatures": {
+        "subscriptions": "Hasta 10 suscripciones",
+        "dashboard": "Dashboard básico",
+        "exportJson": "Exportación JSON",
+        "pwa": "App instalable (PWA)",
+        "bilingual": "Español e inglés"
+      },
+      "proFeatures": {
+        "unlimited": "Suscripciones ilimitadas",
+        "analytics": "Analytics avanzados",
+        "multicurrency": "Soporte multi-moneda",
+        "calendar": "Calendario de pagos",
+        "exportCsv": "Exportación CSV + JSON",
+        "notifications": "Recordatorios de pago",
+        "priority": "Soporte prioritario",
+        "allFree": "Todo lo del plan Free"
+      }
+    },
+    "social": {
+      "stat1": "Gestión total",
+      "stat1Desc": "De todas tus suscripciones",
+      "stat2": "Multi-dispositivo",
+      "stat2Desc": "PWA en cualquier pantalla",
+      "stat3": "Bilingüe",
+      "stat3Desc": "Español e inglés",
+      "stat4": "Privacidad",
+      "stat4Desc": "Tus datos, tu control"
+    },
+    "cta": {
+      "title": "¿Listo para tomar el control?",
+      "subtitle": "Únete y empieza a gestionar tus suscripciones hoy.",
+      "button": "Crear tu cuenta gratis"
+    },
+    "footer": {
+      "description": "Tu gestor personal de suscripciones. Rastrea, analiza y controla tus gastos recurrentes.",
+      "product": "Producto",
+      "account": "Cuenta",
+      "features": "Funciones",
+      "pricing": "Precios",
+      "signIn": "Iniciar sesión",
+      "register": "Crear cuenta",
+      "copyright": "Suscriptio. Todos los derechos reservados.",
+      "madeWith": "Hecho con"
+    }
   }
 }

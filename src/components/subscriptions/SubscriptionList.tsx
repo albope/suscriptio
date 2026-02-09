@@ -5,12 +5,14 @@ import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useFilterPreferences } from '@/hooks/useFilterPreferences';
+import { useTierLimits } from '@/hooks/useTierLimits';
 import { applyAllFilters } from '@/utils/filterUtils';
 import { SubscriptionCard } from './SubscriptionCard';
 import { SubscriptionModal } from './SubscriptionModal';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { EmptyState } from './EmptyState';
 import { FilterBar } from './FilterBar';
+import { PricingModal } from '@/components/billing/PricingModal';
 import { Button } from '@/components/ui/Button';
 import { Subscription, Category } from '@/types';
 
@@ -31,9 +33,11 @@ export const SubscriptionList = () => {
   const { permanentDelete } = useSubscriptions();
   const { preferredCurrency } = useSettingsStore();
   const { preferences, updatePreferences, resetPreferences } = useFilterPreferences();
+  const { tier, canAddSubscription, currentCount, remainingSlots } = useTierLimits();
 
   // Local state for UI
   const [searchQuery, setSearchQuery] = useState('');
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | undefined>();
 
@@ -133,6 +137,10 @@ export const SubscriptionList = () => {
   };
 
   const handleAddNew = () => {
+    if (!canAddSubscription) {
+      setIsPricingOpen(true);
+      return;
+    }
     setSelectedSubscription(undefined);
     setIsModalOpen(true);
   };
@@ -234,6 +242,11 @@ export const SubscriptionList = () => {
             {sortedSubscriptions.length === 1
               ? t('dashboard.subscription')
               : t('dashboard.subscriptions')}
+            {tier === 'free' && (
+              <span style={{ marginLeft: '8px', color: remainingSlots <= 1 ? '#ffbb00' : '#555555' }}>
+                · {t('billing.subscriptionsUsed', { current: currentCount, max: 5 })}
+              </span>
+            )}
           </p>
         </div>
         <Button onClick={handleAddNew}>
@@ -538,6 +551,8 @@ export const SubscriptionList = () => {
         onCancel={handleCancelDelete}
         isDeleting={isDeleting}
       />
+
+      <PricingModal isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
     </div>
   );
 };

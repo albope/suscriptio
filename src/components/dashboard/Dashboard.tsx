@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSettingsStore } from '@/store/settingsStore';
+import { useTierLimits } from '@/hooks/useTierLimits';
 import { SpendOverview } from './SpendOverview';
 import { KeyMetrics } from './KeyMetrics';
 import { TopCategories } from './TopCategories';
@@ -12,6 +13,7 @@ import { PaymentTimeline } from './PaymentTimeline';
 import { CalendarView } from './CalendarView';
 import { DashboardEmptyState } from './DashboardEmptyState';
 import { SubscriptionModal } from '@/components/subscriptions/SubscriptionModal';
+import { PricingModal } from '@/components/billing/PricingModal';
 import { MigrationModal } from '@/components/auth/MigrationModal';
 import { Subscription } from '@/types';
 
@@ -34,7 +36,9 @@ export const Dashboard = () => {
     getLocalSubscriptions,
   } = useSubscriptions();
 
+  const { canAddSubscription } = useTierLimits();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | undefined>();
   const [showMigration, setShowMigration] = useState(false);
   const [localDataCount, setLocalDataCount] = useState(0);
@@ -94,6 +98,10 @@ export const Dashboard = () => {
   };
 
   const handleAddNew = () => {
+    if (!canAddSubscription) {
+      setIsPricingOpen(true);
+      return;
+    }
     setSelectedSubscription(undefined);
     setIsModalOpen(true);
   };
@@ -424,6 +432,8 @@ export const Dashboard = () => {
           onDiscard={handleDiscardMigration}
         />
       )}
+
+      <PricingModal isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
     </>
   );
 };

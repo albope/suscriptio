@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { formatDate, getDaysUntilPayment, getPaymentLabel, advancePaymentDate } from './dateUtils';
 import { BillingFrequency } from '@/types';
 

@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useSupabaseSubscriptions } from './useSupabaseSubscriptions';
 import { useAuth } from '@/contexts/AuthContext';
-import { BillingFrequency, SubscriptionStatus, Subscription } from '@/types';
+import { BillingFrequency, SubscriptionStatus, Subscription, TIER_LIMITS } from '@/types';
 import { addDays } from 'date-fns';
+import { useUserProfile } from './useUserProfile';
+import { logger } from '@/lib/logger';
 
 export const useSubscriptions = () => {
   // Use selector to get subscriptions - this ensures reactivity
@@ -19,10 +21,32 @@ export const useSubscriptions = () => {
 
   const { user } = useAuth();
   const supabase = useSupabaseSubscriptions();
+  const { profile } = useUserProfile();
 
   // If user is authenticated, use Supabase operations
   // Otherwise, use local store operations
-  const addSubscription = user ? supabase.addSubscription : addSubscriptionStore;
+  const rawAddSubscription = user ? supabase.addSubscription : addSubscriptionStore;
+
+  // Defensive tier limit check (safety net — UI should block before reaching here)
+  const addSubscription = useCallback(
+    async (subscription: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>) => {
+      const tier = profile?.subscriptionTier ?? 'free';
+      const limit = TIER_LIMITS[tier].maxActiveSubscriptions;
+      const activeCount = subscriptions.filter(
+        (s: Subscription) => s.status === SubscriptionStatus.ACTIVE
+      ).length;
+
+      if (activeCount >= limit) {
+        const log = logger.withContext('useSubscriptions');
+        log.warn(`Tier limit reached (${activeCount}/${limit}). Blocking addSubscription.`);
+        throw new Error('TIER_LIMIT_REACHED');
+      }
+
+      return rawAddSubscription(subscription);
+    },
+    [rawAddSubscription, profile, subscriptions]
+  );
+
   const updateSubscription = user ? supabase.updateSubscription : updateSubscriptionStore;
   const deleteSubscription = user ? supabase.deleteSubscription : deleteSubscriptionStore;
   const permanentDelete = user ? supabase.permanentDelete : permanentDeleteStore;

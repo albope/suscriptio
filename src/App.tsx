@@ -2,11 +2,13 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { ErrorBoundary } from './components/errors/ErrorBoundary';
 
 // Lazy load pages for better code splitting
+const Landing = lazy(() => import('./pages/Landing').then((m) => ({ default: m.Landing })));
 const Dashboard = lazy(() =>
   import('./components/dashboard/Dashboard').then((m) => ({ default: m.Dashboard }))
 );
@@ -42,6 +44,46 @@ const PageLoader = () => (
   </div>
 );
 
+// Conditional home route: Landing for guests, Dashboard for authenticated users
+const HomeRoute = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#000000',
+        }}
+      >
+        <div
+          style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid rgba(0, 212, 255, 0.2)',
+            borderTopColor: '#00d4ff',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (user) {
+    return (
+      <AppLayout>
+        <Dashboard />
+      </AppLayout>
+    );
+  }
+
+  return <Landing />;
+};
+
 function AppContent() {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -50,16 +92,11 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* Home: landing for guests, dashboard for authenticated */}
+        <Route path="/" element={<HomeRoute />} />
+
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
-          <Route
-            path="/"
-            element={
-              <AppLayout>
-                <Dashboard />
-              </AppLayout>
-            }
-          />
           <Route
             path="/subscriptions"
             element={
