@@ -14,6 +14,8 @@ import { CalendarView } from './CalendarView';
 import { DashboardEmptyState } from './DashboardEmptyState';
 import { SubscriptionModal } from '@/components/subscriptions/SubscriptionModal';
 import { PricingModal } from '@/components/billing/PricingModal';
+import { SubscriptionLimitBar } from '@/components/billing/SubscriptionLimitBar';
+import { OnboardingModal } from '@/components/onboarding/OnboardingModal';
 import { MigrationModal } from '@/components/auth/MigrationModal';
 import { Subscription } from '@/types';
 
@@ -36,12 +38,24 @@ export const Dashboard = () => {
     getLocalSubscriptions,
   } = useSubscriptions();
 
-  const { canAddSubscription } = useTierLimits();
+  const { canAddSubscription, tier } = useTierLimits();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | undefined>();
   const [showMigration, setShowMigration] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [localDataCount, setLocalDataCount] = useState(0);
+
+  // Show onboarding on first visit
+  useEffect(() => {
+    if (user && !isLoading) {
+      const onboardingKey = `onboarding-shown-${user.id}`;
+      if (!localStorage.getItem(onboardingKey)) {
+        setShowOnboarding(true);
+        localStorage.setItem(onboardingKey, 'true');
+      }
+    }
+  }, [user, isLoading]);
 
   // Check for local data to migrate after login
   useEffect(() => {
@@ -252,6 +266,13 @@ export const Dashboard = () => {
             </div>
           </div>
 
+          {/* Subscription Limit Bar */}
+          {tier === 'free' && (
+            <div className="animate-slide-up animate-delay-50">
+              <SubscriptionLimitBar onUpgradeClick={() => setIsPricingOpen(true)} />
+            </div>
+          )}
+
           {/* KPI Cards - 2x2 Grid */}
           <div
             className="animate-slide-up animate-delay-100"
@@ -434,6 +455,14 @@ export const Dashboard = () => {
       )}
 
       <PricingModal isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
+
+      {/* Onboarding Modal */}
+      {showOnboarding && (
+        <OnboardingModal
+          onClose={() => setShowOnboarding(false)}
+          onAddSubscription={handleAddNew}
+        />
+      )}
     </>
   );
 };

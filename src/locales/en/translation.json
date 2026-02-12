@@ -284,6 +284,23 @@
       "permanentAccess": "Permanent access"
     }
   },
+  "onboarding": {
+    "step1Title": "Welcome to Suscriptio",
+    "step1Description": "Your personal subscription manager. Track all your recurring expenses in one place.",
+    "step2Title": "Add your subscriptions",
+    "step2Description": "Netflix, Spotify, gym... Record every recurring expense with its cost, frequency, and payment date.",
+    "step3Title": "Free up to {{max}} subscriptions",
+    "step3Description": "The free plan includes up to {{max}} active subscriptions. For unlimited, unlock Premium for just €{{price}} (one-time purchase).",
+    "next": "Next",
+    "skip": "Skip",
+    "addFirst": "Add my first subscription",
+    "lastSlot": "Last slot!",
+    "unlockUnlimited": "Unlock unlimited",
+    "unlimitedFor": "Unlimited for €{{price}}",
+    "quickAdd": "Quick add",
+    "popularServices": "Popular services",
+    "orAddCustom": "or add custom"
+  },
   "languages": {
     "es": "Spanish",
     "en": "English"

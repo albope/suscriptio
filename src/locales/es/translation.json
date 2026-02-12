@@ -284,6 +284,23 @@
       "permanentAccess": "Acceso permanente"
     }
   },
+  "onboarding": {
+    "step1Title": "Bienvenido a Suscriptio",
+    "step1Description": "Tu gestor personal de suscripciones. Controla todos tus gastos recurrentes en un solo lugar.",
+    "step2Title": "Añade tus suscripciones",
+    "step2Description": "Netflix, Spotify, gimnasio... Registra cada gasto recurrente con su coste, frecuencia y fecha de pago.",
+    "step3Title": "Gratis hasta {{max}} suscripciones",
+    "step3Description": "El plan gratuito incluye hasta {{max}} suscripciones activas. Para ilimitadas, desbloquea Premium por solo {{price}}€ (pago único).",
+    "next": "Siguiente",
+    "skip": "Omitir",
+    "addFirst": "Añadir mi primera suscripción",
+    "lastSlot": "¡Último hueco!",
+    "unlockUnlimited": "Desbloquear ilimitadas",
+    "unlimitedFor": "Ilimitadas por {{price}}€",
+    "quickAdd": "Añadir rápido",
+    "popularServices": "Servicios populares",
+    "orAddCustom": "o añade personalizada"
+  },
   "languages": {
     "es": "Español",
     "en": "Inglés"

@@ -13,6 +13,7 @@ import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { EmptyState } from './EmptyState';
 import { FilterBar } from './FilterBar';
 import { PricingModal } from '@/components/billing/PricingModal';
+import { SubscriptionLimitBar } from '@/components/billing/SubscriptionLimitBar';
 import { Button } from '@/components/ui/Button';
 import { Subscription, Category, TIER_LIMITS } from '@/types';
 
@@ -443,6 +444,11 @@ export const SubscriptionList = () => {
         onReset={handleResetFilters}
         activeFiltersCount={activeFiltersCount}
       />
+
+      {/* Subscription Limit Bar */}
+      {tier === 'free' && (
+        <SubscriptionLimitBar onUpgradeClick={() => setIsPricingOpen(true)} />
+      )}
 
       {/* Subscriptions Grid */}
       {sortedSubscriptions.length === 0 ? (

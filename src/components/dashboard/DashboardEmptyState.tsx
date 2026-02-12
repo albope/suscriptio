@@ -146,29 +146,55 @@ export const DashboardEmptyState = ({ onAddSubscription }: DashboardEmptyStatePr
           <span>{t('dashboard.emptyAction')}</span>
         </button>
 
-        {/* Subtle hint */}
-        <p
-          style={{
-            fontSize: '13px',
-            color: 'rgba(255, 255, 255, 0.3)',
-            marginTop: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-          }}
-        >
-          <svg
-            style={{ width: '14px', height: '14px', color: '#00d4ff' }}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+        {/* Popular services chips */}
+        <div style={{ marginTop: '28px' }}>
+          <p
+            style={{
+              fontSize: '12px',
+              color: 'rgba(255, 255, 255, 0.3)',
+              marginBottom: '12px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          {t('dashboard.emptyHint')}
-        </p>
+            {t('onboarding.popularServices')}
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px',
+              justifyContent: 'center',
+            }}
+          >
+            {['Netflix', 'Spotify', 'YouTube Premium', 'iCloud', 'ChatGPT', 'Gym'].map((name) => (
+              <button
+                key={name}
+                onClick={onAddSubscription}
+                style={{
+                  padding: '6px 14px',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '20px',
+                  color: '#888',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)';
+                  e.currentTarget.style.color = '#00d4ff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.color = '#888';
+                }}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
