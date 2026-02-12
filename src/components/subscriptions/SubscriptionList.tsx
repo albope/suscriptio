@@ -14,7 +14,7 @@ import { EmptyState } from './EmptyState';
 import { FilterBar } from './FilterBar';
 import { PricingModal } from '@/components/billing/PricingModal';
 import { Button } from '@/components/ui/Button';
-import { Subscription, Category } from '@/types';
+import { Subscription, Category, TIER_LIMITS } from '@/types';
 
 type SortOption = 'date-asc' | 'date-desc' | 'price-asc' | 'price-desc' | 'name-asc';
 
@@ -244,7 +244,7 @@ export const SubscriptionList = () => {
               : t('dashboard.subscriptions')}
             {tier === 'free' && (
               <span style={{ marginLeft: '8px', color: remainingSlots <= 1 ? '#ffbb00' : '#555555' }}>
-                · {t('billing.subscriptionsUsed', { current: currentCount, max: 5 })}
+                · {t('billing.subscriptionsUsed', { current: currentCount, max: TIER_LIMITS.free.maxActiveSubscriptions })}
               </span>
             )}
           </p>

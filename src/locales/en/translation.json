@@ -256,26 +256,22 @@
     "permissionDenied": "You need to allow notifications to enable reminders"
   },
   "billing": {
-    "planSection": "Plan & Billing",
-    "planDescription": "Manage your subscription plan",
+    "planSection": "Plan",
     "currentPlan": "Current plan",
     "free": "Free",
     "premium": "Premium",
     "upgrade": "Upgrade to Premium",
-    "manageBilling": "Manage billing",
     "upgradeRequired": "Upgrade required",
     "limitReached": "You've reached the limit of {{max}} active subscriptions. Upgrade to Premium to track unlimited subscriptions.",
     "subscriptionsUsed": "{{current}}/{{max}} subscriptions",
     "unlimited": "Unlimited",
-    "monthly": "Monthly",
-    "annual": "Annual",
-    "monthlyPrice": "€{{amount}}/mo",
-    "annualPrice": "€{{amount}}/yr",
-    "perMonth": "month",
-    "perYear": "year",
-    "savePercent": "Save {{percent}}%",
-    "popularChoice": "Most popular",
-    "selectPlan": "Select plan",
+    "oneTimePurchase": "One-time purchase",
+    "payOnce": "Pay once, enjoy forever",
+    "unlockPremium": "Unlock Premium",
+    "unlockPremiumPrice": "Unlock Premium — €{{amount}}",
+    "restorePurchase": "Restore purchase",
+    "permanentAccess": "Permanent access",
+    "availableOnAndroid": "Available for purchase on the Android app",
     "features": {
       "freeTitle": "Free",
       "premiumTitle": "Premium",
@@ -284,11 +280,9 @@
       "basicAnalytics": "Basic analytics",
       "fullAnalytics": "Full analytics",
       "exportData": "Export data",
-      "prioritySupport": "Priority support"
-    },
-    "billingPeriodEnd": "Your plan renews on {{date}}",
-    "paymentSuccess": "Welcome to Premium!",
-    "paymentCancelled": "Payment was cancelled"
+      "prioritySupport": "Priority support",
+      "permanentAccess": "Permanent access"
+    }
   },
   "languages": {
     "es": "Spanish",

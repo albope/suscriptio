@@ -256,26 +256,22 @@
     "permissionDenied": "Necesitas permitir las notificaciones para activar los recordatorios"
   },
   "billing": {
-    "planSection": "Plan y facturación",
-    "planDescription": "Gestiona tu plan de suscripción",
+    "planSection": "Plan",
     "currentPlan": "Plan actual",
     "free": "Free",
     "premium": "Premium",
     "upgrade": "Mejorar a Premium",
-    "manageBilling": "Gestionar facturación",
     "upgradeRequired": "Mejora necesaria",
     "limitReached": "Has alcanzado el límite de {{max}} suscripciones activas. Mejora a Premium para rastrear suscripciones ilimitadas.",
     "subscriptionsUsed": "{{current}}/{{max}} suscripciones",
     "unlimited": "Ilimitadas",
-    "monthly": "Mensual",
-    "annual": "Anual",
-    "monthlyPrice": "€{{amount}}/mes",
-    "annualPrice": "€{{amount}}/año",
-    "perMonth": "mes",
-    "perYear": "año",
-    "savePercent": "Ahorra {{percent}}%",
-    "popularChoice": "Más popular",
-    "selectPlan": "Seleccionar plan",
+    "oneTimePurchase": "Pago único",
+    "payOnce": "Paga una vez, disfruta para siempre",
+    "unlockPremium": "Desbloquear Premium",
+    "unlockPremiumPrice": "Desbloquear Premium — €{{amount}}",
+    "restorePurchase": "Restaurar compra",
+    "permanentAccess": "Acceso permanente",
+    "availableOnAndroid": "Disponible para comprar en la app Android",
     "features": {
       "freeTitle": "Free",
       "premiumTitle": "Premium",
@@ -284,11 +280,9 @@
       "basicAnalytics": "Analíticas básicas",
       "fullAnalytics": "Analíticas completas",
       "exportData": "Exportar datos",
-      "prioritySupport": "Soporte prioritario"
-    },
-    "billingPeriodEnd": "Tu plan se renueva el {{date}}",
-    "paymentSuccess": "¡Bienvenido a Premium!",
-    "paymentCancelled": "El pago fue cancelado"
+      "prioritySupport": "Soporte prioritario",
+      "permanentAccess": "Acceso permanente"
+    }
   },
   "languages": {
     "es": "Español",

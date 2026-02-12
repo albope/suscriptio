@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { useStripeCheckout } from '@/hooks/useStripeCheckout';
+import { useGooglePlayPurchase } from '@/hooks/useGooglePlayPurchase';
+import { isAndroid } from '@/lib/platform';
 import { PlanBadge } from './PlanBadge';
 import { PricingModal } from './PricingModal';
 
 export const BillingSection = () => {
   const { t } = useTranslation();
   const { profile, isLoading } = useUserProfile();
-  const { openPortal, isLoading: isPortalLoading } = useStripeCheckout();
+  const { restore, isLoading: isRestoring } = useGooglePlayPurchase();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
 
   const tier = profile?.subscriptionTier ?? 'free';
@@ -120,11 +121,9 @@ export const BillingSection = () => {
                 </span>
                 <PlanBadge tier={tier} />
               </div>
-              {isPremium && profile?.tierPeriodEnd && (
+              {isPremium && (
                 <p style={{ fontSize: '12px', color: '#888888', marginTop: '4px' }}>
-                  {t('billing.billingPeriodEnd', {
-                    date: profile.tierPeriodEnd.toLocaleDateString(),
-                  })}
+                  {t('billing.permanentAccess')}
                 </p>
               )}
             </div>
@@ -133,26 +132,28 @@ export const BillingSection = () => {
 
         {/* Action buttons */}
         {isPremium ? (
-          <button
-            onClick={openPortal}
-            disabled={isPortalLoading}
-            style={{
-              width: '100%',
-              padding: '12px 20px',
-              fontSize: '14px',
-              fontWeight: 600,
-              borderRadius: '10px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: '#111111',
-              color: '#ededed',
-              cursor: isPortalLoading ? 'not-allowed' : 'pointer',
-              fontFamily: 'inherit',
-              transition: 'all 0.15s ease',
-              opacity: isPortalLoading ? 0.6 : 1,
-            }}
-          >
-            {isPortalLoading ? '...' : t('billing.manageBilling')}
-          </button>
+          isAndroid() && (
+            <button
+              onClick={() => restore()}
+              disabled={isRestoring}
+              style={{
+                width: '100%',
+                padding: '12px 20px',
+                fontSize: '14px',
+                fontWeight: 600,
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: '#111111',
+                color: '#ededed',
+                cursor: isRestoring ? 'not-allowed' : 'pointer',
+                fontFamily: 'inherit',
+                transition: 'all 0.15s ease',
+                opacity: isRestoring ? 0.6 : 1,
+              }}
+            >
+              {isRestoring ? '...' : t('billing.restorePurchase')}
+            </button>
+          )
         ) : (
           <button
             onClick={() => setIsPricingOpen(true)}

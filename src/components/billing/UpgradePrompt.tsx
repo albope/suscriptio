@@ -1,18 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { PRICING, ANNUAL_SAVINGS_PERCENT, STRIPE_PRICES } from '@/constants/billing';
-import { useStripeCheckout } from '@/hooks/useStripeCheckout';
-import { FREE_TIER_MAX_SUBSCRIPTIONS } from '@/constants/billing';
+import { FREE_TIER_MAX_SUBSCRIPTIONS, PREMIUM_PRICE } from '@/constants/billing';
+import { useGooglePlayPurchase } from '@/hooks/useGooglePlayPurchase';
+import { isAndroid } from '@/lib/platform';
 
 export const UpgradePrompt = () => {
   const { t } = useTranslation();
-  const { checkout, isLoading } = useStripeCheckout();
-
-  const handleCheckout = (period: 'monthly' | 'annual') => {
-    const priceId = STRIPE_PRICES[period];
-    if (priceId) {
-      checkout(priceId);
-    }
-  };
+  const { purchase, isLoading, error } = useGooglePlayPurchase();
 
   return (
     <div
@@ -21,13 +14,14 @@ export const UpgradePrompt = () => {
         padding: '32px 24px',
       }}
     >
-      {/* Lock icon */}
+      {/* Star icon */}
       <div
         style={{
           width: '64px',
           height: '64px',
           borderRadius: '16px',
-          background: 'linear-gradient(135deg, rgba(255, 187, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(255, 187, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 100%)',
           border: '1px solid rgba(255, 187, 0, 0.2)',
           display: 'flex',
           alignItems: 'center',
@@ -72,63 +66,40 @@ export const UpgradePrompt = () => {
         {t('billing.limitReached', { max: FREE_TIER_MAX_SUBSCRIPTIONS })}
       </p>
 
-      {/* Pricing buttons */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <button
-          onClick={() => handleCheckout('annual')}
-          disabled={isLoading || !STRIPE_PRICES.annual}
-          style={{
-            width: '100%',
-            padding: '14px 20px',
-            fontSize: '14px',
-            fontWeight: 600,
-            borderRadius: '10px',
-            border: 'none',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            background: 'linear-gradient(180deg, #ffbb00 0%, #ff8c00 100%)',
-            color: '#000',
-            boxShadow: '0 0 0 1px rgba(255, 187, 0, 0.3), 0 4px 20px rgba(255, 187, 0, 0.25)',
-            transition: 'all 0.15s ease',
-            fontFamily: 'inherit',
-            opacity: isLoading ? 0.6 : 1,
-          }}
-        >
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            {t('billing.annualPrice', { amount: PRICING.annual.amount })}
-            <span
-              style={{
-                background: 'rgba(0, 0, 0, 0.2)',
-                padding: '2px 8px',
-                borderRadius: '4px',
-                fontSize: '11px',
-              }}
-            >
-              {t('billing.savePercent', { percent: ANNUAL_SAVINGS_PERCENT })}
-            </span>
-          </span>
-        </button>
+      {/* Single purchase button */}
+      <button
+        onClick={() => purchase()}
+        disabled={isLoading}
+        style={{
+          width: '100%',
+          padding: '14px 20px',
+          fontSize: '14px',
+          fontWeight: 600,
+          borderRadius: '10px',
+          border: 'none',
+          cursor: isLoading ? 'not-allowed' : 'pointer',
+          background: 'linear-gradient(180deg, #ffbb00 0%, #ff8c00 100%)',
+          color: '#000',
+          boxShadow: '0 0 0 1px rgba(255, 187, 0, 0.3), 0 4px 20px rgba(255, 187, 0, 0.25)',
+          transition: 'all 0.15s ease',
+          fontFamily: 'inherit',
+          opacity: isLoading ? 0.6 : 1,
+        }}
+      >
+        {isLoading
+          ? '...'
+          : t('billing.unlockPremiumPrice', { amount: PREMIUM_PRICE.amount })}
+      </button>
 
-        <button
-          onClick={() => handleCheckout('monthly')}
-          disabled={isLoading || !STRIPE_PRICES.monthly}
-          style={{
-            width: '100%',
-            padding: '14px 20px',
-            fontSize: '14px',
-            fontWeight: 600,
-            borderRadius: '10px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            background: '#111111',
-            color: '#ededed',
-            transition: 'all 0.15s ease',
-            fontFamily: 'inherit',
-            opacity: isLoading ? 0.6 : 1,
-          }}
-        >
-          {t('billing.monthlyPrice', { amount: PRICING.monthly.amount })}
-        </button>
-      </div>
+      {!isAndroid() && (
+        <p style={{ fontSize: '11px', color: '#666666', marginTop: '8px' }}>
+          {t('billing.availableOnAndroid')}
+        </p>
+      )}
+
+      {error && error !== 'PLATFORM_NOT_SUPPORTED' && (
+        <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '8px' }}>{error}</p>
+      )}
     </div>
   );
 };

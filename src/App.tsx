@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
@@ -6,6 +6,7 @@ import { useAuth } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { ErrorBoundary } from './components/errors/ErrorBoundary';
+import { initRevenueCat } from './lib/revenueCat';
 
 // Lazy load pages for better code splitting
 const Landing = lazy(() => import('./pages/Landing').then((m) => ({ default: m.Landing })));
@@ -120,6 +121,10 @@ function AppContent() {
 }
 
 function App() {
+  useEffect(() => {
+    initRevenueCat();
+  }, []);
+
   return (
     <ErrorBoundary>
       <AuthProvider>

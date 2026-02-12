@@ -1,6 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -30,19 +29,6 @@ export const Settings = () => {
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [pendingImport, setPendingImport] = useState<Subscription[] | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  // Handle Stripe payment redirect query params
-  useEffect(() => {
-    const payment = searchParams.get('payment');
-    if (payment === 'success') {
-      toast.success(t('billing.paymentSuccess'));
-      setSearchParams({}, { replace: true });
-    } else if (payment === 'cancelled') {
-      toast.info(t('billing.paymentCancelled'));
-      setSearchParams({}, { replace: true });
-    }
-  }, [searchParams, setSearchParams, t]);
 
   const handleToggleReminders = async () => {
     if (!remindersEnabled) {

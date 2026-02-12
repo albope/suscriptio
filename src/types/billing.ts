@@ -4,10 +4,9 @@ export interface UserProfile {
   id: string;
   userId: string;
   subscriptionTier: SubscriptionTier;
-  stripeCustomerId: string | null;
-  stripeSubscriptionId: string | null;
-  stripePriceId: string | null;
-  tierPeriodEnd: Date | null;
+  purchasePlatform: 'google_play' | 'web' | null;
+  purchaseToken: string | null;
+  purchasedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,7 +16,7 @@ export interface TierLimits {
 }
 
 export const TIER_LIMITS: Record<SubscriptionTier, TierLimits> = {
-  free: { maxActiveSubscriptions: 5 },
+  free: { maxActiveSubscriptions: 3 },
   premium: { maxActiveSubscriptions: Infinity },
 };
 
@@ -26,10 +25,9 @@ export interface DbUserProfile {
   id: string;
   user_id: string;
   subscription_tier: string;
-  stripe_customer_id: string | null;
-  stripe_subscription_id: string | null;
-  stripe_price_id: string | null;
-  tier_period_end: string | null;
+  purchase_platform: string | null;
+  purchase_token: string | null;
+  purchased_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -39,10 +37,9 @@ export const fromDbProfile = (row: DbUserProfile): UserProfile => ({
   id: row.id,
   userId: row.user_id,
   subscriptionTier: row.subscription_tier as SubscriptionTier,
-  stripeCustomerId: row.stripe_customer_id,
-  stripeSubscriptionId: row.stripe_subscription_id,
-  stripePriceId: row.stripe_price_id,
-  tierPeriodEnd: row.tier_period_end ? new Date(row.tier_period_end) : null,
+  purchasePlatform: row.purchase_platform as UserProfile['purchasePlatform'],
+  purchaseToken: row.purchase_token,
+  purchasedAt: row.purchased_at ? new Date(row.purchased_at) : null,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at),
 });

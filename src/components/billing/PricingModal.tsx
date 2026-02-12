@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/Modal';
-import { PRICING, ANNUAL_SAVINGS_PERCENT, STRIPE_PRICES } from '@/constants/billing';
-import { FREE_TIER_MAX_SUBSCRIPTIONS } from '@/constants/billing';
-import { useStripeCheckout } from '@/hooks/useStripeCheckout';
+import { FREE_TIER_MAX_SUBSCRIPTIONS, PREMIUM_PRICE } from '@/constants/billing';
+import { useGooglePlayPurchase } from '@/hooks/useGooglePlayPurchase';
+import { isAndroid } from '@/lib/platform';
 
 interface PricingModalProps {
   isOpen: boolean;
@@ -11,12 +11,12 @@ interface PricingModalProps {
 
 export const PricingModal = ({ isOpen, onClose }: PricingModalProps) => {
   const { t } = useTranslation();
-  const { checkout, isLoading } = useStripeCheckout();
+  const { purchase, isLoading, error } = useGooglePlayPurchase();
 
-  const handleCheckout = (period: 'monthly' | 'annual') => {
-    const priceId = STRIPE_PRICES[period];
-    if (priceId) {
-      checkout(priceId);
+  const handlePurchase = async () => {
+    const success = await purchase();
+    if (success) {
+      onClose();
     }
   };
 
@@ -31,116 +31,87 @@ export const PricingModal = ({ isOpen, onClose }: PricingModalProps) => {
       t('billing.features.fullAnalytics'),
       t('billing.features.exportData'),
       t('billing.features.prioritySupport'),
+      t('billing.features.permanentAccess'),
     ],
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('billing.upgrade')}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Pricing cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          {/* Monthly */}
-          <div
+        {/* Premium card */}
+        <div
+          style={{
+            padding: '24px 20px',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 187, 0, 0.3)',
+            background:
+              'linear-gradient(180deg, rgba(255, 187, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%)',
+            textAlign: 'center',
+            position: 'relative',
+          }}
+        >
+          <span
             style={{
-              padding: '20px 16px',
-              borderRadius: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              background: 'rgba(17, 17, 17, 0.6)',
-              textAlign: 'center',
+              position: 'absolute',
+              top: '-10px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'linear-gradient(135deg, #ffbb00, #ff8c00)',
+              color: '#000',
+              padding: '3px 10px',
+              borderRadius: '6px',
+              fontSize: '10px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
             }}
           >
-            <p style={{ fontSize: '12px', color: '#888888', marginBottom: '8px', fontWeight: 500 }}>
-              {t('billing.monthly')}
-            </p>
-            <p style={{ fontSize: '28px', fontWeight: 700, color: '#ededed', marginBottom: '4px' }}>
-              {PRICING.monthly.currency === 'EUR' ? '€' : '$'}
-              {PRICING.monthly.amount}
-            </p>
-            <p style={{ fontSize: '12px', color: '#666666' }}>/{t('billing.perMonth')}</p>
-            <button
-              onClick={() => handleCheckout('monthly')}
-              disabled={isLoading || !STRIPE_PRICES.monthly}
-              style={{
-                width: '100%',
-                marginTop: '16px',
-                padding: '10px',
-                fontSize: '13px',
-                fontWeight: 600,
-                borderRadius: '8px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                background: '#111111',
-                color: '#ededed',
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                fontFamily: 'inherit',
-                transition: 'all 0.15s ease',
-                opacity: isLoading ? 0.6 : 1,
-              }}
-            >
-              {t('billing.selectPlan')}
-            </button>
-          </div>
-
-          {/* Annual */}
-          <div
+            {t('billing.oneTimePurchase')}
+          </span>
+          <p
             style={{
-              padding: '20px 16px',
-              borderRadius: '12px',
-              border: '1px solid rgba(255, 187, 0, 0.3)',
-              background: 'linear-gradient(180deg, rgba(255, 187, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%)',
-              textAlign: 'center',
-              position: 'relative',
+              fontSize: '14px',
+              color: '#888888',
+              marginBottom: '8px',
+              fontWeight: 500,
+              marginTop: '8px',
             }}
           >
-            <span
-              style={{
-                position: 'absolute',
-                top: '-10px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: 'linear-gradient(135deg, #ffbb00, #ff8c00)',
-                color: '#000',
-                padding: '3px 10px',
-                borderRadius: '6px',
-                fontSize: '10px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              {t('billing.popularChoice')}
-            </span>
-            <p style={{ fontSize: '12px', color: '#888888', marginBottom: '8px', fontWeight: 500 }}>
-              {t('billing.annual')}
+            Premium
+          </p>
+          <p style={{ fontSize: '36px', fontWeight: 700, color: '#ededed', marginBottom: '4px' }}>
+            €{PREMIUM_PRICE.amount}
+          </p>
+          <p style={{ fontSize: '13px', color: '#ffbb00' }}>{t('billing.payOnce')}</p>
+          <button
+            onClick={handlePurchase}
+            disabled={isLoading}
+            style={{
+              width: '100%',
+              marginTop: '20px',
+              padding: '14px',
+              fontSize: '14px',
+              fontWeight: 600,
+              borderRadius: '10px',
+              border: 'none',
+              background: 'linear-gradient(180deg, #ffbb00 0%, #ff8c00 100%)',
+              color: '#000',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              fontFamily: 'inherit',
+              transition: 'all 0.15s ease',
+              boxShadow: '0 4px 20px rgba(255, 187, 0, 0.25)',
+              opacity: isLoading ? 0.6 : 1,
+            }}
+          >
+            {isLoading ? '...' : t('billing.unlockPremium')}
+          </button>
+          {!isAndroid() && (
+            <p style={{ fontSize: '11px', color: '#666666', marginTop: '8px' }}>
+              {t('billing.availableOnAndroid')}
             </p>
-            <p style={{ fontSize: '28px', fontWeight: 700, color: '#ededed', marginBottom: '4px' }}>
-              {PRICING.annual.currency === 'EUR' ? '€' : '$'}
-              {PRICING.annual.amount}
-            </p>
-            <p style={{ fontSize: '12px', color: '#ffbb00' }}>
-              /{t('billing.perYear')} · {t('billing.savePercent', { percent: ANNUAL_SAVINGS_PERCENT })}
-            </p>
-            <button
-              onClick={() => handleCheckout('annual')}
-              disabled={isLoading || !STRIPE_PRICES.annual}
-              style={{
-                width: '100%',
-                marginTop: '16px',
-                padding: '10px',
-                fontSize: '13px',
-                fontWeight: 600,
-                borderRadius: '8px',
-                border: 'none',
-                background: 'linear-gradient(180deg, #ffbb00 0%, #ff8c00 100%)',
-                color: '#000',
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                fontFamily: 'inherit',
-                transition: 'all 0.15s ease',
-                boxShadow: '0 4px 20px rgba(255, 187, 0, 0.25)',
-                opacity: isLoading ? 0.6 : 1,
-              }}
-            >
-              {t('billing.selectPlan')}
-            </button>
-          </div>
+          )}
+          {error && error !== 'PLATFORM_NOT_SUPPORTED' && (
+            <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '8px' }}>{error}</p>
+          )}
         </div>
 
         {/* Feature comparison */}

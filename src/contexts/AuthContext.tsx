@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session, AuthError, AuthResponse } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { identifyUser, resetUser } from '@/lib/revenueCat';
 
 interface AuthContextType {
   user: User | null;
@@ -36,6 +37,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Sync RevenueCat user identity with Supabase auth
+      if (session?.user) {
+        identifyUser(session.user.id);
+      } else {
+        resetUser();
+      }
     });
 
     return () => subscription.unsubscribe();
