@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+const PLAY_STORE_URL =
+  'https://play.google.com/store/apps/details?id=com.suscriptio.app';
+
 export const Footer = () => {
   const { t } = useTranslation();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
@@ -153,14 +156,16 @@ export const Footer = () => {
                 >
                   {t('landing.footer.signIn')}
                 </Link>
-                <Link
-                  to="/register"
-                  style={linkStyle('register')}
-                  onMouseEnter={() => setHoveredLink('register')}
+                <a
+                  href={PLAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle('download')}
+                  onMouseEnter={() => setHoveredLink('download')}
                   onMouseLeave={() => setHoveredLink(null)}
                 >
-                  {t('landing.footer.register')}
-                </Link>
+                  {t('landing.footer.download')}
+                </a>
               </nav>
             </div>
           </div>

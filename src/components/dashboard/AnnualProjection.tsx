@@ -11,7 +11,7 @@ import {
   Cell,
 } from 'recharts';
 import { Subscription, BillingFrequency } from '@/types';
-import { formatCurrency } from '@/utils/calculations';
+import { formatCurrency, normalizeToMonthly } from '@/utils/calculations';
 import { addMonths, getMonth, getYear, startOfMonth, format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -52,19 +52,13 @@ export const AnnualProjection = ({ subscriptions, preferredCurrency }: AnnualPro
       let yearlyTotal = 0;
 
       filteredSubs.forEach((sub) => {
-        if (sub.billingFrequency === BillingFrequency.MONTHLY) {
-          // Monthly subscriptions appear every month
-          monthlyTotal += sub.cost;
-        } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
+        if (sub.billingFrequency === BillingFrequency.YEARLY) {
           // Yearly subscriptions appear only in their payment month
           const paymentDate = new Date(sub.nextPaymentDate);
           const paymentMonth = getMonth(paymentDate);
           const paymentYear = getYear(paymentDate);
 
-          // Check if this subscription pays in this target month
-          // We need to consider future years too
           if (paymentMonth === targetMonth) {
-            // Check if the payment year matches or is in the future
             if (
               paymentYear === targetYear ||
               (paymentYear < targetYear && targetMonth >= currentMonth) ||
@@ -72,10 +66,20 @@ export const AnnualProjection = ({ subscriptions, preferredCurrency }: AnnualPro
             ) {
               yearlyTotal += sub.cost;
             } else if (paymentYear === currentYear && targetYear === currentYear + 1) {
-              // Next year's occurrence
               yearlyTotal += sub.cost;
             }
           }
+        } else if (sub.billingFrequency === BillingFrequency.QUARTERLY) {
+          // Quarterly: appears every 3 months from payment date
+          const paymentDate = new Date(sub.nextPaymentDate);
+          const paymentMonth = getMonth(paymentDate);
+          const diff = ((targetMonth - paymentMonth) % 12 + 12) % 12;
+          if (diff % 3 === 0) {
+            monthlyTotal += sub.cost;
+          }
+        } else {
+          // WEEKLY, MONTHLY, CUSTOM: normalize to monthly
+          monthlyTotal += normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
         }
       });
 

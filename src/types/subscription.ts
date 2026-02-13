@@ -1,6 +1,9 @@
 export enum BillingFrequency {
+  WEEKLY = 'weekly',
   MONTHLY = 'monthly',
+  QUARTERLY = 'quarterly',
   YEARLY = 'yearly',
+  CUSTOM = 'custom',
 }
 
 export enum SubscriptionStatus {
@@ -33,6 +36,9 @@ export interface Subscription {
   notes?: string;
   providerUrl?: string;
   reminderDaysBefore?: number;
+  customIntervalDays?: number;
+  color?: string;
+  trialEndDate?: Date;
   createdAt: Date;
   updatedAt: Date;
 }

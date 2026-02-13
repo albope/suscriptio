@@ -4,9 +4,13 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { TagInput } from '@/components/ui/TagInput';
+import { ColorPicker } from '@/components/ui/ColorPicker';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { BillingFrequency, SubscriptionStatus, Category, Subscription } from '@/types';
 import { CURRENCIES, DEFAULT_CURRENCY } from '@/constants/currencies';
+import { PremiumGate } from '@/components/billing/PremiumGate';
+import { useIsPremium } from '@/hooks/useIsPremium';
+import { findService } from '@/utils/serviceMatch';
 
 interface SubscriptionFormProps {
   initialData?: Subscription;
@@ -17,12 +21,14 @@ interface SubscriptionFormProps {
 export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: SubscriptionFormProps) => {
   const { t } = useTranslation();
   const { getAllTags } = useSubscriptionStore();
+  const isPremium = useIsPremium();
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
     cost: initialData?.cost?.toString() || '',
     currency: initialData?.currency || DEFAULT_CURRENCY,
     billingFrequency: initialData?.billingFrequency || BillingFrequency.MONTHLY,
+    customIntervalDays: initialData?.customIntervalDays?.toString() || '14',
     nextPaymentDate: initialData?.nextPaymentDate
       ? new Date(initialData.nextPaymentDate).toISOString().split('T')[0]
       : new Date().toISOString().split('T')[0],
@@ -31,26 +37,43 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
     tags: initialData?.tags || [],
     notes: initialData?.notes || '',
     providerUrl: initialData?.providerUrl || '',
+    color: initialData?.color || undefined as string | undefined,
+    isTrial: !!(initialData?.trialEndDate),
+    trialEndDate: initialData?.trialEndDate
+      ? new Date(initialData.trialEndDate).toISOString().split('T')[0]
+      : '',
   });
+
+  const suggestedColor = findService(formData.name)?.brandColor;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const data = {
-      ...formData,
+      name: formData.name,
       cost: parseFloat(formData.cost),
+      currency: formData.currency,
+      billingFrequency: formData.billingFrequency,
       nextPaymentDate: new Date(formData.nextPaymentDate),
+      status: formData.status,
       category: formData.category || undefined,
       tags: formData.tags.length > 0 ? formData.tags : undefined,
       notes: formData.notes || undefined,
       providerUrl: formData.providerUrl || undefined,
+      customIntervalDays: formData.billingFrequency === BillingFrequency.CUSTOM
+        ? parseInt(formData.customIntervalDays) || 14
+        : undefined,
+      color: formData.color || undefined,
+      trialEndDate: formData.isTrial && formData.trialEndDate
+        ? new Date(formData.trialEndDate)
+        : undefined,
     };
 
     onSubmit(data);
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', flex: 1, minHeight: 0, overflowY: 'auto' }}>
       <Input
         label={t('subscriptions.fields.name')}
         value={formData.name}
@@ -78,12 +101,19 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
           value={formData.currency}
           onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
           required
+          disabled={!isPremium}
         >
-          {CURRENCIES.map((currency) => (
-            <option key={currency.code} value={currency.code}>
-              {currency.symbol} {currency.code}
+          {isPremium ? (
+            CURRENCIES.map((currency) => (
+              <option key={currency.code} value={currency.code}>
+                {currency.symbol} {currency.code}
+              </option>
+            ))
+          ) : (
+            <option value={formData.currency}>
+              {CURRENCIES.find((c) => c.code === formData.currency)?.symbol || '€'} {formData.currency}
             </option>
-          ))}
+          )}
         </Select>
       </div>
 
@@ -97,7 +127,26 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
       >
         <option value={BillingFrequency.MONTHLY}>{t('subscriptions.frequency.monthly')}</option>
         <option value={BillingFrequency.YEARLY}>{t('subscriptions.frequency.yearly')}</option>
+        {isPremium && (
+          <>
+            <option value={BillingFrequency.WEEKLY}>{t('subscriptions.frequency.weekly')}</option>
+            <option value={BillingFrequency.QUARTERLY}>{t('subscriptions.frequency.quarterly')}</option>
+            <option value={BillingFrequency.CUSTOM}>{t('subscriptions.frequency.custom')}</option>
+          </>
+        )}
       </Select>
+
+      {formData.billingFrequency === BillingFrequency.CUSTOM && (
+        <Input
+          label={t('subscriptions.frequency.customInterval')}
+          type="number"
+          min="1"
+          max="365"
+          value={formData.customIntervalDays}
+          onChange={(e) => setFormData({ ...formData, customIntervalDays: e.target.value })}
+          required
+        />
+      )}
 
       <Input
         label={t('subscriptions.fields.nextPaymentDate')}
@@ -130,23 +179,40 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
         ))}
       </Select>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label
-          style={{
-            fontSize: '13px',
-            fontWeight: 500,
-            color: '#888888',
-          }}
-        >
-          {t('subscriptions.fields.tags')}
-        </label>
-        <TagInput
-          tags={formData.tags}
-          onChange={(tags) => setFormData({ ...formData, tags })}
-          suggestions={getAllTags()}
-          placeholder={t('tags.placeholder')}
-        />
-      </div>
+      {isPremium ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#888888',
+            }}
+          >
+            {t('subscriptions.fields.tags')}
+          </label>
+          <TagInput
+            tags={formData.tags}
+            onChange={(tags) => setFormData({ ...formData, tags })}
+            suggestions={getAllTags()}
+            placeholder={t('tags.placeholder')}
+          />
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#888888',
+            }}
+          >
+            {t('subscriptions.fields.tags')}
+          </label>
+          <PremiumGate feature="tags" fallback="inline-prompt">
+            <span />
+          </PremiumGate>
+        </div>
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <label
@@ -194,6 +260,68 @@ export const SubscriptionForm = ({ initialData, onSubmit, onCancel }: Subscripti
         value={formData.providerUrl}
         onChange={(e) => setFormData({ ...formData, providerUrl: e.target.value })}
       />
+
+      {/* Color picker */}
+      <ColorPicker
+        value={formData.color}
+        onChange={(color) => setFormData({ ...formData, color })}
+        suggestedColor={suggestedColor}
+      />
+
+      {/* Trial toggle */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <label style={{ fontSize: '13px', fontWeight: 500, color: '#888888' }}>
+            {t('trial.toggle', 'Prueba gratuita')}
+          </label>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={formData.isTrial}
+            onClick={() => setFormData({ ...formData, isTrial: !formData.isTrial, trialEndDate: '' })}
+            style={{
+              width: '44px',
+              height: '24px',
+              borderRadius: '12px',
+              border: 'none',
+              cursor: 'pointer',
+              position: 'relative',
+              transition: 'background 0.2s ease',
+              background: formData.isTrial
+                ? 'rgba(0, 212, 255, 0.4)'
+                : 'rgba(255, 255, 255, 0.1)',
+              padding: 0,
+            }}
+          >
+            <div
+              style={{
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                background: formData.isTrial ? '#00d4ff' : '#888888',
+                position: 'absolute',
+                top: '3px',
+                left: formData.isTrial ? '23px' : '3px',
+                transition: 'all 0.2s ease',
+              }}
+            />
+          </button>
+        </div>
+        {formData.isTrial && (
+          <>
+            <Input
+              label={t('trial.endDate', 'Fecha fin del trial')}
+              type="date"
+              value={formData.trialEndDate}
+              onChange={(e) => setFormData({ ...formData, trialEndDate: e.target.value })}
+              required
+            />
+            <p style={{ fontSize: '12px', color: '#666666', margin: 0 }}>
+              {t('trial.helper', 'Te avisaremos antes de que termine')}
+            </p>
+          </>
+        )}
+      </div>
 
       <div
         style={{

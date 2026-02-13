@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FREE_TIER_MAX_SUBSCRIPTIONS, PREMIUM_PRICE } from '@/constants/billing';
+import { SUBSCRIPTION_TEMPLATES } from '@/constants/templates';
 
 interface OnboardingModalProps {
   onClose: () => void;
   onAddSubscription: () => void;
 }
 
-const STEPS = 3;
+const STEPS = 4;
 
 export const OnboardingModal = ({ onClose, onAddSubscription }: OnboardingModalProps) => {
   const { t } = useTranslation();
@@ -24,6 +25,11 @@ export const OnboardingModal = ({ onClose, onAddSubscription }: OnboardingModalP
 
   const handleSkip = () => {
     onClose();
+  };
+
+  const handleTemplateSelect = () => {
+    onClose();
+    onAddSubscription();
   };
 
   const steps = [
@@ -44,6 +50,16 @@ export const OnboardingModal = ({ onClose, onAddSubscription }: OnboardingModalP
       ),
       title: t('onboarding.step2Title'),
       description: t('onboarding.step2Description'),
+    },
+    {
+      icon: (
+        <svg style={{ width: '48px', height: '48px', color: '#00d4ff' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      ),
+      title: t('onboarding.popularServices'),
+      description: t('onboarding.quickAdd'),
+      templates: true,
     },
     {
       icon: (
@@ -146,11 +162,47 @@ export const OnboardingModal = ({ onClose, onAddSubscription }: OnboardingModalP
             fontSize: '14px',
             color: 'rgba(255, 255, 255, 0.5)',
             lineHeight: 1.6,
-            marginBottom: '32px',
+            marginBottom: current.templates ? '20px' : '32px',
           }}
         >
           {current.description}
         </p>
+
+        {/* Templates grid */}
+        {current.templates && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '8px',
+              marginBottom: '20px',
+            }}
+          >
+            {SUBSCRIPTION_TEMPLATES.map((tpl) => (
+              <button
+                key={tpl.name}
+                onClick={() => handleTemplateSelect()}
+                style={{
+                  padding: '12px 10px',
+                  background: 'rgba(0, 212, 255, 0.05)',
+                  border: '1px solid rgba(0, 212, 255, 0.12)',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.15s ease',
+                  fontFamily: 'inherit',
+                }}
+              >
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#ededed', marginBottom: '2px' }}>
+                  {tpl.name}
+                </div>
+                <div style={{ fontSize: '11px', color: '#888' }}>
+                  {tpl.cost.toFixed(2)} {tpl.currency}/{tpl.billingFrequency === 'monthly' ? t('subscriptions.frequency.perMonth').replace('/ ', '') : t('subscriptions.frequency.perYear').replace('/ ', '')}
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Actions */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -170,7 +222,7 @@ export const OnboardingModal = ({ onClose, onAddSubscription }: OnboardingModalP
               boxShadow: '0 0 16px rgba(0, 212, 255, 0.25)',
             }}
           >
-            {step < STEPS - 1 ? t('onboarding.next') : t('onboarding.addFirst')}
+            {current.templates ? t('onboarding.orAddCustom') : step < STEPS - 1 ? t('onboarding.next') : t('onboarding.addFirst')}
           </button>
           <button
             onClick={handleSkip}

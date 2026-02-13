@@ -19,6 +19,7 @@
     "@capacitor/android": "^8.0.2",
     "@capacitor/cli": "^7.4.5",
     "@capacitor/core": "^8.0.2",
+    "@capacitor/local-notifications": "^8.0.1",
     "@revenuecat/purchases-capacitor": "^12.1.1",
     "@supabase/supabase-js": "^2.90.0",
     "date-fns": "^4.1.0",

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Header } from './Header';
 import { MobileNav } from './MobileNav';
+import { OfflineIndicator } from './OfflineIndicator';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -41,6 +42,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       <div className="fixed inset-0 bg-grid pointer-events-none opacity-50" aria-hidden="true" />
 
       <div className="relative z-10">
+        <OfflineIndicator />
         <Header />
         <main
           id="main-content"

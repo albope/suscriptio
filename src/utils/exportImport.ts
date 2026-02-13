@@ -58,6 +58,7 @@ export async function importFromJson(file: File): Promise<Subscription[]> {
   return data.subscriptions.map((sub) => ({
     ...sub,
     nextPaymentDate: new Date(sub.nextPaymentDate),
+    trialEndDate: sub.trialEndDate ? new Date(sub.trialEndDate) : undefined,
     createdAt: new Date(sub.createdAt),
     updatedAt: new Date(sub.updatedAt),
   }));
@@ -96,8 +97,11 @@ export function exportToCsv(subscriptions: Subscription[]): void {
 
   // Map frequency and status to Spanish labels
   const frequencyLabels: Record<string, string> = {
+    weekly: 'Semanal',
     monthly: 'Mensual',
+    quarterly: 'Trimestral',
     yearly: 'Anual',
+    custom: 'Personalizada',
   };
 
   const statusLabels: Record<string, string> = {

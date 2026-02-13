@@ -12,17 +12,21 @@ import { CategoryBreakdown } from './CategoryBreakdown';
 import { PaymentTimeline } from './PaymentTimeline';
 import { CalendarView } from './CalendarView';
 import { DashboardEmptyState } from './DashboardEmptyState';
+import { SpendingTrends } from './SpendingTrends';
+import { BudgetIndicator } from './BudgetIndicator';
+import { TrialAlerts } from './TrialAlerts';
 import { SubscriptionModal } from '@/components/subscriptions/SubscriptionModal';
 import { PricingModal } from '@/components/billing/PricingModal';
 import { SubscriptionLimitBar } from '@/components/billing/SubscriptionLimitBar';
 import { OnboardingModal } from '@/components/onboarding/OnboardingModal';
 import { MigrationModal } from '@/components/auth/MigrationModal';
 import { Subscription } from '@/types';
+import { PremiumGate } from '@/components/billing/PremiumGate';
 
 export const Dashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { paymentView, setPaymentView } = useSettingsStore();
+  const { paymentView, setPaymentView, monthlyBudget } = useSettingsStore();
   const {
     subscriptions,
     activeSubscriptions,
@@ -33,12 +37,13 @@ export const Dashboard = () => {
     topCategories,
     preferredCurrency,
     spendByCurrency,
+    monthlySpend,
     isLoading,
     migrateLocalToCloud,
     getLocalSubscriptions,
   } = useSubscriptions();
 
-  const { canAddSubscription, tier } = useTierLimits();
+  const { tier } = useTierLimits();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | undefined>();
@@ -112,10 +117,6 @@ export const Dashboard = () => {
   };
 
   const handleAddNew = () => {
-    if (!canAddSubscription) {
-      setIsPricingOpen(true);
-      return;
-    }
     setSelectedSubscription(undefined);
     setIsModalOpen(true);
   };
@@ -133,7 +134,7 @@ export const Dashboard = () => {
   return (
     <>
       {isEmpty ? (
-        <DashboardEmptyState onAddSubscription={handleAddNew} />
+        <DashboardEmptyState onAddSubscription={() => handleAddNew()} />
       ) : isLoading ? (
         <div
           style={{
@@ -211,7 +212,7 @@ export const Dashboard = () => {
                 </p>
               </div>
               <button
-                onClick={handleAddNew}
+                onClick={() => handleAddNew()}
                 className="premium-add-button"
                 style={{
                   display: 'inline-flex',
@@ -273,6 +274,12 @@ export const Dashboard = () => {
             </div>
           )}
 
+          {/* Trial Alerts */}
+          <TrialAlerts
+            subscriptions={subscriptions}
+            onClickSubscription={handleSubscriptionClick}
+          />
+
           {/* KPI Cards - 2x2 Grid */}
           <div
             className="animate-slide-up animate-delay-100"
@@ -291,6 +298,23 @@ export const Dashboard = () => {
               preferredCurrency={preferredCurrency}
             />
             <TopCategories topCategories={topCategories} preferredCurrency={preferredCurrency} />
+            {monthlyBudget !== null && monthlyBudget > 0 && (
+              <PremiumGate feature="budgetLimits" fallback="hidden">
+                <BudgetIndicator
+                  monthlySpend={monthlySpend}
+                  monthlyBudget={monthlyBudget}
+                  preferredCurrency={preferredCurrency}
+                />
+              </PremiumGate>
+            )}
+          </div>
+
+          {/* Spending Trends */}
+          <div className="animate-slide-up animate-delay-150">
+            <SpendingTrends
+              subscriptions={subscriptions}
+              preferredCurrency={preferredCurrency}
+            />
           </div>
 
           {/* Payment Visualization Section */}
@@ -420,10 +444,12 @@ export const Dashboard = () => {
                   daysToShow={60}
                 />
               ) : (
-                <CalendarView
-                  subscriptions={activeSubscriptions}
-                  onSubscriptionClick={handleSubscriptionClick}
-                />
+                <PremiumGate feature="calendarView" fallback="blur">
+                  <CalendarView
+                    subscriptions={activeSubscriptions}
+                    onSubscriptionClick={handleSubscriptionClick}
+                  />
+                </PremiumGate>
               )}
               <CategoryBreakdown data={categoryBreakdown} />
             </div>
@@ -431,10 +457,12 @@ export const Dashboard = () => {
 
           {/* Annual Projection Section */}
           <div className="animate-slide-up animate-delay-300">
-            <AnnualProjection
-              subscriptions={activeSubscriptions}
-              preferredCurrency={preferredCurrency}
-            />
+            <PremiumGate feature="advancedAnalytics" fallback="blur">
+              <AnnualProjection
+                subscriptions={activeSubscriptions}
+                preferredCurrency={preferredCurrency}
+              />
+            </PremiumGate>
           </div>
         </div>
       )}

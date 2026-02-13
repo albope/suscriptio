@@ -7,7 +7,9 @@
     "delete": "Delete",
     "confirm": "Confirm",
     "currency": "$",
-    "closeModal": "Close modal"
+    "closeModal": "Close modal",
+    "all": "All",
+    "none": "None"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -48,7 +50,10 @@
     "monthlyProjection": "Monthly payments",
     "yearlyPayments": "Yearly payments",
     "noDataAvailable": "No data available",
-    "addSubscriptionsToSeeBreakdown": "Add subscriptions to see the breakdown"
+    "addSubscriptionsToSeeBreakdown": "Add subscriptions to see the breakdown",
+    "spendingTrends": "Spending trends",
+    "spendingTrendsSubtitle": "Monthly spending evolution",
+    "estimated": "Estimated from current subscriptions"
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -87,13 +92,21 @@
       "category": "Category",
       "tags": "Tags",
       "notes": "Notes",
-      "providerUrl": "Provider URL"
+      "providerUrl": "Provider URL",
+      "color": "Color"
     },
     "frequency": {
+      "weekly": "Weekly",
       "monthly": "Monthly",
+      "quarterly": "Quarterly",
       "yearly": "Yearly",
+      "custom": "Custom",
+      "perWeek": "/ week",
       "perMonth": "/ month",
-      "perYear": "/ year"
+      "perQuarter": "/ quarter",
+      "perYear": "/ year",
+      "everyXDays": "Every {{days}} days",
+      "customInterval": "Interval in days"
     },
     "status": {
       "active": "Active",
@@ -109,6 +122,11 @@
       "news_learning": "News & Learning",
       "utilities": "Utilities",
       "other": "Other"
+    },
+    "templates": {
+      "title": "Choose service",
+      "subtitle": "Select a popular service or add a custom one.",
+      "addCustom": "Add custom"
     }
   },
   "validation": {
@@ -239,7 +257,7 @@
   },
   "reminders": {
     "section": "Reminders",
-    "description": "Receive notifications about upcoming payments while the app is open",
+    "description": "Receive notifications about upcoming payments",
     "enableTitle": "Enable reminders",
     "enableDescription": "Upcoming payment notifications",
     "daysTitle": "Days in advance",
@@ -251,9 +269,17 @@
       "7": "1 week before"
     },
     "disclaimer": "Reminders only work while the application is open. To avoid missing payments, we recommend opening the app regularly or adding it to your home screen.",
+    "disclaimerNative": "Reminders will be sent at 9:00 AM even when the app is closed.",
     "enabled": "Reminders enabled",
     "disabled": "Reminders disabled",
-    "permissionDenied": "You need to allow notifications to enable reminders"
+    "permissionDenied": "You need to allow notifications to enable reminders",
+    "notificationTitle": "Upcoming payment",
+    "notificationBody": "{{name}} ({{amount}}) due {{days}}",
+    "notificationDays": {
+      "today": "today",
+      "tomorrow": "tomorrow",
+      "inDays": "in {{count}} days"
+    }
   },
   "billing": {
     "planSection": "Plan",
@@ -301,6 +327,37 @@
     "popularServices": "Popular services",
     "orAddCustom": "or add custom"
   },
+  "budget": {
+    "title": "Monthly budget",
+    "description": "Set a monthly spending limit and get alerts",
+    "setAmount": "Monthly limit",
+    "currency": "in {{currency}}",
+    "remaining": "{{amount}} remaining",
+    "exceeded": "Over budget by {{amount}}",
+    "indicator": "Budget",
+    "of": "of {{total}}",
+    "warningToast": "You're approaching your monthly budget ({{percent}}%)",
+    "exceededToast": "You've exceeded your monthly budget!"
+  },
+  "premium": {
+    "locked": "Premium feature",
+    "lockedDescription": "This feature is available with Premium",
+    "unlockFeature": "Unlock with Premium",
+    "featureNames": {
+      "csvExport": "CSV Export",
+      "calendarView": "Payment Calendar",
+      "advancedAnalytics": "Advanced Analytics",
+      "reminders": "Reminders",
+      "tags": "Tags",
+      "multiCurrency": "Multi-Currency",
+      "customFrequencies": "Custom Frequencies",
+      "spendingTrends": "Spending Trends",
+      "budgetLimits": "Monthly Budget"
+    }
+  },
+  "offline": {
+    "message": "You're offline. Changes will sync when you reconnect."
+  },
   "languages": {
     "es": "Spanish",
     "en": "English"
@@ -311,14 +368,15 @@
       "screenshots": "Demo",
       "pricing": "Pricing",
       "signIn": "Sign In",
-      "getStarted": "Get Started"
+      "getStarted": "Download app"
     },
     "hero": {
       "badge": "Smart subscription management",
       "title": "Take control of your subscriptions",
       "subtitle": "Track all your recurring expenses in one place. Visualize your spending, get payment reminders, and never lose track of what you're paying for.",
-      "cta": "Get started free",
-      "ctaSecondary": "See features"
+      "cta": "Get it on Google Play",
+      "ctaSecondary": "See features",
+      "availableOn": "Available on Android"
     },
     "features": {
       "title": "Everything you need",
@@ -349,22 +407,53 @@
       }
     },
     "showcase": {
-      "title": "See it in action",
-      "subtitle": "A beautiful, intuitive interface designed for clarity"
+      "title": "See how it works",
+      "subtitle": "Powerful features, beautifully simple",
+      "tabs": {
+        "setup": {
+          "title": "Quick Setup",
+          "description": "Add your subscriptions in seconds with pre-configured templates for popular services.",
+          "bullet1": "Templates for Netflix, Spotify, Disney+ and more",
+          "bullet2": "Auto-fills price, currency and billing frequency",
+          "bullet3": "Also supports fully custom subscriptions"
+        },
+        "analytics": {
+          "title": "Smart Analytics",
+          "description": "Understand your spending patterns with visual analytics and monthly spending trends.",
+          "bullet1": "Spending trends chart for the last 6 months",
+          "bullet2": "Category breakdown with percentages",
+          "bullet3": "Key metrics: monthly spend, yearly projection, average cost"
+        },
+        "budget": {
+          "title": "Budget Control",
+          "description": "Set monthly budgets and get notified before you overspend.",
+          "bullet1": "Visual progress bar with color-coded thresholds",
+          "bullet2": "Alerts when approaching and exceeding the limit",
+          "bullet3": "Monthly compliance tracking"
+        },
+        "calendar": {
+          "title": "Payment Calendar",
+          "description": "Never miss a payment with visual timeline and smart reminders.",
+          "bullet1": "Upcoming payments view with exact dates",
+          "bullet2": "Configurable reminders (1, 2, 3 or 7 days before)",
+          "bullet3": "Monthly calendar view"
+        }
+      }
     },
     "pricing": {
       "title": "Simple, transparent pricing",
-      "subtitle": "Choose the plan that fits you best",
+      "subtitle": "Start for free. Unlock everything with a single payment.",
       "free": "Free",
       "freePeriod": "forever",
       "pro": "Pro",
-      "proPeriod": "/month",
-      "proPrice": "6.99",
+      "proPeriod": "one-time",
+      "proLifetime": "Lifetime access",
+      "proNoRenewals": "No subscriptions. No renewals.",
       "popular": "Popular",
-      "ctaFree": "Start for free",
-      "ctaPro": "Go Pro",
+      "ctaFree": "Download free",
+      "ctaPro": "Download & unlock Pro",
       "freeFeatures": {
-        "subscriptions": "Up to 10 subscriptions",
+        "subscriptions": "Up to 3 subscriptions",
         "dashboard": "Basic dashboard",
         "exportJson": "JSON export",
         "pwa": "Installable app (PWA)",
@@ -381,20 +470,73 @@
         "allFree": "Everything in Free"
       }
     },
+    "comparison": {
+      "title": "Detailed comparison",
+      "subtitle": "Everything included in each plan",
+      "feature": "Feature",
+      "freeColumn": "Free",
+      "proColumn": "Pro",
+      "rows": {
+        "subscriptions": "Subscriptions",
+        "subscriptionsFree": "Up to 3",
+        "subscriptionsPro": "Unlimited",
+        "dashboard": "Dashboard",
+        "dashboardFree": "Basic",
+        "dashboardPro": "Full",
+        "analytics": "Advanced analytics",
+        "multicurrency": "Multi-currency",
+        "calendar": "Payment calendar",
+        "exportJson": "JSON export",
+        "exportCsv": "CSV export",
+        "reminders": "Reminders",
+        "tags": "Tags",
+        "support": "Support",
+        "supportFree": "Community",
+        "supportPro": "Priority"
+      }
+    },
     "social": {
-      "stat1": "Total control",
-      "stat1Desc": "Over all your subscriptions",
-      "stat2": "Multi-device",
-      "stat2Desc": "PWA on any screen",
-      "stat3": "Bilingual",
-      "stat3Desc": "Spanish & English",
-      "stat4": "Privacy first",
-      "stat4Desc": "Your data, your control"
+      "title": "What our users say",
+      "subtitle": "Discover why they choose Suscriptio",
+      "statUsers": "500+ users",
+      "statRating": "4.8★ rating",
+      "statPrivacy": "100% private",
+      "testimonial1": {
+        "name": "María G.",
+        "role": "Freelancer",
+        "quote": "I discovered I was paying over €40/month on subscriptions I didn't even remember. Suscriptio helped me save from day one."
+      },
+      "testimonial2": {
+        "name": "Carlos R.",
+        "role": "Developer",
+        "quote": "Finally an app that isn't yet another subscription. The €2.99 one-time payment and permanent access is exactly what I was looking for."
+      },
+      "testimonial3": {
+        "name": "Laura P.",
+        "role": "Designer",
+        "quote": "The interface is beautiful and works perfectly offline. I track Netflix, Spotify, Figma... everything in one place."
+      }
     },
     "cta": {
       "title": "Ready to take control?",
-      "subtitle": "Join and start managing your subscriptions today.",
-      "button": "Create your free account"
+      "subtitle": "Download the app and start managing your subscriptions today.",
+      "button": "Get it on Google Play"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know about Suscriptio",
+      "q1": "Is it free? What does Premium include?",
+      "a1": "Yes, you can use Suscriptio for free with up to 3 active subscriptions. Premium unlocks unlimited subscriptions, payment calendar, advanced analytics, CSV export, reminders, tags, multi-currency, spending trends, and monthly budget. All for a one-time payment of €2.99.",
+      "q2": "How do I stop tracking a subscription?",
+      "a2": "Swipe the subscription to the left or tap on it and press 'Cancel subscription'. It won't be deleted: it moves to canceled status and stops counting in your totals, but you can reactivate it anytime.",
+      "q3": "Is my data private?",
+      "a3": "Absolutely. Your data is stored locally on your device. If you create an account, it syncs securely with Supabase. We never share your data with third parties.",
+      "q4": "Does it work offline?",
+      "a4": "Yes. Suscriptio is a PWA that works completely offline. Changes sync automatically when you regain connectivity.",
+      "q5": "What if I already paid and switch phones?",
+      "a5": "Your Premium purchase is linked to your Google Play account. Install the app on your new device, sign in with the same account, and tap 'Restore purchase' in settings.",
+      "q6": "Why a one-time payment instead of a subscription?",
+      "a6": "Because it would be ironic if a subscription management app charged you yet another subscription. Premium is a one-time €2.99 payment with permanent access and all future updates."
     },
     "footer": {
       "description": "Your personal subscription manager. Track, analyze, and control your recurring expenses.",
@@ -403,9 +545,21 @@
       "features": "Features",
       "pricing": "Pricing",
       "signIn": "Sign In",
-      "register": "Create Account",
+      "download": "Download app",
       "copyright": "Suscriptio. All rights reserved.",
       "madeWith": "Made with"
     }
+  },
+  "trial": {
+    "toggle": "Free trial",
+    "endDate": "Trial end date",
+    "helper": "We'll notify you before it ends",
+    "daysRemaining": "{{days}} days of trial",
+    "expiringToday": "Trial expires today",
+    "expiringTomorrow": "Trial expires tomorrow",
+    "expired": "Trial expired",
+    "alertTitle": "Expiring trials",
+    "cancelBefore": "Cancel before",
+    "keepSubscription": "Keep"
   }
 }

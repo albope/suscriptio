@@ -1,16 +1,28 @@
 import { BillingFrequency } from '@/types';
 import { getCurrencyByCode, DEFAULT_CURRENCY } from '@/constants/currencies';
 
-export const normalizeToMonthly = (cost: number, frequency: BillingFrequency): number => {
-  if (frequency === BillingFrequency.MONTHLY) return cost;
-  if (frequency === BillingFrequency.YEARLY) return cost / 12;
-  return 0;
+export const normalizeToMonthly = (cost: number, frequency: BillingFrequency, customIntervalDays?: number): number => {
+  switch (frequency) {
+    case BillingFrequency.WEEKLY: return cost * (30.44 / 7);
+    case BillingFrequency.MONTHLY: return cost;
+    case BillingFrequency.QUARTERLY: return cost / 3;
+    case BillingFrequency.YEARLY: return cost / 12;
+    case BillingFrequency.CUSTOM:
+      return customIntervalDays ? cost * (30.44 / customIntervalDays) : 0;
+    default: return 0;
+  }
 };
 
-export const normalizeToYearly = (cost: number, frequency: BillingFrequency): number => {
-  if (frequency === BillingFrequency.MONTHLY) return cost * 12;
-  if (frequency === BillingFrequency.YEARLY) return cost;
-  return 0;
+export const normalizeToYearly = (cost: number, frequency: BillingFrequency, customIntervalDays?: number): number => {
+  switch (frequency) {
+    case BillingFrequency.WEEKLY: return cost * (365.25 / 7);
+    case BillingFrequency.MONTHLY: return cost * 12;
+    case BillingFrequency.QUARTERLY: return cost * 4;
+    case BillingFrequency.YEARLY: return cost;
+    case BillingFrequency.CUSTOM:
+      return customIntervalDays ? cost * (365.25 / customIntervalDays) : 0;
+    default: return 0;
+  }
 };
 
 /**

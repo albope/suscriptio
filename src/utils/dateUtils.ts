@@ -27,3 +27,9 @@ export const advancePaymentDate = (currentDate: Date, frequency: BillingFrequenc
   }
   return currentDate;
 };
+
+export const getTrialDaysRemaining = (trialEndDate: Date | string): number => {
+  const now = new Date();
+  const end = new Date(trialEndDate);
+  return differenceInDays(end, now);
+};

@@ -231,12 +231,34 @@ export const Header = () => {
 
           @media (max-width: 768px) {
             .header-inner {
-              padding: 0 16px;
-              height: 56px;
+              padding: 0 12px;
+              height: 52px;
+            }
+
+            .logo-section {
+              gap: 10px;
+            }
+
+            .logo-wrapper {
+              width: 32px;
+              height: 32px;
+            }
+
+            .logo-img {
+              width: 32px;
+              height: 32px;
+            }
+
+            .logo-text {
+              display: none;
             }
 
             .nav-container {
               display: none;
+            }
+
+            .user-section {
+              gap: 10px;
             }
 
             .user-email {
@@ -244,6 +266,14 @@ export const Header = () => {
             }
 
             .divider {
+              display: none;
+            }
+
+            .logout-btn {
+              padding: 6px 8px;
+            }
+
+            .logout-btn-text {
               display: none;
             }
           }
@@ -390,7 +420,7 @@ export const Header = () => {
                   <polyline points="16,17 21,12 16,7" />
                   <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
-                {t('auth.logout')}
+                <span className="logout-btn-text">{t('auth.logout')}</span>
               </button>
             </div>
           )}

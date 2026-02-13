@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
+const PLAY_STORE_URL =
+  'https://play.google.com/store/apps/details?id=com.suscriptio.app';
 
 export const CtaSection = () => {
   const { t } = useTranslation();
@@ -88,10 +90,14 @@ export const CtaSection = () => {
           >
             {t('landing.cta.subtitle')}
           </p>
-          <Link
-            to="/register"
+          <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              display: 'inline-block',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
               padding: '18px 40px',
               fontSize: '16px',
               fontWeight: 700,
@@ -110,8 +116,11 @@ export const CtaSection = () => {
             onMouseEnter={() => setHoveredButton(true)}
             onMouseLeave={() => setHoveredButton(false)}
           >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 1.33-2.965 1.716-2.36-2.36 3.023-3.023v2.337zM5.864 2.658L16.8 8.991l-2.302 2.302L5.864 2.658z" />
+            </svg>
             {t('landing.cta.button')}
-          </Link>
+          </a>
         </div>
       </section>
     </>

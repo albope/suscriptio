@@ -90,9 +90,8 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         bottom: 0,
         zIndex: 9999,
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         justifyContent: 'center',
-        padding: '16px',
       }}
     >
       {/* Backdrop */}
@@ -110,7 +109,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         aria-hidden="true"
       />
 
-      {/* Modal container */}
+      {/* Modal container — bottom sheet */}
       <div
         ref={modalRef}
         role="dialog"
@@ -121,36 +120,58 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           position: 'relative',
           width: '100%',
           maxWidth: '480px',
-          maxHeight: '85vh',
+          maxHeight: 'calc(100dvh - 40px)',
           backgroundColor: '#111111',
-          borderRadius: '16px',
+          borderRadius: '20px 20px 0 0',
           border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 0 60px rgba(0, 212, 255, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+          borderBottom: 'none',
+          boxShadow: '0 0 60px rgba(0, 212, 255, 0.1), 0 -10px 50px -12px rgba(0, 0, 0, 0.8)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          animation: 'modalSlideIn 0.3s ease-out',
+          animation: 'modalSlideUp 0.3s ease-out',
           outline: 'none',
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Drag handle */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingTop: '10px',
+            paddingBottom: '4px',
+            flexShrink: 0,
+          }}
+          aria-hidden="true"
+        >
+          <div
+            style={{
+              width: '36px',
+              height: '4px',
+              borderRadius: '2px',
+              background: 'rgba(255, 255, 255, 0.15)',
+            }}
+          />
+        </div>
+
         {/* Header */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '20px 24px',
+            padding: '8px 20px 14px',
             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)',
+            flexShrink: 0,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div
               aria-hidden="true"
               style={{
-                width: '40px',
-                height: '40px',
+                width: '36px',
+                height: '36px',
                 borderRadius: '10px',
                 background: 'linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%)',
                 display: 'flex',
@@ -160,7 +181,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
               }}
             >
               <svg
-                style={{ width: '20px', height: '20px', color: '#000' }}
+                style={{ width: '18px', height: '18px', color: '#000' }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -170,7 +191,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
             </div>
-            <h2 id={titleId} style={{ fontSize: '18px', fontWeight: 700, color: '#ededed' }}>
+            <h2 id={titleId} style={{ fontSize: '17px', fontWeight: 700, color: '#ededed' }}>
               {title}
             </h2>
           </div>
@@ -178,33 +199,33 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             onClick={onClose}
             aria-label={t('common.closeModal')}
             style={{
-              width: '36px',
-              height: '36px',
+              width: '32px',
+              height: '32px',
               borderRadius: '10px',
-              background: 'transparent',
+              background: 'rgba(255, 255, 255, 0.06)',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#666666',
+              color: '#888888',
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
               e.currentTarget.style.color = '#ededed';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = '#666666';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+              e.currentTarget.style.color = '#888888';
             }}
           >
             <svg
-              style={{ width: '20px', height: '20px' }}
+              style={{ width: '18px', height: '18px' }}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              strokeWidth={2}
+              strokeWidth={2.5}
               aria-hidden="true"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -212,11 +233,16 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           </button>
         </div>
 
-        {/* Content */}
+        {/* Content — flex container, children manage their own scrolling */}
         <div
           style={{
-            overflowY: 'auto',
-            padding: '24px',
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            padding: '16px',
+            paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
             background: '#0a0a0a',
           }}
         >

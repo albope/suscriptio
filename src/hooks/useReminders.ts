@@ -1,8 +1,16 @@
 import { useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useReminderStore } from '@/store/reminderStore';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { getDaysUntilPayment } from '@/utils/dateUtils';
 import { formatCurrency } from '@/utils/calculations';
+import { isAndroid } from '@/lib/platform';
+import {
+  checkNativePermission,
+  requestNativePermission,
+  scheduleSubscriptionNotifications,
+  cancelAllNotifications,
+} from '@/lib/localNotifications';
 
 const CHECK_INTERVAL_MS = 60000; // Check every minute
 
@@ -15,6 +23,7 @@ interface UpcomingPayment {
 }
 
 export const useReminders = () => {
+  const { t } = useTranslation();
   const intervalRef = useRef<number | null>(null);
 
   const {
@@ -31,6 +40,13 @@ export const useReminders = () => {
 
   // Request notification permission
   const requestPermission = useCallback(async (): Promise<NotificationPermission> => {
+    if (isAndroid()) {
+      const result = await requestNativePermission();
+      const mapped = result === 'granted' ? 'granted' : 'denied';
+      setNotificationPermission(mapped);
+      return mapped;
+    }
+
     if (!('Notification' in window)) {
       return 'denied';
     }
@@ -42,6 +58,7 @@ export const useReminders = () => {
 
   // Check if notifications are supported
   const isSupported = useCallback((): boolean => {
+    if (isAndroid()) return true;
     return 'Notification' in window;
   }, []);
 
@@ -63,21 +80,26 @@ export const useReminders = () => {
       }));
   }, [subscriptions, daysBeforePayment]);
 
-  // Show a notification
+  // Show a web notification (browser/PWA only)
   const showNotification = useCallback(
     (payment: UpcomingPayment) => {
+      if (isAndroid()) return; // Native uses scheduled notifications
       if (notificationPermission !== 'granted') return;
       if (notifiedSubscriptions.includes(payment.id)) return;
 
       const daysText =
         payment.daysUntil === 0
-          ? 'hoy'
+          ? t('reminders.notificationDays.today')
           : payment.daysUntil === 1
-            ? 'mañana'
-            : `en ${payment.daysUntil} días`;
+            ? t('reminders.notificationDays.tomorrow')
+            : t('reminders.notificationDays.inDays', { count: payment.daysUntil });
 
-      const notification = new Notification('Pago próximo', {
-        body: `${payment.name} (${formatCurrency(payment.cost, payment.currency)}) vence ${daysText}`,
+      const notification = new Notification(t('reminders.notificationTitle'), {
+        body: t('reminders.notificationBody', {
+          name: payment.name,
+          amount: formatCurrency(payment.cost, payment.currency),
+          days: daysText,
+        }),
         icon: '/icons/icon-192x192.png',
         tag: `payment-${payment.id}`,
         requireInteraction: false,
@@ -90,10 +112,10 @@ export const useReminders = () => {
 
       markAsNotified(payment.id);
     },
-    [notificationPermission, notifiedSubscriptions, markAsNotified]
+    [notificationPermission, notifiedSubscriptions, markAsNotified, t]
   );
 
-  // Check and notify for upcoming payments
+  // Check and notify for upcoming payments (web only)
   const checkAndNotify = useCallback(() => {
     if (!enabled || notificationPermission !== 'granted') return;
 
@@ -122,8 +144,23 @@ export const useReminders = () => {
     return getUpcomingPayments().length;
   }, [enabled, getUpcomingPayments]);
 
-  // Setup interval for checking
+  // Native: schedule/cancel notifications when dependencies change
   useEffect(() => {
+    if (!isAndroid()) return;
+
+    if (!enabled) {
+      cancelAllNotifications();
+      return;
+    }
+
+    if (notificationPermission === 'granted') {
+      scheduleSubscriptionNotifications(subscriptions, daysBeforePayment, t);
+    }
+  }, [enabled, daysBeforePayment, subscriptions, notificationPermission, t]);
+
+  // Web: setup interval for checking (browser/PWA only)
+  useEffect(() => {
+    if (isAndroid()) return;
     if (!enabled || notificationPermission !== 'granted') {
       if (intervalRef.current) {
         window.clearInterval(intervalRef.current);
@@ -148,7 +185,11 @@ export const useReminders = () => {
 
   // Check permission on mount
   useEffect(() => {
-    if ('Notification' in window) {
+    if (isAndroid()) {
+      checkNativePermission().then((result) => {
+        setNotificationPermission(result === 'granted' ? 'granted' : 'default');
+      });
+    } else if ('Notification' in window) {
       setNotificationPermission(Notification.permission);
     }
   }, [setNotificationPermission]);

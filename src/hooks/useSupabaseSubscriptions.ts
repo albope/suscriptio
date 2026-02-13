@@ -22,6 +22,9 @@ interface DbSubscription {
   tags: string[] | null;
   notes: string | null;
   provider_url: string | null;
+  custom_interval_days: number | null;
+  color: string | null;
+  trial_end_date: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -39,6 +42,9 @@ const fromDb = (row: DbSubscription): Subscription => ({
   tags: row.tags || undefined,
   notes: row.notes || undefined,
   providerUrl: row.provider_url || undefined,
+  customIntervalDays: row.custom_interval_days || undefined,
+  color: row.color || undefined,
+  trialEndDate: row.trial_end_date ? new Date(row.trial_end_date) : undefined,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at),
 });
@@ -59,6 +65,11 @@ const toDb = (sub: Omit<Subscription, 'id' | 'createdAt' | 'updatedAt'>, userId:
   tags: sub.tags || null,
   notes: sub.notes || null,
   provider_url: sub.providerUrl || null,
+  custom_interval_days: sub.customIntervalDays || null,
+  color: sub.color || null,
+  trial_end_date: sub.trialEndDate instanceof Date
+    ? sub.trialEndDate.toISOString().split('T')[0]
+    : sub.trialEndDate || null,
 });
 
 export const useSupabaseSubscriptions = () => {
@@ -177,6 +188,13 @@ export const useSupabaseSubscriptions = () => {
     if (updates.tags !== undefined) dbUpdates.tags = updates.tags || null;
     if (updates.notes !== undefined) dbUpdates.notes = updates.notes || null;
     if (updates.providerUrl !== undefined) dbUpdates.provider_url = updates.providerUrl || null;
+    if (updates.customIntervalDays !== undefined) dbUpdates.custom_interval_days = updates.customIntervalDays || null;
+    if (updates.color !== undefined) dbUpdates.color = updates.color || null;
+    if (updates.trialEndDate !== undefined) {
+      dbUpdates.trial_end_date = updates.trialEndDate instanceof Date
+        ? updates.trialEndDate.toISOString().split('T')[0]
+        : updates.trialEndDate || null;
+    }
 
     try {
       const { error: updateError } = await withRetry(
@@ -263,6 +281,11 @@ export const useSupabaseSubscriptions = () => {
       tags: sub.tags || null,
       notes: sub.notes || null,
       provider_url: sub.providerUrl || null,
+      custom_interval_days: sub.customIntervalDays || null,
+      color: sub.color || null,
+      trial_end_date: sub.trialEndDate instanceof Date
+        ? sub.trialEndDate.toISOString().split('T')[0]
+        : sub.trialEndDate || null,
     }));
 
     try {

@@ -13,11 +13,44 @@ export interface UserProfile {
 
 export interface TierLimits {
   maxActiveSubscriptions: number;
+  csvExport: boolean;
+  calendarView: boolean;
+  advancedAnalytics: boolean;
+  reminders: boolean;
+  tags: boolean;
+  multiCurrency: boolean;
+  customFrequencies: boolean;
+  spendingTrends: boolean;
+  budgetLimits: boolean;
 }
 
+export type PremiumFeature = keyof Omit<TierLimits, 'maxActiveSubscriptions'>;
+
 export const TIER_LIMITS: Record<SubscriptionTier, TierLimits> = {
-  free: { maxActiveSubscriptions: 3 },
-  premium: { maxActiveSubscriptions: Infinity },
+  free: {
+    maxActiveSubscriptions: 3,
+    csvExport: false,
+    calendarView: false,
+    advancedAnalytics: false,
+    reminders: false,
+    tags: false,
+    multiCurrency: false,
+    customFrequencies: false,
+    spendingTrends: false,
+    budgetLimits: false,
+  },
+  premium: {
+    maxActiveSubscriptions: Infinity,
+    csvExport: true,
+    calendarView: true,
+    advancedAnalytics: true,
+    reminders: true,
+    tags: true,
+    multiCurrency: true,
+    customFrequencies: true,
+    spendingTrends: true,
+    budgetLimits: true,
+  },
 };
 
 // Database row type (snake_case from Supabase)

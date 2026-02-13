@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { BillingFrequency, SubscriptionStatus, Subscription, TIER_LIMITS } from '@/types';
 import { addDays } from 'date-fns';
 import { useUserProfile } from './useUserProfile';
+import { normalizeToMonthly, normalizeToYearly } from '@/utils/calculations';
 import { logger } from '@/lib/logger';
 
 export const useSubscriptions = () => {
@@ -87,12 +88,7 @@ export const useSubscriptions = () => {
   const monthlySpend = useMemo(
     () =>
       activeInPreferredCurrency.reduce((total: number, sub: Subscription) => {
-        if (sub.billingFrequency === BillingFrequency.MONTHLY) {
-          return total + sub.cost;
-        } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
-          return total + sub.cost / 12;
-        }
-        return total;
+        return total + normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
       }, 0),
     [activeInPreferredCurrency]
   );
@@ -100,12 +96,7 @@ export const useSubscriptions = () => {
   const yearlySpend = useMemo(
     () =>
       activeInPreferredCurrency.reduce((total: number, sub: Subscription) => {
-        if (sub.billingFrequency === BillingFrequency.MONTHLY) {
-          return total + sub.cost * 12;
-        } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
-          return total + sub.cost;
-        }
-        return total;
+        return total + normalizeToYearly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
       }, 0),
     [activeInPreferredCurrency]
   );
@@ -118,10 +109,8 @@ export const useSubscriptions = () => {
       const currency = sub.currency || preferredCurrency;
       const existing = byCurrency.get(currency) || { monthly: 0, yearly: 0, count: 0 };
 
-      const monthlyCost =
-        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
-      const yearlyCost =
-        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost * 12 : sub.cost;
+      const monthlyCost = normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
+      const yearlyCost = normalizeToYearly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
 
       byCurrency.set(currency, {
         monthly: existing.monthly + monthlyCost,
@@ -147,8 +136,7 @@ export const useSubscriptions = () => {
     activeSubscriptions.forEach((sub: Subscription) => {
       const category = sub.category || 'other';
       const currency = sub.currency || preferredCurrency;
-      const monthlyCost =
-        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const monthlyCost = normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
 
       const existing = breakdown.get(category) || { totalsByCurrency: new Map(), count: 0 };
       const currentTotal = existing.totalsByCurrency.get(currency) || 0;
@@ -174,10 +162,8 @@ export const useSubscriptions = () => {
     if (activeSubscriptions.length === 0) return null;
 
     return activeSubscriptions.reduce((max: Subscription, sub: Subscription) => {
-      const maxMonthlyCost =
-        max.billingFrequency === BillingFrequency.MONTHLY ? max.cost : max.cost / 12;
-      const subMonthlyCost =
-        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const maxMonthlyCost = normalizeToMonthly(max.cost, max.billingFrequency, max.customIntervalDays);
+      const subMonthlyCost = normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
 
       return subMonthlyCost > maxMonthlyCost ? sub : max;
     });
@@ -189,13 +175,22 @@ export const useSubscriptions = () => {
   }, [activeInPreferredCurrency, monthlySpend]);
 
   const subscriptionsByFrequency = useMemo(() => {
+    const weekly = activeSubscriptions.filter(
+      (sub: Subscription) => sub.billingFrequency === BillingFrequency.WEEKLY
+    ).length;
     const monthly = activeSubscriptions.filter(
       (sub: Subscription) => sub.billingFrequency === BillingFrequency.MONTHLY
+    ).length;
+    const quarterly = activeSubscriptions.filter(
+      (sub: Subscription) => sub.billingFrequency === BillingFrequency.QUARTERLY
     ).length;
     const yearly = activeSubscriptions.filter(
       (sub: Subscription) => sub.billingFrequency === BillingFrequency.YEARLY
     ).length;
-    return { monthly, yearly };
+    const custom = activeSubscriptions.filter(
+      (sub: Subscription) => sub.billingFrequency === BillingFrequency.CUSTOM
+    ).length;
+    return { weekly, monthly, quarterly, yearly, custom };
   }, [activeSubscriptions]);
 
   // Top 3 categories by monthly spend (in preferred currency)
@@ -205,8 +200,7 @@ export const useSubscriptions = () => {
 
     activeInPreferredCurrency.forEach((sub: Subscription) => {
       const category = sub.category || 'other';
-      const monthlyCost =
-        sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+      const monthlyCost = normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
       const existing = categoryTotals.get(category) || 0;
       categoryTotals.set(category, existing + monthlyCost);
     });

@@ -21,7 +21,23 @@ describe('normalizeToMonthly', () => {
 
   it('returns 0 for unknown frequency', () => {
     // @ts-expect-error testing invalid input
-    expect(normalizeToMonthly(100, 'weekly')).toBe(0);
+    expect(normalizeToMonthly(100, 'biweekly')).toBe(0);
+  });
+
+  it('normalizes weekly cost to monthly', () => {
+    expect(normalizeToMonthly(10, BillingFrequency.WEEKLY)).toBeCloseTo(43.49, 1);
+  });
+
+  it('normalizes quarterly cost to monthly', () => {
+    expect(normalizeToMonthly(30, BillingFrequency.QUARTERLY)).toBeCloseTo(10, 2);
+  });
+
+  it('normalizes custom frequency to monthly', () => {
+    expect(normalizeToMonthly(10, BillingFrequency.CUSTOM, 14)).toBeCloseTo(21.74, 1);
+  });
+
+  it('returns 0 for custom frequency without interval', () => {
+    expect(normalizeToMonthly(10, BillingFrequency.CUSTOM)).toBe(0);
   });
 });
 
@@ -40,7 +56,15 @@ describe('normalizeToYearly', () => {
 
   it('returns 0 for unknown frequency', () => {
     // @ts-expect-error testing invalid input
-    expect(normalizeToYearly(100, 'weekly')).toBe(0);
+    expect(normalizeToYearly(100, 'biweekly')).toBe(0);
+  });
+
+  it('normalizes weekly cost to yearly', () => {
+    expect(normalizeToYearly(10, BillingFrequency.WEEKLY)).toBeCloseTo(521.86, 0);
+  });
+
+  it('normalizes quarterly cost to yearly', () => {
+    expect(normalizeToYearly(30, BillingFrequency.QUARTERLY)).toBeCloseTo(120, 2);
   });
 });
 

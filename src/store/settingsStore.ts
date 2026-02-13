@@ -13,6 +13,8 @@ interface SettingsStore {
   setPaymentView: (view: PaymentView) => void;
   language: Language;
   setLanguage: (lang: Language) => void;
+  monthlyBudget: number | null;
+  setMonthlyBudget: (budget: number | null) => void;
 }
 
 // Detect initial language from browser
@@ -27,6 +29,7 @@ export const useSettingsStore = create<SettingsStore>()(
       preferredCurrency: DEFAULT_CURRENCY,
       paymentView: 'timeline',
       language: getInitialLanguage(),
+      monthlyBudget: null,
 
       setPreferredCurrency: (currency) => {
         set({ preferredCurrency: currency });
@@ -39,6 +42,10 @@ export const useSettingsStore = create<SettingsStore>()(
       setLanguage: (lang) => {
         i18n.changeLanguage(lang);
         set({ language: lang });
+      },
+
+      setMonthlyBudget: (budget) => {
+        set({ monthlyBudget: budget });
       },
     }),
     {

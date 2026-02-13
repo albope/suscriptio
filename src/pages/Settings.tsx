@@ -11,13 +11,19 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { BillingSection } from '@/components/billing/BillingSection';
 import { CURRENCIES } from '@/constants/currencies';
+import { PremiumGate } from '@/components/billing/PremiumGate';
+import { useIsPremium } from '@/hooks/useIsPremium';
+import { useUserProfile } from '@/hooks/useUserProfile';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
+import { isAndroid } from '@/lib/platform';
 import type { Subscription } from '@/types';
 
 export const Settings = () => {
   const { t } = useTranslation();
   const { subscriptions, replaceAllSubscriptions, addMultipleSubscriptions } =
     useSubscriptionStore();
-  const { preferredCurrency, setPreferredCurrency, language, setLanguage } = useSettingsStore();
+  const { preferredCurrency, setPreferredCurrency, language, setLanguage, monthlyBudget, setMonthlyBudget } = useSettingsStore();
   const {
     enabled: remindersEnabled,
     daysBeforePayment,
@@ -25,6 +31,10 @@ export const Settings = () => {
     setDaysBeforePayment,
   } = useReminderStore();
   const { isSupported, notificationPermission, requestPermission } = useReminders();
+  const isPremium = useIsPremium();
+  const { profile, refetch: refetchProfile } = useUserProfile();
+  const { user } = useAuth();
+  const [togglingTier, setTogglingTier] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
@@ -237,8 +247,94 @@ export const Settings = () => {
         <BillingSection />
       </div>
 
+      {/* Budget Section */}
+      <PremiumGate feature="budgetLimits" fallback="lock">
+        <section
+          style={{
+            background: 'rgba(17, 17, 17, 0.6)',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginBottom: '24px',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#ededed',
+              marginBottom: '8px',
+            }}
+          >
+            {t('budget.title')}
+          </h2>
+          <p
+            style={{
+              fontSize: '14px',
+              color: '#666666',
+              marginBottom: '24px',
+            }}
+          >
+            {t('budget.description')}
+          </p>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px',
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.04)',
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: '#ededed',
+                  marginBottom: '4px',
+                }}
+              >
+                {t('budget.setAmount')}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#666666' }}>
+                {t('budget.currency', { currency: preferredCurrency })}
+              </p>
+            </div>
+            <input
+              type="number"
+              min="0"
+              step="10"
+              value={monthlyBudget ?? ''}
+              onChange={(e) => {
+                const val = e.target.value;
+                setMonthlyBudget(val ? parseFloat(val) : null);
+              }}
+              placeholder="0"
+              style={{
+                width: '120px',
+                padding: '10px 14px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '10px',
+                fontSize: '16px',
+                fontWeight: 600,
+                color: '#ededed',
+                backgroundColor: '#111111',
+                outline: 'none',
+                textAlign: 'right',
+                fontFamily: 'inherit',
+              }}
+            />
+          </div>
+        </section>
+      </PremiumGate>
+
       {/* Reminders Section */}
       {isSupported() && (
+        <PremiumGate feature="reminders" fallback="lock">
         <section
           style={{
             background: 'rgba(17, 17, 17, 0.6)',
@@ -383,10 +479,11 @@ export const Settings = () => {
             }}
           >
             <p style={{ fontSize: '12px', color: '#f59e0b', lineHeight: 1.5 }}>
-              {t('reminders.disclaimer')}
+              {isAndroid() ? t('reminders.disclaimerNative') : t('reminders.disclaimer')}
             </p>
           </div>
         </section>
+        </PremiumGate>
       )}
 
       {/* Data Management Section */}
@@ -463,22 +560,28 @@ export const Settings = () => {
                 </svg>
                 JSON
               </Button>
-              <Button onClick={handleExportCsv} variant="secondary">
-                <svg
-                  style={{ width: '16px', height: '16px' }}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  />
-                </svg>
-                CSV
-              </Button>
+              {isPremium ? (
+                <Button onClick={handleExportCsv} variant="secondary">
+                  <svg
+                    style={{ width: '16px', height: '16px' }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                  CSV
+                </Button>
+              ) : (
+                <PremiumGate feature="csvExport" fallback="inline-prompt">
+                  <span />
+                </PremiumGate>
+              )}
             </div>
           </div>
 
@@ -553,6 +656,116 @@ export const Settings = () => {
           </p>
         </div>
       </section>
+
+      {/* Dev-only Premium Toggle */}
+      {import.meta.env.DEV && user && (
+        <section
+          style={{
+            background: 'rgba(245, 158, 11, 0.06)',
+            border: '1px dashed rgba(245, 158, 11, 0.3)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginTop: '24px',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#f59e0b',
+              marginBottom: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            DEV: Premium Toggle
+          </h2>
+          <p
+            style={{
+              fontSize: '13px',
+              color: '#888888',
+              marginBottom: '16px',
+            }}
+          >
+            Solo visible en desarrollo. Cambia el tier directamente en Supabase.
+          </p>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px',
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '12px',
+              border: `1px solid ${isPremium ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)'}`,
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: '#ededed',
+                  marginBottom: '4px',
+                }}
+              >
+                Tier actual:{' '}
+                <span style={{ color: isPremium ? '#00d4ff' : '#888888' }}>
+                  {profile?.subscriptionTier ?? 'free'}
+                </span>
+              </h3>
+              <p style={{ fontSize: '13px', color: '#666666' }}>
+                User ID: {user.id.slice(0, 8)}...
+              </p>
+            </div>
+            <button
+              disabled={togglingTier}
+              onClick={async () => {
+                setTogglingTier(true);
+                const newTier = isPremium ? 'free' : 'premium';
+                const { error } = await supabase
+                  .from('user_profiles')
+                  .update({
+                    subscription_tier: newTier,
+                    purchase_platform: newTier === 'premium' ? 'web' : null,
+                    purchased_at: newTier === 'premium' ? new Date().toISOString() : null,
+                  })
+                  .eq('user_id', user.id);
+
+                if (error) {
+                  toast.error(`Error: ${error.message}`);
+                } else {
+                  await refetchProfile();
+                  toast.success(`Tier cambiado a ${newTier.toUpperCase()}`);
+                }
+                setTogglingTier(false);
+              }}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '10px',
+                border: 'none',
+                fontWeight: 600,
+                fontSize: '14px',
+                cursor: togglingTier ? 'wait' : 'pointer',
+                opacity: togglingTier ? 0.6 : 1,
+                background: isPremium
+                  ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                  : 'linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%)',
+                color: '#fff',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {togglingTier
+                ? 'Cambiando...'
+                : isPremium
+                  ? 'Cambiar a FREE'
+                  : 'Cambiar a PREMIUM'}
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* Import Confirmation Modal */}
       <Modal

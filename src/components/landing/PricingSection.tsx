@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
+const PLAY_STORE_URL =
+  'https://play.google.com/store/apps/details?id=com.suscriptio.app';
 
 const CheckIcon = () => (
   <svg
@@ -196,8 +198,10 @@ export const PricingSection = () => {
             </div>
 
             {/* CTA */}
-            <Link
-              to="/register"
+            <a
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: 'block',
                 textAlign: 'center',
@@ -221,7 +225,7 @@ export const PricingSection = () => {
               }}
             >
               {t('landing.pricing.ctaFree')}
-            </Link>
+            </a>
           </div>
 
           {/* Pro card (highlighted) */}
@@ -279,7 +283,7 @@ export const PricingSection = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'baseline',
-                  gap: '4px',
+                  gap: '8px',
                   marginTop: '12px',
                 }}
               >
@@ -292,17 +296,40 @@ export const PricingSection = () => {
                     lineHeight: 1,
                   }}
                 >
-                  {'\u20AC'}6.99
+                  {'\u20AC'}2.99
+                </span>
+                <span
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'var(--accent-cyan, #00d4ff)',
+                    background: 'rgba(0, 212, 255, 0.1)',
+                    border: '1px solid rgba(0, 212, 255, 0.2)',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                  }}
+                >
+                  {t('landing.pricing.proPeriod')}
                 </span>
               </div>
               <p
                 style={{
                   fontSize: '14px',
                   color: 'var(--text-secondary, #888)',
-                  marginTop: '8px',
+                  marginTop: '10px',
                 }}
               >
-                {t('landing.pricing.proPeriod')}
+                {t('landing.pricing.proLifetime')}
+              </p>
+              <p
+                style={{
+                  fontSize: '13px',
+                  color: '#00ff94',
+                  marginTop: '4px',
+                  fontWeight: 500,
+                }}
+              >
+                {t('landing.pricing.proNoRenewals')}
               </p>
             </div>
 
@@ -340,8 +367,10 @@ export const PricingSection = () => {
             </div>
 
             {/* CTA */}
-            <Link
-              to="/register"
+            <a
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: 'block',
                 textAlign: 'center',
@@ -366,7 +395,7 @@ export const PricingSection = () => {
               }}
             >
               {t('landing.pricing.ctaPro')}
-            </Link>
+            </a>
           </div>
         </div>
       </section>

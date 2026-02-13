@@ -12,6 +12,16 @@ vi.mock('@/store/subscriptionStore', () => ({
   }),
 }));
 
+// Mock useIsPremium (requires AuthProvider)
+vi.mock('@/hooks/useIsPremium', () => ({
+  useIsPremium: () => false,
+}));
+
+// Mock PremiumGate to avoid AuthProvider dependency from PricingModal
+vi.mock('@/components/billing/PremiumGate', () => ({
+  PremiumGate: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
 const mockOnSubmit = vi.fn();
 const mockOnCancel = vi.fn();
 

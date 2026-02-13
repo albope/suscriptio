@@ -7,7 +7,9 @@
     "delete": "Eliminar",
     "confirm": "Confirmar",
     "currency": "€",
-    "closeModal": "Cerrar modal"
+    "closeModal": "Cerrar modal",
+    "all": "Todos",
+    "none": "Ninguno"
   },
   "nav": {
     "dashboard": "Panel",
@@ -48,7 +50,10 @@
     "monthlyProjection": "Pagos mensuales",
     "yearlyPayments": "Pagos anuales",
     "noDataAvailable": "No hay datos disponibles",
-    "addSubscriptionsToSeeBreakdown": "Agrega suscripciones para ver el desglose"
+    "addSubscriptionsToSeeBreakdown": "Agrega suscripciones para ver el desglose",
+    "spendingTrends": "Tendencias de gasto",
+    "spendingTrendsSubtitle": "Evolución del gasto mensual",
+    "estimated": "Estimado según suscripciones actuales"
   },
   "subscriptions": {
     "title": "Suscripciones",
@@ -87,13 +92,21 @@
       "category": "Categoría",
       "tags": "Etiquetas",
       "notes": "Notas",
-      "providerUrl": "URL del proveedor"
+      "providerUrl": "URL del proveedor",
+      "color": "Color"
     },
     "frequency": {
+      "weekly": "Semanal",
       "monthly": "Mensual",
+      "quarterly": "Trimestral",
       "yearly": "Anual",
+      "custom": "Personalizada",
+      "perWeek": "/ semana",
       "perMonth": "/ mes",
-      "perYear": "/ año"
+      "perQuarter": "/ trimestre",
+      "perYear": "/ año",
+      "everyXDays": "Cada {{days}} días",
+      "customInterval": "Intervalo en días"
     },
     "status": {
       "active": "Activa",
@@ -109,6 +122,11 @@
       "news_learning": "Noticias y aprendizaje",
       "utilities": "Utilidades",
       "other": "Otro"
+    },
+    "templates": {
+      "title": "Elegir servicio",
+      "subtitle": "Selecciona un servicio popular o añade uno personalizado.",
+      "addCustom": "Añadir personalizada"
     }
   },
   "validation": {
@@ -239,7 +257,7 @@
   },
   "reminders": {
     "section": "Recordatorios",
-    "description": "Recibe notificaciones sobre pagos próximos mientras la app esté abierta",
+    "description": "Recibe notificaciones sobre pagos próximos",
     "enableTitle": "Activar recordatorios",
     "enableDescription": "Notificaciones de pagos próximos",
     "daysTitle": "Días de anticipación",
@@ -251,9 +269,17 @@
       "7": "1 semana antes"
     },
     "disclaimer": "Los recordatorios solo funcionan mientras la aplicación esté abierta. Para no olvidar pagos, te recomendamos abrir la app regularmente o añadirla a tu pantalla de inicio.",
+    "disclaimerNative": "Los recordatorios se enviarán a las 9:00 AM incluso con la app cerrada.",
     "enabled": "Recordatorios activados",
     "disabled": "Recordatorios desactivados",
-    "permissionDenied": "Necesitas permitir las notificaciones para activar los recordatorios"
+    "permissionDenied": "Necesitas permitir las notificaciones para activar los recordatorios",
+    "notificationTitle": "Pago próximo",
+    "notificationBody": "{{name}} ({{amount}}) vence {{days}}",
+    "notificationDays": {
+      "today": "hoy",
+      "tomorrow": "mañana",
+      "inDays": "en {{count}} días"
+    }
   },
   "billing": {
     "planSection": "Plan",
@@ -301,6 +327,37 @@
     "popularServices": "Servicios populares",
     "orAddCustom": "o añade personalizada"
   },
+  "budget": {
+    "title": "Presupuesto mensual",
+    "description": "Establece un límite de gasto mensual y recibe alertas",
+    "setAmount": "Límite mensual",
+    "currency": "en {{currency}}",
+    "remaining": "{{amount}} restante",
+    "exceeded": "Excedido por {{amount}}",
+    "indicator": "Presupuesto",
+    "of": "de {{total}}",
+    "warningToast": "Te acercas a tu presupuesto mensual ({{percent}}%)",
+    "exceededToast": "¡Has superado tu presupuesto mensual!"
+  },
+  "premium": {
+    "locked": "Función Premium",
+    "lockedDescription": "Esta función está disponible con Premium",
+    "unlockFeature": "Desbloquear con Premium",
+    "featureNames": {
+      "csvExport": "Exportación CSV",
+      "calendarView": "Calendario de pagos",
+      "advancedAnalytics": "Analytics avanzados",
+      "reminders": "Recordatorios",
+      "tags": "Etiquetas",
+      "multiCurrency": "Multi-moneda",
+      "customFrequencies": "Frecuencias personalizadas",
+      "spendingTrends": "Tendencias de gasto",
+      "budgetLimits": "Presupuesto mensual"
+    }
+  },
+  "offline": {
+    "message": "Sin conexión. Los cambios se sincronizarán al reconectarte."
+  },
   "languages": {
     "es": "Español",
     "en": "Inglés"
@@ -311,14 +368,15 @@
       "screenshots": "Demo",
       "pricing": "Precios",
       "signIn": "Iniciar sesión",
-      "getStarted": "Comenzar"
+      "getStarted": "Descargar app"
     },
     "hero": {
       "badge": "Gestión inteligente de suscripciones",
       "title": "Toma el control de tus suscripciones",
       "subtitle": "Gestiona todos tus gastos recurrentes en un solo lugar. Visualiza tu gasto, recibe recordatorios y nunca pierdas de vista lo que pagas.",
-      "cta": "Comenzar gratis",
-      "ctaSecondary": "Ver funciones"
+      "cta": "Descargar en Google Play",
+      "ctaSecondary": "Ver funciones",
+      "availableOn": "Disponible en Android"
     },
     "features": {
       "title": "Todo lo que necesitas",
@@ -350,21 +408,52 @@
     },
     "showcase": {
       "title": "Mira cómo funciona",
-      "subtitle": "Una interfaz intuitiva diseñada para la claridad"
+      "subtitle": "Funciones potentes, increíblemente simples",
+      "tabs": {
+        "setup": {
+          "title": "Setup rápido",
+          "description": "Añade tus suscripciones en segundos con plantillas preconfiguradas para los servicios más populares.",
+          "bullet1": "Plantillas para Netflix, Spotify, Disney+ y más",
+          "bullet2": "Autocompletado de precio, moneda y frecuencia",
+          "bullet3": "También puedes añadir suscripciones personalizadas"
+        },
+        "analytics": {
+          "title": "Analíticas inteligentes",
+          "description": "Comprende tus patrones de gasto con analíticas visuales y tendencias de gasto mensuales.",
+          "bullet1": "Gráfico de tendencias de los últimos 6 meses",
+          "bullet2": "Desglose por categoría con porcentajes",
+          "bullet3": "Métricas clave: gasto mensual, anual y promedio"
+        },
+        "budget": {
+          "title": "Control de presupuesto",
+          "description": "Establece presupuestos mensuales y recibe alertas antes de gastar de más.",
+          "bullet1": "Barra de progreso visual con cambio de color",
+          "bullet2": "Alertas al acercarte y superar el límite",
+          "bullet3": "Seguimiento mensual de cumplimiento"
+        },
+        "calendar": {
+          "title": "Calendario de pagos",
+          "description": "Nunca pierdas un pago con la línea de tiempo visual y recordatorios inteligentes.",
+          "bullet1": "Vista de próximos pagos con fechas exactas",
+          "bullet2": "Recordatorios configurables (1, 2, 3 o 7 días antes)",
+          "bullet3": "Vista mensual en formato calendario"
+        }
+      }
     },
     "pricing": {
       "title": "Planes simples y transparentes",
-      "subtitle": "Elige el plan que mejor se adapte a ti",
+      "subtitle": "Empieza gratis. Desbloquea todo con un solo pago.",
       "free": "Free",
       "freePeriod": "para siempre",
       "pro": "Pro",
-      "proPeriod": "/mes",
-      "proPrice": "6.99",
+      "proPeriod": "pago único",
+      "proLifetime": "Acceso de por vida",
+      "proNoRenewals": "Sin suscripciones. Sin renovaciones.",
       "popular": "Popular",
-      "ctaFree": "Empezar gratis",
-      "ctaPro": "Comenzar Pro",
+      "ctaFree": "Descargar gratis",
+      "ctaPro": "Descargar y desbloquear Pro",
       "freeFeatures": {
-        "subscriptions": "Hasta 10 suscripciones",
+        "subscriptions": "Hasta 3 suscripciones",
         "dashboard": "Dashboard básico",
         "exportJson": "Exportación JSON",
         "pwa": "App instalable (PWA)",
@@ -381,20 +470,73 @@
         "allFree": "Todo lo del plan Free"
       }
     },
+    "comparison": {
+      "title": "Comparación detallada",
+      "subtitle": "Todo lo que incluye cada plan",
+      "feature": "Función",
+      "freeColumn": "Free",
+      "proColumn": "Pro",
+      "rows": {
+        "subscriptions": "Suscripciones",
+        "subscriptionsFree": "Hasta 3",
+        "subscriptionsPro": "Ilimitadas",
+        "dashboard": "Dashboard",
+        "dashboardFree": "Básico",
+        "dashboardPro": "Completo",
+        "analytics": "Analytics avanzados",
+        "multicurrency": "Multi-moneda",
+        "calendar": "Calendario de pagos",
+        "exportJson": "Exportación JSON",
+        "exportCsv": "Exportación CSV",
+        "reminders": "Recordatorios",
+        "tags": "Etiquetas",
+        "support": "Soporte",
+        "supportFree": "Comunidad",
+        "supportPro": "Prioritario"
+      }
+    },
     "social": {
-      "stat1": "Gestión total",
-      "stat1Desc": "De todas tus suscripciones",
-      "stat2": "Multi-dispositivo",
-      "stat2Desc": "PWA en cualquier pantalla",
-      "stat3": "Bilingüe",
-      "stat3Desc": "Español e inglés",
-      "stat4": "Privacidad",
-      "stat4Desc": "Tus datos, tu control"
+      "title": "Lo que dicen nuestros usuarios",
+      "subtitle": "Descubre por qué eligen Suscriptio",
+      "statUsers": "500+ usuarios",
+      "statRating": "4.8★ valoración",
+      "statPrivacy": "100% privado",
+      "testimonial1": {
+        "name": "María G.",
+        "role": "Freelancer",
+        "quote": "Descubrí que pagaba más de 40€ al mes en suscripciones que ni recordaba. Suscriptio me ayudó a ahorrar desde el primer día."
+      },
+      "testimonial2": {
+        "name": "Carlos R.",
+        "role": "Desarrollador",
+        "quote": "Por fin una app que no es otra suscripción más. El pago único de 2.99€ y acceso permanente es exactamente lo que buscaba."
+      },
+      "testimonial3": {
+        "name": "Laura P.",
+        "role": "Diseñadora",
+        "quote": "La interfaz es preciosa y funciona perfecto offline. Controlo Netflix, Spotify, Figma... todo en un mismo sitio."
+      }
     },
     "cta": {
       "title": "¿Listo para tomar el control?",
-      "subtitle": "Únete y empieza a gestionar tus suscripciones hoy.",
-      "button": "Crear tu cuenta gratis"
+      "subtitle": "Descarga la app y empieza a gestionar tus suscripciones hoy.",
+      "button": "Descargar en Google Play"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "Resolvemos tus dudas sobre Suscriptio",
+      "q1": "¿Es gratis? ¿Qué incluye Premium?",
+      "a1": "Sí, puedes usar Suscriptio gratis con hasta 3 suscripciones activas. Premium desbloquea suscripciones ilimitadas, calendario de pagos, analytics avanzados, exportación CSV, recordatorios, etiquetas, multi-moneda, tendencias de gasto y presupuesto mensual. Todo por un único pago de 2,99€.",
+      "q2": "¿Cómo cancelo el seguimiento de una suscripción?",
+      "a2": "Desliza la suscripción hacia la izquierda o entra en ella y pulsa 'Cancelar suscripción'. No se elimina: pasa a estado cancelado y deja de contar en tus totales, pero puedes reactivarla cuando quieras.",
+      "q3": "¿Mis datos son privados?",
+      "a3": "Totalmente. Tus datos se guardan localmente en tu dispositivo. Si creas una cuenta, se sincronizan con Supabase de forma cifrada. Nunca compartimos tus datos con terceros.",
+      "q4": "¿Funciona sin internet?",
+      "a4": "Sí. Suscriptio es una PWA que funciona completamente offline. Los cambios se sincronizan automáticamente cuando recuperas la conexión.",
+      "q5": "¿Qué pasa si ya pagué y cambio de teléfono?",
+      "a5": "Tu compra de Premium está vinculada a tu cuenta de Google Play. Instala la app en tu nuevo dispositivo, inicia sesión con la misma cuenta y pulsa 'Restaurar compra' en la configuración.",
+      "q6": "¿Por qué un pago único y no una suscripción?",
+      "a6": "Porque sería irónico que una app de gestión de suscripciones te cobrara otra suscripción más. Premium es un pago único de 2,99€ con acceso permanente y todas las actualizaciones futuras."
     },
     "footer": {
       "description": "Tu gestor personal de suscripciones. Rastrea, analiza y controla tus gastos recurrentes.",
@@ -403,9 +545,21 @@
       "features": "Funciones",
       "pricing": "Precios",
       "signIn": "Iniciar sesión",
-      "register": "Crear cuenta",
+      "download": "Descargar app",
       "copyright": "Suscriptio. Todos los derechos reservados.",
       "madeWith": "Hecho con"
     }
+  },
+  "trial": {
+    "toggle": "Prueba gratuita",
+    "endDate": "Fecha fin del trial",
+    "helper": "Te avisaremos antes de que termine",
+    "daysRemaining": "{{days}} días de trial",
+    "expiringToday": "Trial expira hoy",
+    "expiringTomorrow": "Trial expira mañana",
+    "expired": "Trial expirado",
+    "alertTitle": "Trials por expirar",
+    "cancelBefore": "Cancelar antes",
+    "keepSubscription": "Mantener"
   }
 }

@@ -7,9 +7,10 @@ import { logger } from '@/lib/logger';
 
 const log = logger.withContext('GooglePlayPurchase');
 
-// RevenueCat product ID — configure in RevenueCat dashboard
-const PRODUCT_ID = 'suscriptio_premium';
-const ENTITLEMENT_ID = 'premium';
+// RevenueCat product ID — must match Google Play Console product ID
+const PRODUCT_ID = 'lifetime';
+// Entitlement identifier — must match RevenueCat dashboard
+const ENTITLEMENT_ID = 'Suscriptio Premium';
 
 export const useGooglePlayPurchase = () => {
   const { user } = useAuth();

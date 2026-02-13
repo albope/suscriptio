@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { Subscription, BillingFrequency, SubscriptionStatus, CategoryBreakdown } from '@/types';
 import { addDays, addMonths, addYears, isBefore, startOfDay } from 'date-fns';
 import { DEFAULT_CURRENCY } from '@/constants/currencies';
+import { normalizeToMonthly, normalizeToYearly } from '@/utils/calculations';
 
 // Helper function to advance past payment dates
 function advancePaymentDates(subscriptions: Subscription[]): Subscription[] {
@@ -15,14 +16,22 @@ function advancePaymentDates(subscriptions: Subscription[]): Subscription[] {
     if (!isBefore(nextPayment, today)) return sub;
 
     let newDate = nextPayment;
-    if (sub.billingFrequency === BillingFrequency.MONTHLY) {
-      while (isBefore(newDate, today)) {
-        newDate = addMonths(newDate, 1);
-      }
-    } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
-      while (isBefore(newDate, today)) {
-        newDate = addYears(newDate, 1);
-      }
+    switch (sub.billingFrequency) {
+      case BillingFrequency.WEEKLY:
+        while (isBefore(newDate, today)) newDate = addDays(newDate, 7);
+        break;
+      case BillingFrequency.MONTHLY:
+        while (isBefore(newDate, today)) newDate = addMonths(newDate, 1);
+        break;
+      case BillingFrequency.QUARTERLY:
+        while (isBefore(newDate, today)) newDate = addMonths(newDate, 3);
+        break;
+      case BillingFrequency.YEARLY:
+        while (isBefore(newDate, today)) newDate = addYears(newDate, 1);
+        break;
+      case BillingFrequency.CUSTOM:
+        while (isBefore(newDate, today)) newDate = addDays(newDate, sub.customIntervalDays || 30);
+        break;
     }
 
     if (newDate.getTime() !== nextPayment.getTime()) {
@@ -168,12 +177,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         return get()
           .getActiveSubscriptions()
           .reduce((total, sub) => {
-            if (sub.billingFrequency === BillingFrequency.MONTHLY) {
-              return total + sub.cost;
-            } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
-              return total + sub.cost / 12;
-            }
-            return total;
+            return total + normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
           }, 0);
       },
 
@@ -181,12 +185,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         return get()
           .getActiveSubscriptions()
           .reduce((total, sub) => {
-            if (sub.billingFrequency === BillingFrequency.MONTHLY) {
-              return total + sub.cost * 12;
-            } else if (sub.billingFrequency === BillingFrequency.YEARLY) {
-              return total + sub.cost;
-            }
-            return total;
+            return total + normalizeToYearly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
           }, 0);
       },
 
@@ -201,8 +200,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
           .forEach((sub) => {
             const category = sub.category || 'other';
             const currency = sub.currency || 'EUR';
-            const monthlyCost =
-              sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+            const monthlyCost = normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
 
             const existing = breakdown.get(category) || { totalsByCurrency: new Map(), count: 0 };
             const currentTotal = existing.totalsByCurrency.get(currency) || 0;
@@ -229,10 +227,8 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
         if (active.length === 0) return null;
 
         return active.reduce((max, sub) => {
-          const maxMonthlyCost =
-            max.billingFrequency === BillingFrequency.MONTHLY ? max.cost : max.cost / 12;
-          const subMonthlyCost =
-            sub.billingFrequency === BillingFrequency.MONTHLY ? sub.cost : sub.cost / 12;
+          const maxMonthlyCost = normalizeToMonthly(max.cost, max.billingFrequency, max.customIntervalDays);
+          const subMonthlyCost = normalizeToMonthly(sub.cost, sub.billingFrequency, sub.customIntervalDays);
 
           return subMonthlyCost > maxMonthlyCost ? sub : max;
         });
@@ -304,7 +300,7 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
     }),
     {
       name: 'subscriptions-storage',
-      version: 2,
+      version: 5,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as { subscriptions: Subscription[] };
 
@@ -323,6 +319,33 @@ export const useSubscriptionStore = create<SubscriptionStore>()(
           state.subscriptions = state.subscriptions.map((sub) => ({
             ...sub,
             tags: sub.tags || [],
+          }));
+        }
+
+        // Migration from version 2 to 3: Add customIntervalDays field
+        if (version < 3) {
+          console.log('[Migration] Migrating subscriptions to version 3: adding customIntervalDays field');
+          state.subscriptions = state.subscriptions.map((sub) => ({
+            ...sub,
+            customIntervalDays: sub.customIntervalDays ?? undefined,
+          }));
+        }
+
+        // Migration from version 3 to 4: Add color field
+        if (version < 4) {
+          console.log('[Migration] Migrating subscriptions to version 4: adding color field');
+          state.subscriptions = state.subscriptions.map((sub) => ({
+            ...sub,
+            color: sub.color ?? undefined,
+          }));
+        }
+
+        // Migration from version 4 to 5: Add trialEndDate field
+        if (version < 5) {
+          console.log('[Migration] Migrating subscriptions to version 5: adding trialEndDate field');
+          state.subscriptions = state.subscriptions.map((sub) => ({
+            ...sub,
+            trialEndDate: sub.trialEndDate ?? undefined,
           }));
         }
 

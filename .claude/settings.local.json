@@ -12,7 +12,15 @@
       "Bash(git remote add:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: complete Suscriptio subscription manager app\n\n- React 19 + TypeScript + Vite setup\n- Dark futuristic theme with cyan/purple accents\n- Glassmorphism UI components\n- Dashboard with spend overview, metrics, and category breakdown\n- Subscription CRUD with localStorage persistence\n- Responsive design with mobile navigation\n- i18n support \\(Spanish\\)\n- Custom logo and favicon\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run format:check:*)",
+      "Bash(npm run format:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e:*)",
+      "Bash(npx vitest run:*)",
+      "Bash(dir:*)"
     ]
   },
   "extends": "./plugins/agents",
