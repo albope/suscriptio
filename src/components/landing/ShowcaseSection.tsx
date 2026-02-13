@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { ServiceLogo } from '@/components/ui/ServiceLogo';
 
 /* ── Tab data ── */
 
@@ -105,21 +106,15 @@ const PROGRESS_TICK_MS = 50;
 /* ── Mockup sub-components ── */
 
 const services = [
-  { name: 'Netflix', color: '#e50914', initial: 'N' },
-  { name: 'Spotify', color: '#1db954', initial: 'S' },
-  { name: 'Disney+', color: '#113ccf', initial: 'D' },
-  { name: 'Amazon', color: '#ff9900', initial: 'A' },
-  { name: 'YouTube', color: '#ff0000', initial: 'Y' },
-  { name: 'ChatGPT', color: '#10a37f', initial: 'C' },
-  { name: 'iCloud+', color: '#a855f7', initial: 'i' },
-  { name: 'Xbox', color: '#107c10', initial: 'X' },
+  'Netflix', 'Spotify', 'Disney+', 'Amazon',
+  'YouTube', 'ChatGPT', 'iCloud+', 'Xbox',
 ];
 
 const SetupMockup = () => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-    {services.map((s, i) => (
+    {services.map((name, i) => (
       <div
-        key={s.name}
+        key={name}
         className="showcase-mock-item"
         style={{
           display: 'flex',
@@ -132,23 +127,9 @@ const SetupMockup = () => (
           animation: `showcase-item-appear 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${i * 0.08}s both`,
         }}
       >
-        <div
-          style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '8px',
-            background: `${s.color}18`,
-            border: `1px solid ${s.color}30`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <span style={{ fontSize: '12px', fontWeight: 700, color: s.color }}>{s.initial}</span>
-        </div>
+        <ServiceLogo name={name} size={28} />
         <span style={{ fontSize: '12px', fontWeight: 600, color: '#ededed', whiteSpace: 'nowrap' }}>
-          {s.name}
+          {name}
         </span>
       </div>
     ))}
