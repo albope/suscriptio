@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -654,6 +655,135 @@ export const Settings = () => {
               ? t('settings.storedLocallyOne')
               : t('settings.storedLocally')}
           </p>
+        </div>
+      </section>
+
+      {/* Legal Section */}
+      <section
+        style={{
+          background: 'rgba(17, 17, 17, 0.6)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          borderRadius: '16px',
+          padding: '24px',
+          marginTop: '24px',
+        }}
+      >
+        <h2
+          style={{
+            fontSize: '18px',
+            fontWeight: 600,
+            color: '#ededed',
+            marginBottom: '8px',
+          }}
+        >
+          {t('settings.legalSection')}
+        </h2>
+        <p
+          style={{
+            fontSize: '14px',
+            color: '#666666',
+            marginBottom: '24px',
+          }}
+        >
+          {t('settings.legalDescription')}
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <Link
+            to="/privacy"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px',
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.04)',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 212, 255, 0.08)';
+              e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.04)';
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: '#ededed',
+                  marginBottom: '4px',
+                }}
+              >
+                {t('settings.privacyPolicy')}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#666666' }}>
+                {t('settings.privacyPolicyDescription')}
+              </p>
+            </div>
+            <svg
+              style={{ width: '20px', height: '20px', color: '#888', flexShrink: 0 }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+
+          <Link
+            to="/terms"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px',
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.04)',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 212, 255, 0.08)';
+              e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.04)';
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: '#ededed',
+                  marginBottom: '4px',
+                }}
+              >
+                {t('settings.termsOfService')}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#666666' }}>
+                {t('settings.termsOfServiceDescription')}
+              </p>
+            </div>
+            <svg
+              style={{ width: '20px', height: '20px', color: '#888', flexShrink: 0 }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
       </section>
 

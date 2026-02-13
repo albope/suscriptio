@@ -212,7 +212,13 @@
     "storedLocally": "suscripciones guardadas localmente",
     "storedLocallyOne": "suscripción guardada localmente",
     "language": "Idioma",
-    "languageDescription": "Idioma de la aplicación"
+    "languageDescription": "Idioma de la aplicación",
+    "legalSection": "Legal",
+    "legalDescription": "Políticas de privacidad y términos de servicio",
+    "privacyPolicy": "Política de privacidad",
+    "privacyPolicyDescription": "Cómo gestionamos tus datos",
+    "termsOfService": "Términos de servicio",
+    "termsOfServiceDescription": "Condiciones de uso de la app"
   },
   "filters": {
     "advanced": "Filtros avanzados",
@@ -547,7 +553,10 @@
       "signIn": "Iniciar sesión",
       "download": "Descargar app",
       "copyright": "Suscriptio. Todos los derechos reservados.",
-      "madeWith": "Hecho con"
+      "madeWith": "Hecho con",
+      "legal": "Legal",
+      "privacy": "Política de privacidad",
+      "terms": "Términos de servicio"
     }
   },
   "trial": {
@@ -561,5 +570,106 @@
     "alertTitle": "Trials por expirar",
     "cancelBefore": "Cancelar antes",
     "keepSubscription": "Mantener"
+  },
+  "legal": {
+    "backToHome": "Volver al inicio",
+    "privacy": {
+      "title": "Política de privacidad",
+      "lastUpdated": "Última actualización: 13 de febrero de 2026",
+      "intro": "En Suscriptio, tu privacidad es nuestra prioridad. Esta política explica qué datos recopilamos, cómo los usamos y tus derechos sobre ellos.",
+      "dataCollection": {
+        "title": "Datos que recopilamos",
+        "email": "Correo electrónico: necesario para crear tu cuenta y autenticarte.",
+        "subscriptions": "Datos de suscripciones: nombres, costes, fechas de pago, categorías, etiquetas y notas que introduces.",
+        "profile": "Configuración: moneda preferida, idioma y tier de suscripción (Free o Premium).",
+        "usage": "No rastreamos ni recopilamos métricas de uso de la app."
+      },
+      "thirdParty": {
+        "title": "Servicios de terceros",
+        "supabase": "Supabase: almacenamiento de datos y autenticación. Datos cifrados en tránsito y en reposo.",
+        "revenuecat": "RevenueCat: procesamiento de pagos Premium a través de Google Play Store.",
+        "noTracking": "No usamos Google Analytics, Facebook Pixel ni ningún servicio de tracking."
+      },
+      "dataUsage": {
+        "title": "Cómo usamos tus datos",
+        "functionality": "Solo para la funcionalidad de la app: mostrar tus suscripciones, calcular totales y enviar recordatorios.",
+        "noSelling": "Nunca vendemos, compartimos ni monetizamos tus datos personales.",
+        "noAds": "No mostramos anuncios ni compartimos datos con anunciantes."
+      },
+      "storage": {
+        "title": "Almacenamiento de datos",
+        "local": "Tus datos se guardan localmente en tu dispositivo para funcionar offline.",
+        "cloud": "Si creas cuenta, los datos se sincronizan con Supabase (servidores en Europa, GDPR compliant).",
+        "encryption": "Los datos están cifrados en tránsito (HTTPS) y en reposo."
+      },
+      "rights": {
+        "title": "Tus derechos (GDPR)",
+        "access": "Acceso: puedes exportar todos tus datos desde Configuración > Exportar datos.",
+        "deletion": "Eliminación: contáctanos para eliminar tu cuenta y todos tus datos.",
+        "portability": "Portabilidad: exporta tus datos en JSON o CSV.",
+        "rectification": "Rectificación: edita o corrige tus datos en cualquier momento desde la app."
+      },
+      "contact": {
+        "title": "Contacto",
+        "description": "Para solicitudes de privacidad, eliminación de datos o preguntas:",
+        "email": "albertobort@gmail.com"
+      }
+    },
+    "terms": {
+      "title": "Términos de servicio",
+      "lastUpdated": "Última actualización: 13 de febrero de 2026",
+      "intro": "Al usar Suscriptio, aceptas estos términos. Por favor, léelos detenidamente.",
+      "acceptance": {
+        "title": "Aceptación de los términos",
+        "description": "Al acceder y usar esta aplicación, aceptas estar sujeto a estos términos de servicio. Si no estás de acuerdo, no uses la app."
+      },
+      "service": {
+        "title": "Descripción del servicio",
+        "description": "Suscriptio es una herramienta de gestión de suscripciones personales. Te permite rastrear gastos recurrentes, visualizar analíticas y recibir recordatorios.",
+        "noGuarantee": "No garantizamos la exactitud de cálculos ni nos responsabilizamos de errores en el seguimiento."
+      },
+      "accounts": {
+        "title": "Cuentas de usuario",
+        "registration": "Debes proporcionar un email válido al registrarte.",
+        "security": "Eres responsable de mantener la seguridad de tu contraseña.",
+        "responsibility": "Eres responsable de todas las actividades bajo tu cuenta."
+      },
+      "premium": {
+        "title": "Compra Premium",
+        "price": "Premium cuesta €2.99 como pago único a través de Google Play Store.",
+        "refunds": "Las políticas de reembolso están sujetas a las condiciones de Google Play.",
+        "lifetime": "El acceso Premium es permanente y no requiere renovación."
+      },
+      "userResponsibilities": {
+        "title": "Responsabilidades del usuario",
+        "noMisuse": "No uses la app para actividades ilegales.",
+        "accuracy": "Eres responsable de la exactitud de los datos que introduces.",
+        "noReverse": "No intentes realizar ingeniería inversa de la aplicación."
+      },
+      "intellectualProperty": {
+        "title": "Propiedad intelectual",
+        "ownership": "Suscriptio y todo su contenido son propiedad de sus creadores.",
+        "license": "Te otorgamos una licencia limitada y no exclusiva para usar la app."
+      },
+      "liability": {
+        "title": "Limitación de responsabilidad",
+        "asIs": "La app se proporciona «tal cual», sin garantías de ningún tipo.",
+        "noLiability": "No somos responsables de pérdida de datos, errores o interrupciones del servicio.",
+        "backup": "Recomendamos exportar tus datos regularmente como backup."
+      },
+      "changes": {
+        "title": "Cambios en los términos",
+        "description": "Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado de la app implica la aceptación de los cambios."
+      },
+      "termination": {
+        "title": "Terminación",
+        "description": "Podemos suspender o cancelar tu cuenta si violas estos términos. Puedes eliminar tu cuenta en cualquier momento contactándonos."
+      },
+      "contact": {
+        "title": "Contacto",
+        "description": "Para preguntas sobre estos términos:",
+        "email": "albertobort@gmail.com"
+      }
+    }
   }
 }

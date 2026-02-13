@@ -21,6 +21,8 @@ const SubscriptionList = lazy(() =>
 const Settings = lazy(() => import('./pages/Settings').then((m) => ({ default: m.Settings })));
 const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
 const Register = lazy(() => import('./pages/Register').then((m) => ({ default: m.Register })));
+const Privacy = lazy(() => import('./pages/Privacy').then((m) => ({ default: m.Privacy })));
+const Terms = lazy(() => import('./pages/Terms').then((m) => ({ default: m.Terms })));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -92,6 +94,8 @@ function AppContent() {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
 
         {/* Home: landing for guests, dashboard for authenticated */}
         <Route path="/" element={<HomeRoute />} />

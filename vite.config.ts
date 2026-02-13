@@ -19,8 +19,8 @@ export default defineConfig({
         name: 'Suscriptio',
         short_name: 'Suscriptio',
         description: 'Gestor de suscripciones personal',
-        theme_color: '#6366f1',
-        background_color: '#ffffff',
+        theme_color: '#00d4ff',
+        background_color: '#000000',
         display: 'standalone',
         start_url: '/',
         icons: [

@@ -52,7 +52,7 @@ export const Footer = () => {
             className="footer-columns"
             style={{
               display: 'grid',
-              gridTemplateColumns: '2fr 1fr 1fr',
+              gridTemplateColumns: '2fr 1fr 1fr 1fr',
               gap: '64px',
               marginBottom: '48px',
             }}
@@ -166,6 +166,40 @@ export const Footer = () => {
                 >
                   {t('landing.footer.download')}
                 </a>
+              </nav>
+            </div>
+
+            {/* Legal column */}
+            <div>
+              <h4
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: 'var(--text-primary, #ededed)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('landing.footer.legal')}
+              </h4>
+              <nav>
+                <Link
+                  to="/privacy"
+                  style={linkStyle('privacy')}
+                  onMouseEnter={() => setHoveredLink('privacy')}
+                  onMouseLeave={() => setHoveredLink(null)}
+                >
+                  {t('landing.footer.privacy')}
+                </Link>
+                <Link
+                  to="/terms"
+                  style={linkStyle('terms')}
+                  onMouseEnter={() => setHoveredLink('terms')}
+                  onMouseLeave={() => setHoveredLink(null)}
+                >
+                  {t('landing.footer.terms')}
+                </Link>
               </nav>
             </div>
           </div>

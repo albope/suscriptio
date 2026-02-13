@@ -212,7 +212,13 @@
     "importAddDescription": "Keeps current subscriptions and adds the ones from the file",
     "subscriptionsCount": "{{count}} subscriptions in the file",
     "storedLocally": "subscriptions stored locally",
-    "storedLocallyOne": "subscription stored locally"
+    "storedLocallyOne": "subscription stored locally",
+    "legalSection": "Legal",
+    "legalDescription": "Privacy policy and terms of service",
+    "privacyPolicy": "Privacy Policy",
+    "privacyPolicyDescription": "How we handle your data",
+    "termsOfService": "Terms of Service",
+    "termsOfServiceDescription": "App usage conditions"
   },
   "filters": {
     "advanced": "Advanced filters",
@@ -547,7 +553,10 @@
       "signIn": "Sign In",
       "download": "Download app",
       "copyright": "Suscriptio. All rights reserved.",
-      "madeWith": "Made with"
+      "madeWith": "Made with",
+      "legal": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
     }
   },
   "trial": {
@@ -561,5 +570,106 @@
     "alertTitle": "Expiring trials",
     "cancelBefore": "Cancel before",
     "keepSubscription": "Keep"
+  },
+  "legal": {
+    "backToHome": "Back to home",
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: February 13, 2026",
+      "intro": "At Suscriptio, your privacy is our priority. This policy explains what data we collect, how we use it, and your rights regarding it.",
+      "dataCollection": {
+        "title": "Data we collect",
+        "email": "Email address: required to create your account and authenticate.",
+        "subscriptions": "Subscription data: names, costs, payment dates, categories, tags, and notes that you enter.",
+        "profile": "Settings: preferred currency, language, and subscription tier (Free or Premium).",
+        "usage": "We do not track or collect app usage metrics."
+      },
+      "thirdParty": {
+        "title": "Third-party services",
+        "supabase": "Supabase: data storage and authentication. Data encrypted in transit and at rest.",
+        "revenuecat": "RevenueCat: Premium payment processing through Google Play Store.",
+        "noTracking": "We don't use Google Analytics, Facebook Pixel, or any tracking services."
+      },
+      "dataUsage": {
+        "title": "How we use your data",
+        "functionality": "Only for app functionality: displaying your subscriptions, calculating totals, and sending reminders.",
+        "noSelling": "We never sell, share, or monetize your personal data.",
+        "noAds": "We don't show ads or share data with advertisers."
+      },
+      "storage": {
+        "title": "Data storage",
+        "local": "Your data is saved locally on your device for offline functionality.",
+        "cloud": "If you create an account, data syncs with Supabase (servers in Europe, GDPR compliant).",
+        "encryption": "Data is encrypted in transit (HTTPS) and at rest."
+      },
+      "rights": {
+        "title": "Your rights (GDPR)",
+        "access": "Access: you can export all your data from Settings > Export data.",
+        "deletion": "Deletion: contact us to delete your account and all your data.",
+        "portability": "Portability: export your data in JSON or CSV format.",
+        "rectification": "Rectification: edit or correct your data at any time from the app."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "For privacy requests, data deletion, or questions:",
+        "email": "albertobort@gmail.com"
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: February 13, 2026",
+      "intro": "By using Suscriptio, you agree to these terms. Please read them carefully.",
+      "acceptance": {
+        "title": "Acceptance of terms",
+        "description": "By accessing and using this application, you agree to be bound by these terms of service. If you disagree, please do not use the app."
+      },
+      "service": {
+        "title": "Service description",
+        "description": "Suscriptio is a personal subscription management tool. It allows you to track recurring expenses, visualize analytics, and receive reminders.",
+        "noGuarantee": "We do not guarantee the accuracy of calculations nor are we responsible for tracking errors."
+      },
+      "accounts": {
+        "title": "User accounts",
+        "registration": "You must provide a valid email when registering.",
+        "security": "You are responsible for maintaining the security of your password.",
+        "responsibility": "You are responsible for all activities under your account."
+      },
+      "premium": {
+        "title": "Premium purchase",
+        "price": "Premium costs €2.99 as a one-time payment through Google Play Store.",
+        "refunds": "Refund policies are subject to Google Play's terms and conditions.",
+        "lifetime": "Premium access is permanent and does not require renewal."
+      },
+      "userResponsibilities": {
+        "title": "User responsibilities",
+        "noMisuse": "Do not use the app for illegal activities.",
+        "accuracy": "You are responsible for the accuracy of the data you enter.",
+        "noReverse": "Do not attempt to reverse engineer the application."
+      },
+      "intellectualProperty": {
+        "title": "Intellectual property",
+        "ownership": "Suscriptio and all its content are owned by its creators.",
+        "license": "We grant you a limited, non-exclusive license to use the app."
+      },
+      "liability": {
+        "title": "Limitation of liability",
+        "asIs": "The app is provided 'as is', without warranties of any kind.",
+        "noLiability": "We are not responsible for data loss, errors, or service interruptions.",
+        "backup": "We recommend exporting your data regularly as a backup."
+      },
+      "changes": {
+        "title": "Changes to terms",
+        "description": "We reserve the right to modify these terms at any time. Continued use of the app implies acceptance of changes."
+      },
+      "termination": {
+        "title": "Termination",
+        "description": "We may suspend or cancel your account if you violate these terms. You can delete your account at any time by contacting us."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "For questions about these terms:",
+        "email": "albertobort@gmail.com"
+      }
+    }
   }
 }

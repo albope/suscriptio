@@ -354,6 +354,7 @@ export const ShowcaseSection = () => {
   const [progress, setProgress] = useState(0);
   const advanceRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tickCountRef = useRef(0);
 
   const clearTimers = useCallback(() => {
     if (advanceRef.current) { clearInterval(advanceRef.current); advanceRef.current = null; }
@@ -367,15 +368,18 @@ export const ShowcaseSection = () => {
       return;
     }
 
+    const totalTicks = AUTO_ADVANCE_MS / PROGRESS_TICK_MS;
+    tickCountRef.current = 0;
+
     progressRef.current = setInterval(() => {
-      setProgress((p) => {
-        const next = p + (PROGRESS_TICK_MS / AUTO_ADVANCE_MS) * 100;
-        if (next >= 100) {
-          setActiveTab((prev) => (prev + 1) % TABS.length);
-          return 0;
-        }
-        return next;
-      });
+      tickCountRef.current += 1;
+      if (tickCountRef.current >= totalTicks) {
+        tickCountRef.current = 0;
+        setActiveTab((prev) => (prev + 1) % TABS.length);
+        setProgress(0);
+      } else {
+        setProgress((tickCountRef.current / totalTicks) * 100);
+      }
     }, PROGRESS_TICK_MS);
 
     return clearTimers;
@@ -385,6 +389,7 @@ export const ShowcaseSection = () => {
   const handleTabClick = (index: number) => {
     setActiveTab(index);
     setProgress(0);
+    tickCountRef.current = 0;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
