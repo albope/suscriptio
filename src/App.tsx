@@ -21,8 +21,17 @@ const SubscriptionList = lazy(() =>
 const Settings = lazy(() => import('./pages/Settings').then((m) => ({ default: m.Settings })));
 const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
 const Register = lazy(() => import('./pages/Register').then((m) => ({ default: m.Register })));
+const ForgotPassword = lazy(() =>
+  import('./pages/ForgotPassword').then((m) => ({ default: m.ForgotPassword }))
+);
+const ResetPassword = lazy(() =>
+  import('./pages/ResetPassword').then((m) => ({ default: m.ResetPassword }))
+);
 const Privacy = lazy(() => import('./pages/Privacy').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('./pages/Terms').then((m) => ({ default: m.Terms })));
+const DeleteAccount = lazy(() =>
+  import('./pages/DeleteAccount').then((m) => ({ default: m.DeleteAccount }))
+);
 
 // Loading fallback component
 const PageLoader = () => (
@@ -94,8 +103,11 @@ function AppContent() {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/delete-account" element={<DeleteAccount />} />
 
         {/* Home: landing for guests, dashboard for authenticated */}
         <Route path="/" element={<HomeRoute />} />

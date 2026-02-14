@@ -155,6 +155,26 @@
     "password": "Contraseña",
     "confirmPassword": "Confirmar contraseña",
     "forgotPassword": "¿Olvidaste tu contraseña?",
+    "forgotPasswordTitle": "Recuperar contraseña",
+    "forgotPasswordSubtitle": "Introduce tu email y te enviaremos un enlace para restablecer tu contraseña",
+    "sendResetLink": "Enviar enlace",
+    "sendingResetLink": "Enviando...",
+    "resetEmailSent": "Si existe una cuenta con este email, recibirás un enlace para restablecer tu contraseña. Revisa tu bandeja de entrada.",
+    "backToLogin": "Volver a iniciar sesión",
+    "resetPasswordTitle": "Nueva contraseña",
+    "resetPasswordSubtitle": "Introduce tu nueva contraseña",
+    "newPassword": "Nueva contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña",
+    "setNewPassword": "Establecer contraseña",
+    "settingPassword": "Guardando...",
+    "passwordResetSuccess": "Contraseña actualizada correctamente",
+    "goToDashboard": "Ir al panel",
+    "passwordChanged": "Contraseña cambiada correctamente",
+    "changePassword": "Cambiar contraseña",
+    "changePasswordDescription": "Actualiza la contraseña de tu cuenta",
+    "accountSection": "Cuenta",
+    "accountDescription": "Gestiona tu cuenta y seguridad",
+    "yourEmail": "Tu email",
     "noAccount": "¿No tienes cuenta?",
     "hasAccount": "¿Ya tienes cuenta?",
     "logout": "Cerrar sesión",
@@ -167,8 +187,27 @@
       "emailNotConfirmed": "Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.",
       "tooManyRequests": "Demasiados intentos. Por favor espera unos minutos antes de volver a intentar.",
       "networkError": "Error de conexión. Comprueba tu conexión a internet.",
-      "userNotFound": "No existe una cuenta con este email"
-    }
+      "userNotFound": "No existe una cuenta con este email",
+      "resetFailed": "Error al enviar el enlace. Inténtalo de nuevo.",
+      "passwordUpdateFailed": "Error al actualizar la contraseña. Inténtalo de nuevo.",
+      "samePassword": "La nueva contraseña debe ser diferente a la actual",
+      "deleteAccountFailed": "Error al eliminar la cuenta. Inténtalo de nuevo."
+    },
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccountDescription": "Elimina permanentemente tu cuenta y todos tus datos",
+    "deleteAccountConfirmTitle": "Eliminar cuenta",
+    "deleteAccountWarning": "Esta acción es irreversible. Se eliminarán permanentemente:",
+    "deleteAccountWarningItems": {
+      "email": "Tu cuenta y correo electrónico",
+      "subscriptions": "Todas tus suscripciones",
+      "profile": "Tu perfil y configuración",
+      "premium": "Tu acceso Premium (si lo tienes)"
+    },
+    "deleteAccountConfirmLabel": "Escribe ELIMINAR para confirmar",
+    "deleteAccountConfirmWord": "ELIMINAR",
+    "deleteAccountButton": "Eliminar mi cuenta",
+    "deleteAccountDeleting": "Eliminando...",
+    "accountDeleted": "Tu cuenta ha sido eliminada correctamente"
   },
   "migration": {
     "title": "Datos encontrados",
@@ -218,7 +257,9 @@
     "privacyPolicy": "Política de privacidad",
     "privacyPolicyDescription": "Cómo gestionamos tus datos",
     "termsOfService": "Términos de servicio",
-    "termsOfServiceDescription": "Condiciones de uso de la app"
+    "termsOfServiceDescription": "Condiciones de uso de la app",
+    "dangerZone": "Zona de peligro",
+    "dangerZoneDescription": "Acciones irreversibles para tu cuenta"
   },
   "filters": {
     "advanced": "Filtros avanzados",
@@ -556,7 +597,8 @@
       "madeWith": "Hecho con",
       "legal": "Legal",
       "privacy": "Política de privacidad",
-      "terms": "Términos de servicio"
+      "terms": "Términos de servicio",
+      "deleteAccount": "Eliminar cuenta"
     }
   },
   "trial": {
@@ -605,7 +647,7 @@
       "rights": {
         "title": "Tus derechos (GDPR)",
         "access": "Acceso: puedes exportar todos tus datos desde Configuración > Exportar datos.",
-        "deletion": "Eliminación: contáctanos para eliminar tu cuenta y todos tus datos.",
+        "deletion": "Eliminación: puedes eliminar tu cuenta y todos tus datos desde Configuración o visitando la página de eliminación de cuenta.",
         "portability": "Portabilidad: exporta tus datos en JSON o CSV.",
         "rectification": "Rectificación: edita o corrige tus datos en cualquier momento desde la app."
       },
@@ -613,6 +655,33 @@
         "title": "Contacto",
         "description": "Para solicitudes de privacidad, eliminación de datos o preguntas:",
         "email": "albertobort@gmail.com"
+      }
+    },
+    "deleteAccount": {
+      "title": "Eliminar cuenta",
+      "lastUpdated": "Última actualización: febrero 2026",
+      "intro": "Esta página te permite solicitar la eliminación de tu cuenta y todos los datos asociados a Suscriptio.",
+      "whatGetsDeleted": {
+        "title": "Qué se elimina",
+        "email": "Tu cuenta y correo electrónico de autenticación",
+        "subscriptions": "Todas tus suscripciones registradas",
+        "profile": "Tu perfil de usuario y configuración",
+        "premium": "Tu estado Premium (el acceso se pierde permanentemente)",
+        "local": "Los datos locales de tu dispositivo"
+      },
+      "howToDelete": {
+        "title": "Cómo eliminar tu cuenta",
+        "loggedInTitle": "Estás conectado",
+        "loggedInDescription": "Puedes eliminar tu cuenta directamente desde aquí o desde Configuración.",
+        "notLoggedInTitle": "Inicia sesión primero",
+        "notLoggedInDescription": "Para eliminar tu cuenta, necesitas iniciar sesión primero.",
+        "loginLink": "Iniciar sesión",
+        "alternativeTitle": "Alternativa",
+        "alternativeDescription": "Si no puedes acceder a tu cuenta, contáctanos y procesaremos la eliminación manualmente."
+      },
+      "contact": {
+        "title": "Contacto",
+        "description": "Para solicitudes de eliminación manual o preguntas:"
       }
     },
     "terms": {
@@ -663,7 +732,7 @@
       },
       "termination": {
         "title": "Terminación",
-        "description": "Podemos suspender o cancelar tu cuenta si violas estos términos. Puedes eliminar tu cuenta en cualquier momento contactándonos."
+        "description": "Podemos suspender o cancelar tu cuenta si violas estos términos. Puedes eliminar tu cuenta en cualquier momento desde Configuración > Eliminar cuenta."
       },
       "contact": {
         "title": "Contacto",

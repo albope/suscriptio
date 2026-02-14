@@ -200,6 +200,14 @@ export const Footer = () => {
                 >
                   {t('landing.footer.terms')}
                 </Link>
+                <Link
+                  to="/delete-account"
+                  style={linkStyle('deleteAccount')}
+                  onMouseEnter={() => setHoveredLink('deleteAccount')}
+                  onMouseLeave={() => setHoveredLink(null)}
+                >
+                  {t('landing.footer.deleteAccount')}
+                </Link>
               </nav>
             </div>
           </div>

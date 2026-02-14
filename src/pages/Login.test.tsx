@@ -44,7 +44,8 @@ describe('Login', () => {
 
       expect(screen.getByRole('heading', { name: /suscriptio/i })).toBeInTheDocument();
       expect(screen.getByText(/email/i)).toBeInTheDocument();
-      expect(screen.getByText(/password|contraseña/i)).toBeInTheDocument();
+      const passwordInput = document.querySelector('input[type="password"]');
+      expect(passwordInput).toBeInTheDocument();
       expect(
         screen.getByRole('button', { name: /iniciar sesión|sign in|login/i })
       ).toBeInTheDocument();

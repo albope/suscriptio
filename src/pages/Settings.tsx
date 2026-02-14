@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -18,6 +18,8 @@ import { useUserProfile } from '@/hooks/useUserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { isAndroid } from '@/lib/platform';
+import { validatePassword } from '@/utils/validation';
+import { clearAllLocalData } from '@/utils/clearLocalData';
 import type { Subscription } from '@/types';
 
 export const Settings = () => {
@@ -34,12 +36,70 @@ export const Settings = () => {
   const { isSupported, notificationPermission, requestPermission } = useReminders();
   const isPremium = useIsPremium();
   const { profile, refetch: refetchProfile } = useUserProfile();
-  const { user } = useAuth();
+  const { user, updatePassword, deleteAccount } = useAuth();
+  const navigate = useNavigate();
   const [togglingTier, setTogglingTier] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [pendingImport, setPendingImport] = useState<Subscription[] | null>(null);
+
+  // Change password state
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+
+  // Delete account state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const passwordValidation = useMemo(() => validatePassword(newPassword), [newPassword]);
+
+  const getStrengthColor = (strength: string) => {
+    switch (strength) {
+      case 'strong':
+        return '#22c55e';
+      case 'medium':
+        return '#f59e0b';
+      default:
+        return '#ef4444';
+    }
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordError(null);
+
+    if (!passwordValidation.isValid) {
+      setPasswordError(passwordValidation.errors.map((err) => t(err)).join('. '));
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setPasswordError(t('auth.errors.passwordMismatch'));
+      return;
+    }
+
+    setPasswordLoading(true);
+    const { error } = await updatePassword(newPassword);
+
+    if (error) {
+      const msg = error.message.toLowerCase();
+      if (msg.includes('same password') || msg.includes('different')) {
+        setPasswordError(t('auth.errors.samePassword'));
+      } else {
+        setPasswordError(t('auth.errors.passwordUpdateFailed'));
+      }
+    } else {
+      toast.success(t('auth.passwordChanged'));
+      setChangePasswordOpen(false);
+      setNewPassword('');
+      setConfirmNewPassword('');
+    }
+    setPasswordLoading(false);
+  };
 
   const handleToggleReminders = async () => {
     if (!remindersEnabled) {
@@ -242,6 +302,108 @@ export const Settings = () => {
           </Select>
         </div>
       </section>
+
+      {/* Account Section */}
+      {user && (
+        <section
+          style={{
+            background: 'rgba(17, 17, 17, 0.6)',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginBottom: '24px',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#ededed',
+              marginBottom: '8px',
+            }}
+          >
+            {t('auth.accountSection')}
+          </h2>
+          <p
+            style={{
+              fontSize: '14px',
+              color: '#666666',
+              marginBottom: '24px',
+            }}
+          >
+            {t('auth.accountDescription')}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Email display */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '16px',
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 600,
+                    color: '#ededed',
+                    marginBottom: '4px',
+                  }}
+                >
+                  {t('auth.yourEmail')}
+                </h3>
+                <p style={{ fontSize: '13px', color: '#666666' }}>{user.email}</p>
+              </div>
+            </div>
+
+            {/* Change password */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '16px',
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 600,
+                    color: '#ededed',
+                    marginBottom: '4px',
+                  }}
+                >
+                  {t('auth.changePassword')}
+                </h3>
+                <p style={{ fontSize: '13px', color: '#666666' }}>
+                  {t('auth.changePasswordDescription')}
+                </p>
+              </div>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setChangePasswordOpen(true);
+                  setNewPassword('');
+                  setConfirmNewPassword('');
+                  setPasswordError(null);
+                }}
+              >
+                {t('auth.changePassword')}
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Billing Section */}
       <div style={{ marginBottom: '24px' }}>
@@ -787,6 +949,90 @@ export const Settings = () => {
         </div>
       </section>
 
+      {/* Danger Zone */}
+      {user && (
+        <section
+          style={{
+            background: 'rgba(17, 17, 17, 0.6)',
+            border: '1px solid rgba(239, 68, 68, 0.15)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginTop: '24px',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#ef4444',
+              marginBottom: '8px',
+            }}
+          >
+            {t('settings.dangerZone')}
+          </h2>
+          <p
+            style={{
+              fontSize: '14px',
+              color: '#666666',
+              marginBottom: '24px',
+            }}
+          >
+            {t('settings.dangerZoneDescription')}
+          </p>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px',
+              background: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '12px',
+              border: '1px solid rgba(239, 68, 68, 0.1)',
+            }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  color: '#ededed',
+                  marginBottom: '4px',
+                }}
+              >
+                {t('auth.deleteAccount')}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#666666' }}>
+                {t('auth.deleteAccountDescription')}
+              </p>
+            </div>
+            <button
+              onClick={() => setDeleteModalOpen(true)}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '10px',
+                border: 'none',
+                fontWeight: 600,
+                fontSize: '14px',
+                cursor: 'pointer',
+                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color: '#fff',
+                transition: 'all 0.2s ease',
+                flexShrink: 0,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = '0.9';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = '1';
+              }}
+            >
+              {t('auth.deleteAccount')}
+            </button>
+          </div>
+        </section>
+      )}
+
       {/* Dev-only Premium Toggle */}
       {import.meta.env.DEV && user && (
         <section
@@ -896,6 +1142,306 @@ export const Settings = () => {
           </div>
         </section>
       )}
+
+      {/* Change Password Modal */}
+      <Modal
+        isOpen={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+        title={t('auth.changePassword')}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {passwordError && (
+            <div
+              style={{
+                background: 'rgba(255, 68, 68, 0.1)',
+                border: '1px solid rgba(255, 68, 68, 0.2)',
+                borderRadius: '10px',
+                padding: '12px 16px',
+                color: '#ff6b6b',
+                fontSize: '14px',
+              }}
+            >
+              {passwordError}
+            </div>
+          )}
+
+          <div>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#888888',
+                marginBottom: '8px',
+              }}
+            >
+              {t('auth.newPassword')}
+            </label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '12px 16px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '10px',
+                fontSize: '14px',
+                color: '#ededed',
+                backgroundColor: '#0a0a0a',
+                outline: 'none',
+              }}
+            />
+            {newPassword.length > 0 && (
+              <div style={{ marginTop: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <div
+                    style={{
+                      flex: 1,
+                      height: '4px',
+                      borderRadius: '2px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width:
+                          passwordValidation.strength === 'strong'
+                            ? '100%'
+                            : passwordValidation.strength === 'medium'
+                              ? '66%'
+                              : '33%',
+                        height: '100%',
+                        background: getStrengthColor(passwordValidation.strength),
+                        transition: 'all 0.2s ease',
+                      }}
+                    />
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 500,
+                      color: getStrengthColor(passwordValidation.strength),
+                    }}
+                  >
+                    {t(`validation.password.${passwordValidation.strength}`)}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#888888',
+                marginBottom: '8px',
+              }}
+            >
+              {t('auth.confirmNewPassword')}
+            </label>
+            <input
+              type="password"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '12px 16px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '10px',
+                fontSize: '14px',
+                color: '#ededed',
+                backgroundColor: '#0a0a0a',
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <Button
+              variant="secondary"
+              onClick={() => setChangePasswordOpen(false)}
+              style={{ flex: 1 }}
+            >
+              {t('common.cancel')}
+            </Button>
+            <button
+              onClick={handleChangePassword}
+              disabled={passwordLoading}
+              style={{
+                flex: 1,
+                padding: '12px 20px',
+                background: passwordLoading
+                  ? '#333333'
+                  : 'linear-gradient(180deg, #00d4ff 0%, #00a8cc 100%)',
+                color: passwordLoading ? '#666666' : '#000',
+                fontWeight: 600,
+                fontSize: '14px',
+                border: 'none',
+                borderRadius: '10px',
+                cursor: passwordLoading ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {passwordLoading ? t('auth.settingPassword') : t('common.save')}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Account Modal */}
+      <Modal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setDeleteConfirmText('');
+          setDeleteError(null);
+        }}
+        title={t('auth.deleteAccountConfirmTitle')}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {deleteError && (
+            <div
+              style={{
+                background: 'rgba(255, 68, 68, 0.1)',
+                border: '1px solid rgba(255, 68, 68, 0.2)',
+                borderRadius: '10px',
+                padding: '12px 16px',
+                color: '#ff6b6b',
+                fontSize: '14px',
+              }}
+            >
+              {deleteError}
+            </div>
+          )}
+
+          <div
+            style={{
+              background: 'rgba(239, 68, 68, 0.08)',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '14px',
+                fontWeight: 600,
+                color: '#ef4444',
+                marginBottom: '10px',
+              }}
+            >
+              {t('auth.deleteAccountWarning')}
+            </p>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {['email', 'subscriptions', 'profile', 'premium'].map((key) => (
+                <li
+                  key={key}
+                  style={{
+                    fontSize: '13px',
+                    color: '#999',
+                    paddingLeft: '16px',
+                    position: 'relative',
+                    marginBottom: '4px',
+                  }}
+                >
+                  <span style={{ position: 'absolute', left: 0, color: '#ef4444' }}>&bull;</span>
+                  {t(`auth.deleteAccountWarningItems.${key}`)}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '13px',
+                fontWeight: 500,
+                color: '#888888',
+                marginBottom: '8px',
+              }}
+            >
+              {t('auth.deleteAccountConfirmLabel')}
+            </label>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder={t('auth.deleteAccountConfirmWord')}
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '12px 16px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '10px',
+                fontSize: '14px',
+                color: '#ededed',
+                backgroundColor: '#0a0a0a',
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setDeleteModalOpen(false);
+                setDeleteConfirmText('');
+                setDeleteError(null);
+              }}
+              style={{ flex: 1 }}
+            >
+              {t('common.cancel')}
+            </Button>
+            <button
+              onClick={async () => {
+                setDeleteError(null);
+                setDeleteLoading(true);
+                clearAllLocalData();
+                const { error } = await deleteAccount();
+                if (error) {
+                  setDeleteError(t('auth.errors.deleteAccountFailed'));
+                  setDeleteLoading(false);
+                  return;
+                }
+                toast.success(t('auth.accountDeleted'));
+                navigate('/');
+              }}
+              disabled={deleteConfirmText !== t('auth.deleteAccountConfirmWord') || deleteLoading}
+              style={{
+                flex: 1,
+                padding: '12px 20px',
+                background:
+                  deleteConfirmText !== t('auth.deleteAccountConfirmWord') || deleteLoading
+                    ? '#333333'
+                    : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color:
+                  deleteConfirmText !== t('auth.deleteAccountConfirmWord') || deleteLoading
+                    ? '#666666'
+                    : '#fff',
+                fontWeight: 600,
+                fontSize: '14px',
+                border: 'none',
+                borderRadius: '10px',
+                cursor:
+                  deleteConfirmText !== t('auth.deleteAccountConfirmWord') || deleteLoading
+                    ? 'not-allowed'
+                    : 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {deleteLoading ? t('auth.deleteAccountDeleting') : t('auth.deleteAccountButton')}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Import Confirmation Modal */}
       <Modal

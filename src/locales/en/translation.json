@@ -155,6 +155,26 @@
     "password": "Password",
     "confirmPassword": "Confirm password",
     "forgotPassword": "Forgot your password?",
+    "forgotPasswordTitle": "Reset password",
+    "forgotPasswordSubtitle": "Enter your email and we'll send you a link to reset your password",
+    "sendResetLink": "Send reset link",
+    "sendingResetLink": "Sending...",
+    "resetEmailSent": "If an account exists with this email, you'll receive a password reset link. Check your inbox.",
+    "backToLogin": "Back to sign in",
+    "resetPasswordTitle": "New password",
+    "resetPasswordSubtitle": "Enter your new password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "setNewPassword": "Set password",
+    "settingPassword": "Saving...",
+    "passwordResetSuccess": "Password updated successfully",
+    "goToDashboard": "Go to dashboard",
+    "passwordChanged": "Password changed successfully",
+    "changePassword": "Change password",
+    "changePasswordDescription": "Update your account password",
+    "accountSection": "Account",
+    "accountDescription": "Manage your account and security",
+    "yourEmail": "Your email",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "logout": "Sign out",
@@ -167,8 +187,27 @@
       "emailNotConfirmed": "Please confirm your email before signing in. Check your inbox.",
       "tooManyRequests": "Too many attempts. Please wait a few minutes before trying again.",
       "networkError": "Connection error. Please check your internet connection.",
-      "userNotFound": "No account exists with this email"
-    }
+      "userNotFound": "No account exists with this email",
+      "resetFailed": "Failed to send reset link. Please try again.",
+      "passwordUpdateFailed": "Failed to update password. Please try again.",
+      "samePassword": "New password must be different from your current password",
+      "deleteAccountFailed": "Failed to delete account. Please try again."
+    },
+    "deleteAccount": "Delete account",
+    "deleteAccountDescription": "Permanently delete your account and all your data",
+    "deleteAccountConfirmTitle": "Delete account",
+    "deleteAccountWarning": "This action is irreversible. The following will be permanently deleted:",
+    "deleteAccountWarningItems": {
+      "email": "Your account and email address",
+      "subscriptions": "All your subscriptions",
+      "profile": "Your profile and settings",
+      "premium": "Your Premium access (if applicable)"
+    },
+    "deleteAccountConfirmLabel": "Type DELETE to confirm",
+    "deleteAccountConfirmWord": "DELETE",
+    "deleteAccountButton": "Delete my account",
+    "deleteAccountDeleting": "Deleting...",
+    "accountDeleted": "Your account has been deleted successfully"
   },
   "migration": {
     "title": "Data found",
@@ -218,7 +257,9 @@
     "privacyPolicy": "Privacy Policy",
     "privacyPolicyDescription": "How we handle your data",
     "termsOfService": "Terms of Service",
-    "termsOfServiceDescription": "App usage conditions"
+    "termsOfServiceDescription": "App usage conditions",
+    "dangerZone": "Danger zone",
+    "dangerZoneDescription": "Irreversible actions for your account"
   },
   "filters": {
     "advanced": "Advanced filters",
@@ -556,7 +597,8 @@
       "madeWith": "Made with",
       "legal": "Legal",
       "privacy": "Privacy Policy",
-      "terms": "Terms of Service"
+      "terms": "Terms of Service",
+      "deleteAccount": "Delete Account"
     }
   },
   "trial": {
@@ -605,7 +647,7 @@
       "rights": {
         "title": "Your rights (GDPR)",
         "access": "Access: you can export all your data from Settings > Export data.",
-        "deletion": "Deletion: contact us to delete your account and all your data.",
+        "deletion": "Deletion: you can delete your account and all your data from Settings or by visiting the account deletion page.",
         "portability": "Portability: export your data in JSON or CSV format.",
         "rectification": "Rectification: edit or correct your data at any time from the app."
       },
@@ -613,6 +655,33 @@
         "title": "Contact",
         "description": "For privacy requests, data deletion, or questions:",
         "email": "albertobort@gmail.com"
+      }
+    },
+    "deleteAccount": {
+      "title": "Delete Account",
+      "lastUpdated": "Last updated: February 2026",
+      "intro": "This page allows you to request the deletion of your account and all data associated with Suscriptio.",
+      "whatGetsDeleted": {
+        "title": "What gets deleted",
+        "email": "Your account and authentication email",
+        "subscriptions": "All your registered subscriptions",
+        "profile": "Your user profile and settings",
+        "premium": "Your Premium status (access is permanently lost)",
+        "local": "Local data on your device"
+      },
+      "howToDelete": {
+        "title": "How to delete your account",
+        "loggedInTitle": "You are signed in",
+        "loggedInDescription": "You can delete your account directly from here or from Settings.",
+        "notLoggedInTitle": "Sign in first",
+        "notLoggedInDescription": "To delete your account, you need to sign in first.",
+        "loginLink": "Sign in",
+        "alternativeTitle": "Alternative",
+        "alternativeDescription": "If you cannot access your account, contact us and we will process the deletion manually."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "For manual deletion requests or questions:"
       }
     },
     "terms": {
@@ -663,7 +732,7 @@
       },
       "termination": {
         "title": "Termination",
-        "description": "We may suspend or cancel your account if you violate these terms. You can delete your account at any time by contacting us."
+        "description": "We may suspend or cancel your account if you violate these terms. You can delete your account at any time from Settings > Delete Account."
       },
       "contact": {
         "title": "Contact",

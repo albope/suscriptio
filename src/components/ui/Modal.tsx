@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useId, useCallback } from 'react';
+import { ReactNode, useEffect, useRef, useId, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ModalProps {
@@ -8,11 +8,23 @@ interface ModalProps {
   children: ReactNode;
 }
 
+const DESKTOP_BREAKPOINT = 640;
+
 export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   const { t } = useTranslation();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const titleId = useId();
+  const [isDesktop, setIsDesktop] = useState(
+    () => window.innerWidth >= DESKTOP_BREAKPOINT
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(min-width: ${DESKTOP_BREAKPOINT}px)`);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   // Focus trap implementation
   const handleKeyDown = useCallback(
@@ -90,8 +102,9 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         bottom: 0,
         zIndex: 9999,
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: isDesktop ? 'center' : 'flex-end',
         justifyContent: 'center',
+        padding: isDesktop ? '24px' : '0',
       }}
     >
       {/* Backdrop */}
@@ -109,7 +122,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         aria-hidden="true"
       />
 
-      {/* Modal container — bottom sheet */}
+      {/* Modal container */}
       <div
         ref={modalRef}
         role="dialog"
@@ -120,40 +133,44 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           position: 'relative',
           width: '100%',
           maxWidth: '480px',
-          maxHeight: 'calc(100dvh - 40px)',
+          maxHeight: isDesktop ? 'calc(100dvh - 48px)' : 'calc(100dvh - 40px)',
           backgroundColor: '#111111',
-          borderRadius: '20px 20px 0 0',
+          borderRadius: isDesktop ? '20px' : '20px 20px 0 0',
           border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderBottom: 'none',
-          boxShadow: '0 0 60px rgba(0, 212, 255, 0.1), 0 -10px 50px -12px rgba(0, 0, 0, 0.8)',
+          borderBottom: isDesktop ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+          boxShadow: isDesktop
+            ? '0 0 60px rgba(0, 212, 255, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+            : '0 0 60px rgba(0, 212, 255, 0.1), 0 -10px 50px -12px rgba(0, 0, 0, 0.8)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          animation: 'modalSlideUp 0.3s ease-out',
+          animation: isDesktop ? 'modalFadeIn 0.2s ease-out' : 'modalSlideUp 0.3s ease-out',
           outline: 'none',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Drag handle */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            paddingTop: '10px',
-            paddingBottom: '4px',
-            flexShrink: 0,
-          }}
-          aria-hidden="true"
-        >
+        {/* Drag handle — mobile only */}
+        {!isDesktop && (
           <div
             style={{
-              width: '36px',
-              height: '4px',
-              borderRadius: '2px',
-              background: 'rgba(255, 255, 255, 0.15)',
+              display: 'flex',
+              justifyContent: 'center',
+              paddingTop: '10px',
+              paddingBottom: '4px',
+              flexShrink: 0,
             }}
-          />
-        </div>
+            aria-hidden="true"
+          >
+            <div
+              style={{
+                width: '36px',
+                height: '4px',
+                borderRadius: '2px',
+                background: 'rgba(255, 255, 255, 0.15)',
+              }}
+            />
+          </div>
+        )}
 
         {/* Header */}
         <div
@@ -161,7 +178,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '8px 20px 14px',
+            padding: isDesktop ? '20px 20px 14px' : '8px 20px 14px',
             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             flexShrink: 0,
           }}
@@ -233,22 +250,30 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           </button>
         </div>
 
-        {/* Content — flex container, children manage their own scrolling */}
+        {/* Content */}
         <div
           style={{
             flex: 1,
             minHeight: 0,
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
-            padding: '16px',
-            paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
+            overflowY: 'auto',
+            padding: isDesktop ? '16px 20px' : '16px',
+            paddingBottom: isDesktop ? '20px' : 'calc(16px + env(safe-area-inset-bottom, 0px))',
             background: '#0a0a0a',
           }}
         >
           {children}
         </div>
       </div>
+
+      {/* Animation keyframes */}
+      <style>{`
+        @keyframes modalFadeIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
     </div>
   );
 };

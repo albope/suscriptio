@@ -762,6 +762,27 @@ export const Login = () => {
             </div>
           </div>
 
+          {/* Forgot Password Link */}
+          <div style={{ textAlign: 'right', marginBottom: '20px', marginTop: '-12px' }}>
+            <Link
+              to="/forgot-password"
+              style={{
+                color: '#888888',
+                fontSize: '13px',
+                textDecoration: 'none',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#00d4ff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#888888';
+              }}
+            >
+              {t('auth.forgotPassword')}
+            </Link>
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
@@ -835,7 +856,7 @@ export const Login = () => {
           style={{
             textAlign: 'center',
             marginTop: '28px',
-            color: '#555555',
+            color: 'rgba(255, 255, 255, 0.6)',
             fontSize: '14px',
             animation: 'fadeIn 0.6s ease-out 0.3s backwards',
           }}
