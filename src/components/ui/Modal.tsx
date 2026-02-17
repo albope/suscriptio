@@ -14,10 +14,14 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   const { t } = useTranslation();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
   const titleId = useId();
   const [isDesktop, setIsDesktop] = useState(
     () => window.innerWidth >= DESKTOP_BREAKPOINT
   );
+
+  // Keep onClose ref in sync without triggering re-renders
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     const mq = window.matchMedia(`(min-width: ${DESKTOP_BREAKPOINT}px)`);
@@ -26,11 +30,11 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Focus trap implementation
+  // Focus trap implementation — stable callback via ref
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -54,7 +58,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         }
       }
     },
-    [onClose]
+    []
   );
 
   useEffect(() => {

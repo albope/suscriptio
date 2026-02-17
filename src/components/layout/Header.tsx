@@ -44,6 +44,7 @@ export const Header = () => {
             display: flex;
             align-items: center;
             gap: 14px;
+            flex-shrink: 0;
           }
 
           .logo-wrapper {
@@ -89,9 +90,16 @@ export const Header = () => {
           }
 
           .nav-container {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px;
+            min-width: 0;
+          }
+
+          .nav-pill {
             display: flex;
             align-items: center;
             gap: 4px;
@@ -163,6 +171,7 @@ export const Header = () => {
             display: flex;
             align-items: center;
             gap: 16px;
+            flex-shrink: 0;
           }
 
           .user-email {
@@ -293,6 +302,7 @@ export const Header = () => {
 
           {/* Center Navigation */}
           <nav className="nav-container" aria-label={t('nav.main', 'Navegación principal')}>
+            <div className="nav-pill">
             <Link
               to="/"
               className={`nav-link ${isActive('/') ? 'nav-link-active' : 'nav-link-inactive'}`}
@@ -394,6 +404,7 @@ export const Header = () => {
               </svg>
               {t('nav.settings')}
             </Link>
+            </div>
           </nav>
 
           {/* User Section */}
